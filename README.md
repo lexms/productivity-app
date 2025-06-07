@@ -1,30 +1,162 @@
-# New mobile app
+# Productivity Companion
 
-*Automatically synced with your [v0.dev](https://v0.dev) deployments*
+A comprehensive productivity and wellness application designed to help you optimize your daily routine, track progress, and achieve your goals through data-driven insights and AI coaching.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/nicolos-projects-72871e9b/v0-new-mobile-app)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.dev-black?style=for-the-badge)](https://v0.dev/chat/projects/rMlmWhCwgyD)
+## ✨ Features
 
-## Overview
+### 📊 **Dashboard & Analytics**
+- Personal productivity dashboard with real-time stats
+- Comprehensive analytics for tasks, focus time, and performance
+- Weekly progress tracking and completion rates
+- Gamified point system with streaks and leaderboards
 
-This repository will stay in sync with your deployed chats on [v0.dev](https://v0.dev).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.dev](https://v0.dev).
+### ✅ **Task Management**
+- Advanced task creation and management
+- Priority-based task organization
+- Daily task tracking and completion
+- Focus time monitoring
 
-## Deployment
+### 📅 **Schedule Optimization**
+- Smart schedule planning and optimization
+- Meeting management and coordination
+- Calendar integration and time blocking
+- Automated scheduling suggestions
 
-Your project is live at:
+### 🏃‍♂️ **Health & Wellness Integration**
+- Wearable device connectivity (fitness trackers, smartwatches)
+- Daily check-in system for mood and energy tracking
+- Health metrics integration
+- Wellness goal setting and monitoring
 
-**[https://vercel.com/nicolos-projects-72871e9b/v0-new-mobile-app](https://vercel.com/nicolos-projects-72871e9b/v0-new-mobile-app)**
+### 🤖 **AI-Powered Coaching**
+- Personalized productivity insights
+- AI-driven recommendations
+- Performance optimization suggestions
+- Adaptive goal setting
 
-## Build your app
+### 🏆 **Social & Gamification**
+- Leaderboards and ranking system
+- Achievement tracking and rewards
+- Progress sharing and accountability
+- Streak tracking for habit building
 
-Continue building your app on:
+### 🔐 **Authentication & Security**
+- Secure user authentication via Supabase
+- Personal profile management
+- Data privacy and security
+- Cross-device synchronization
 
-**[https://v0.dev/chat/projects/rMlmWhCwgyD](https://v0.dev/chat/projects/rMlmWhCwgyD)**
+## 🛠️ Tech Stack
 
-## How It Works
+- **Framework**: Next.js 15 with React 19
+- **Styling**: Tailwind CSS with Radix UI components
+- **Database**: Multiple database support (Supabase, PostgreSQL, SQLite, etc.)
+- **ORM**: Drizzle ORM with migrations
+- **Authentication**: Supabase Auth
+- **TypeScript**: Full type safety
+- **Deployment**: Vercel-ready
 
-1. Create and modify your project using [v0.dev](https://v0.dev)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18+ or Bun
+- pnpm (recommended) or npm
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd productive
+```
+
+2. Install dependencies:
+```bash
+pnpm install
+```
+
+3. Set up environment variables:
+```bash
+cp .env.example .env.local
+```
+
+4. Configure your database and Supabase credentials in `.env.local`
+
+5. Run database migrations:
+```bash
+pnpm db:push
+```
+
+6. Start the development server:
+```bash
+pnpm dev
+```
+
+7. Open [http://localhost:3000](http://localhost:3000) in your browser
+
+## 📱 Application Structure
+
+- **`/app`** - Next.js app router pages and API routes
+- **`/components`** - Reusable UI components organized by atomic design
+  - `atoms/` - Basic UI elements
+  - `molecules/` - Component combinations
+  - `organisms/` - Complex components
+- **`/lib`** - Utility functions and configurations
+- **`/hooks`** - Custom React hooks
+- **`/utils`** - Helper functions
+
+## 🗄️ Database Management
+
+```bash
+# Generate migrations
+pnpm db:generate
+
+# Apply migrations
+pnpm db:migrate
+
+# Push schema changes
+pnpm db:push
+
+# Open Drizzle Studio
+pnpm db:studio
+```
+
+## 🔧 Development
+
+```bash
+# Start development server
+pnpm dev
+
+# Build for production
+pnpm build
+
+# Start production server
+pnpm start
+
+# Run linting
+pnpm lint
+```
+
+## 📊 Key Features Deep Dive
+
+### Task Management
+Complete task lifecycle management with priority levels, due dates, and progress tracking.
+
+### Schedule Optimization
+AI-powered schedule optimization that learns from your patterns and suggests optimal time blocks.
+
+### Wearables Integration
+Connect popular fitness trackers and smartwatches to automatically sync health and activity data.
+
+### Analytics Dashboard
+Comprehensive insights into your productivity patterns, helping you identify peak performance times.
+
+
+## 📄 License
+
+This project is private and proprietary.
+
+## 🆘 Support
+
+For support and questions, please reach out through the application's feedback system or create an issue in this repository.
