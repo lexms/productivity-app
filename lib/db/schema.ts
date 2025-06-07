@@ -7,7 +7,7 @@ export const users = pgTable("users", {
   email: varchar("email", { length: 255 }).notNull().unique(),
   name: varchar("name", { length: 255 }).notNull(),
   avatar: text("avatar"),
-  timezone: varchar("timezone", { length: 50 }).defaultTo("UTC"),
+  timezone: varchar("timezone", { length: 50 }).default("UTC"),
   preferences: jsonb("preferences")
     .$type<{
       autoScheduling: boolean
@@ -577,7 +577,7 @@ export const aiInsightsRelations = relations(aiInsights, ({ one }) => ({
 
 // Export types
 export type User = typeof users.$inferSelect
-export type NewUser = typeof users.$inferInsert
+export type   NewUser = typeof users.$inferInsert
 export type Task = typeof tasks.$inferSelect
 export type NewTask = typeof tasks.$inferInsert
 export type Meeting = typeof meetings.$inferSelect
