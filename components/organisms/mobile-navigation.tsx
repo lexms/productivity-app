@@ -3,32 +3,11 @@
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import {
-  BarChart3,
-  Calendar,
-  CheckSquare,
-  ClipboardCheck,
-  Home,
-  Menu,
-  Trophy,
-  Users,
-  Watch,
-  X,
-} from "lucide-react";
+import { Menu, X } from "lucide-react";
+import { allNavigation } from "@/lib/navigation-config";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-
-const navigation = [
-  { name: "Dashboard", href: "/", icon: Home },
-  { name: "Tasks", href: "/tasks", icon: CheckSquare },
-  { name: "Check-in", href: "/checkin", icon: ClipboardCheck },
-  { name: "Schedule", href: "/schedule", icon: Calendar },
-  { name: "Meetings", href: "/meetings", icon: Users },
-  { name: "Wearables", href: "/wearables", icon: Watch },
-  { name: "Analytics", href: "/analytics", icon: BarChart3 },
-  { name: "Leaderboard", href: "/leaderboard", icon: Trophy },
-];
 
 export function MobileNavigation() {
   const pathname = usePathname();
@@ -46,7 +25,7 @@ export function MobileNavigation() {
           </div>
 
           <ul className="flex flex-col gap-2">
-            {navigation.map((item) => {
+            {allNavigation.map((item) => {
               const isActive = pathname === item.href;
               return (
                 <li key={item.name}>
@@ -93,7 +72,7 @@ export function MobileNavigation() {
                 </div>
                 <nav className="flex-1 p-4">
                   <ul className="flex flex-col gap-2">
-                    {navigation.map((item) => {
+                    {allNavigation.map((item) => {
                       const isActive = pathname === item.href;
                       return (
                         <li key={item.name}>
@@ -124,7 +103,7 @@ export function MobileNavigation() {
       {/* Mobile Bottom Navigation */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
         <div className="grid grid-cols-4 gap-1 p-2">
-          {navigation.slice(0, 4).map((item) => {
+          {allNavigation.slice(0, 4).map((item) => {
             const isActive = pathname === item.href;
             return (
               <Link

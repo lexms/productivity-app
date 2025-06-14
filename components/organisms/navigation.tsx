@@ -17,43 +17,14 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import {
-  BarChart3,
-  Calendar,
-  CheckSquare,
-  ClipboardCheck,
-  Home,
-  MoreHorizontal,
-  Trophy,
-  User,
-  Users,
-  Watch,
-} from "lucide-react";
+  primaryNavigation,
+  secondaryNavigation,
+  allNavigation,
+  getInitials,
+} from "@/lib/navigation-config";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-
-// Primary navigation items (shown in bottom bar)
-const primaryNavigation = [
-  { name: "Dashboard", href: "/", icon: Home },
-  { name: "Tasks", href: "/tasks", icon: CheckSquare },
-  { name: "Check-in", href: "/checkin", icon: ClipboardCheck },
-  { name: "More", href: "#more", icon: MoreHorizontal, isMore: true },
-];
-
-// Secondary navigation items (shown in More menu)
-const secondaryNavigation = [
-  { name: "Schedule", href: "/schedule", icon: Calendar },
-  { name: "Meetings", href: "/meetings", icon: Users },
-  { name: "Wearables", href: "/wearables", icon: Watch },
-  { name: "Analytics", href: "/analytics", icon: BarChart3 },
-  { name: "Leaderboard", href: "/leaderboard", icon: Trophy },
-];
-
-// All navigation items for desktop
-const allNavigation = [
-  ...primaryNavigation.filter((item) => !item.isMore),
-  ...secondaryNavigation,
-];
 
 export function Navigation() {
   const pathname = usePathname();
@@ -78,10 +49,6 @@ export function Navigation() {
   if (!user) {
     return null;
   }
-
-  const getInitials = (email: string) => {
-    return email.split("@")[0].slice(0, 2).toUpperCase();
-  };
 
   return (
     <>
