@@ -22,11 +22,13 @@ import {
   Watch,
   Wifi,
 } from "lucide-react";
+import type React from "react";
 import { useState } from "react";
+import type { WearableDevice } from "@/lib/db/schema";
 
-interface Device {
-  id: string | null;
-  name: string;
+// Extended device interface with connection-specific fields
+interface ConnectedDevice
+  extends Omit<WearableDevice, "createdAt" | "updatedAt" | "userId"> {
   permissions: {
     sleep: boolean;
     heartRate: boolean;
@@ -34,35 +36,37 @@ interface Device {
     stress: boolean;
     location: boolean;
   };
-  connected: boolean;
-  lastSync: string;
+}
+
+// Device discovery specific interface
+interface DiscoveredDevice {
+  id: string;
+  name: string;
+  batteryLevel: number;
+  signalStrength: number;
+}
+
+// Available device types interface
+interface AvailableDevice {
+  id: string;
+  name: string;
+  type: string;
+  icon: React.ComponentType<{ className?: string }>;
 }
 
 interface WearableConnectProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onConnect: (device: Device) => void;
+  onConnect: (device: ConnectedDevice) => void;
+  availableDevices?: AvailableDevice[];
+  discoveredDevices?: DiscoveredDevice[];
 }
 
 export function WearableConnect({
   open,
   onOpenChange,
   onConnect,
-}: WearableConnectProps) {
-  const [step, setStep] = useState(1);
-  const [selectedDevice, setSelectedDevice] = useState<string | null>(null);
-  const [isScanning, setIsScanning] = useState(false);
-  const [isConnecting, setIsConnecting] = useState(false);
-  const [connectionSuccess, setConnectionSuccess] = useState(false);
-  const [dataPermissions, setDataPermissions] = useState({
-    sleep: true,
-    heartRate: true,
-    activity: true,
-    stress: true,
-    location: false,
-  });
-
-  const availableDevices = [
+  availableDevices = [
     { id: "apple-watch", name: "Apple Watch", type: "smartwatch", icon: Watch },
     { id: "fitbit", name: "Fitbit", type: "fitness-tracker", icon: Activity },
     { id: "oura", name: "Oura Ring", type: "ring", icon: Heart },
@@ -76,9 +80,8 @@ export function WearableConnect({
     },
     { id: "google", name: "Google Fit", type: "app", icon: Smartphone },
     { id: "withings", name: "Withings", type: "health-device", icon: Heart },
-  ];
-
-  const discoveredDevices = [
+  ],
+  discoveredDevices = [
     {
       id: "apple-watch-series7",
       name: "Apple Watch Series 7",
@@ -91,7 +94,20 @@ export function WearableConnect({
       batteryLevel: 45,
       signalStrength: 85,
     },
-  ];
+  ],
+}: WearableConnectProps) {
+  const [step, setStep] = useState(1);
+  const [selectedDevice, setSelectedDevice] = useState<string | null>(null);
+  const [isScanning, setIsScanning] = useState(false);
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [connectionSuccess, setConnectionSuccess] = useState(false);
+  const [dataPermissions, setDataPermissions] = useState({
+    sleep: true,
+    heartRate: true,
+    activity: true,
+    stress: true,
+    location: false,
+  });
 
   const handleStartScan = () => {
     setIsScanning(true);
@@ -118,23 +134,37 @@ export function WearableConnect({
   };
 
   const handleFinish = () => {
-    // Create a mock connected device object
-    const connectedDevice = {
+    if (!selectedDevice) return;
+
+    const discoveredDevice = discoveredDevices.find(
+      (d) => d.id === selectedDevice,
+    );
+    if (!discoveredDevice) return;
+
+    // Map discovered device to connected device format
+    const connectedDevice: ConnectedDevice = {
       id: selectedDevice,
-      name:
-        discoveredDevices.find((d) => d.id === selectedDevice)?.name ||
-        "Unknown Device",
+      name: discoveredDevice.name,
+      brand: "whoop", // Default to whoop for now, could be determined from device type
+      model: discoveredDevice.name,
+      lastSync: new Date(),
       permissions: dataPermissions,
-      connected: true,
-      lastSync: new Date().toISOString(),
     };
 
     onConnect(connectedDevice);
     onOpenChange(false);
+
     // Reset state for next time
     setStep(1);
     setSelectedDevice(null);
     setConnectionSuccess(false);
+    setDataPermissions({
+      sleep: true,
+      heartRate: true,
+      activity: true,
+      stress: true,
+      location: false,
+    });
   };
 
   const getSignalStrengthColor = (strength: number) => {

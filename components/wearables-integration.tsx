@@ -2,6 +2,7 @@
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -9,255 +10,203 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Activity,
-  AlertTriangle,
   BarChart3,
-  Battery,
   Brain,
-  Calendar,
   CheckCircle2,
-  Clock,
   Heart,
   Moon,
+  Plus,
   Target,
-  TrendingUp,
   Watch,
   Wifi,
-  WifiOff,
   Zap,
 } from "lucide-react";
 import { useState } from "react";
+import type { WearableDevice, WearableData } from "@/lib/db/schema";
 
-export function WearablesIntegration() {
-  const [connectedDevices, _setConnectedDevices] = useState([
-    {
-      id: 1,
-      name: "Apple Watch Series 9",
-      type: "smartwatch",
-      connected: true,
-      battery: 78,
-      lastSync: "2 min ago",
-    },
-    {
-      id: 2,
-      name: "Oura Ring Gen 3",
-      type: "ring",
-      connected: true,
-      battery: 45,
-      lastSync: "5 min ago",
-    },
-    {
-      id: 3,
-      name: "Fitbit Charge 6",
-      type: "fitness",
-      connected: false,
-      battery: 0,
-      lastSync: "2 hours ago",
-    },
-  ]);
+// Device add form data interface
+interface DeviceAddData {
+  name: string;
+  brand: "whoop" | "garmin" | "appleWatch";
+  model: string;
+}
 
-  // Mock biometric data
-  const sleepData = {
-    lastNight: {
-      duration: 7.2,
-      quality: 82,
-      deepSleep: 1.8,
-      remSleep: 1.4,
-      lightSleep: 4.0,
-      bedtime: "23:15",
-      wakeTime: "06:27",
-      efficiency: 89,
-    },
-    weeklyAverage: {
-      duration: 7.4,
-      quality: 79,
-      trend: "+3%",
-    },
+interface WearablesIntegrationProps {
+  connectedDevices: WearableDevice[];
+  selectedDevice: WearableDevice | null;
+  showAddDevice: boolean;
+  onAddDevice: (deviceData: DeviceAddData) => void;
+  onSelectDevice: (device: WearableDevice) => void;
+  onShowAddDevice: (show: boolean) => void;
+  getDeviceData: (deviceId: string) => WearableData[];
+}
+
+export function WearablesIntegration({
+  connectedDevices,
+  selectedDevice,
+  showAddDevice,
+  onAddDevice,
+  onSelectDevice,
+  onShowAddDevice,
+  getDeviceData,
+}: WearablesIntegrationProps) {
+  const [newDeviceBrand, setNewDeviceBrand] = useState<
+    "whoop" | "garmin" | "appleWatch" | ""
+  >("");
+  const [newDeviceName, setNewDeviceName] = useState("");
+  const [newDeviceModel, setNewDeviceModel] = useState("");
+
+  const handleAddDevice = () => {
+    if (!newDeviceBrand || !newDeviceName || !newDeviceModel) return;
+
+    onAddDevice({
+      name: newDeviceName,
+      brand: newDeviceBrand as "whoop" | "garmin" | "appleWatch",
+      model: newDeviceModel,
+    });
+
+    setNewDeviceBrand("");
+    setNewDeviceName("");
+    setNewDeviceModel("");
   };
 
-  const recoveryData = {
-    current: {
-      score: 85,
-      status: "optimal",
-      hrv: 42,
-      restingHR: 58,
-      trend: "improving",
-    },
-    weekly: [78, 82, 79, 85, 88, 84, 85],
-  };
-
-  const stressData = {
-    current: {
-      level: 2.8,
-      status: "low",
-      trend: "stable",
-    },
-    daily: [
-      { time: "6:00", stress: 1.2, activity: "sleep" },
-      { time: "9:00", stress: 3.5, activity: "commute" },
-      { time: "12:00", stress: 4.2, activity: "meeting" },
-      { time: "15:00", stress: 2.1, activity: "focus work" },
-      { time: "18:00", stress: 3.8, activity: "workout" },
-      { time: "21:00", stress: 1.8, activity: "relaxation" },
-    ],
-  };
-
-  const productivityInsights = [
-    {
-      metric: "Task Completion",
-      correlation: "+23%",
-      insight: "Higher on days with 8+ hours sleep",
-      recommendation: "Maintain consistent bedtime of 11 PM",
-      icon: Target,
-      color: "text-green-600",
-    },
-    {
-      metric: "Focus Duration",
-      correlation: "+18%",
-      insight: "Peaks when HRV is above 40ms",
-      recommendation: "Schedule deep work during high HRV periods",
-      icon: Brain,
-      color: "text-blue-600",
-    },
-    {
-      metric: "Energy Levels",
-      correlation: "-15%",
-      insight: "Decreases with stress levels above 4.0",
-      recommendation: "Take breaks when stress indicators rise",
-      icon: Battery,
-      color: "text-orange-600",
-    },
-    {
-      metric: "Meeting Performance",
-      correlation: "+12%",
-      insight: "Better when recovery score is 80+",
-      recommendation: "Schedule important meetings on high recovery days",
-      icon: TrendingUp,
-      color: "text-purple-600",
-    },
-  ];
-
-  const schedulingRecommendations = [
-    {
-      time: "9:00 AM - 11:00 AM",
-      activity: "Deep Work",
-      reason: "Peak HRV and low stress levels",
-      confidence: 92,
-      status: "optimal",
-    },
-    {
-      time: "2:00 PM - 3:00 PM",
-      activity: "Light Tasks",
-      reason: "Natural energy dip, elevated stress",
-      confidence: 78,
-      status: "caution",
-    },
-    {
-      time: "4:00 PM - 5:00 PM",
-      activity: "Meetings",
-      reason: "Good recovery, moderate stress",
-      confidence: 85,
-      status: "good",
-    },
-    {
-      time: "6:00 PM - 7:00 PM",
-      activity: "Exercise",
-      reason: "Stress release window, good energy",
-      confidence: 88,
-      status: "optimal",
-    },
-  ];
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "optimal":
-        return "text-green-600 bg-green-50 border-green-200";
-      case "good":
-        return "text-blue-600 bg-blue-50 border-blue-200";
-      case "caution":
-        return "text-yellow-600 bg-yellow-50 border-yellow-200";
-      case "poor":
-        return "text-red-600 bg-red-50 border-red-200";
+  const getBrandIcon = (brand: WearableDevice["brand"]) => {
+    switch (brand) {
+      case "whoop":
+        return (
+          <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
+            W
+          </div>
+        );
+      case "garmin":
+        return <Watch className="w-6 h-6 text-blue-600" />;
+      case "appleWatch":
+        return <Watch className="w-6 h-6 text-gray-600" />;
       default:
-        return "text-slate-600 bg-slate-50 border-slate-200";
+        return <Activity className="w-6 h-6" />;
     }
   };
 
-  const formatSleepStage = (hours: number) => {
+  const getBrandName = (brand: WearableDevice["brand"]) => {
+    switch (brand) {
+      case "whoop":
+        return "WHOOP";
+      case "garmin":
+        return "Garmin";
+      case "appleWatch":
+        return "Apple Watch";
+      default:
+        return brand;
+    }
+  };
+
+  const convertMillisToHours = (millis: number) => {
+    const hours = millis / (1000 * 60 * 60);
     const h = Math.floor(hours);
     const m = Math.round((hours - h) * 60);
     return `${h}h ${m}m`;
   };
 
-  return (
-    <div>
-      {/* Connected Devices */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Watch className="w-5 h-5" />
-            Connected Devices
-          </CardTitle>
-          <CardDescription>
-            Manage your wearable devices and sync status
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {connectedDevices.map((device) => (
-              <div
-                key={device.id}
-                className={`p-4 rounded-lg border ${
-                  device.connected
-                    ? "bg-green-50 border-green-200"
-                    : "bg-slate-50 border-slate-200"
-                }`}
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    {device.type === "smartwatch" && (
-                      <Watch className="w-4 h-4" />
-                    )}
-                    {device.type === "ring" && (
-                      <div className="w-4 h-4 rounded-full bg-slate-400" />
-                    )}
-                    {device.type === "fitness" && (
-                      <Activity className="w-4 h-4" />
-                    )}
-                    <span className="font-medium text-sm">{device.name}</span>
-                  </div>
-                  {device.connected ? (
-                    <Wifi className="w-4 h-4 text-green-600" />
-                  ) : (
-                    <WifiOff className="w-4 h-4 text-slate-400" />
-                  )}
-                </div>
-                <div className="space-y-1">
-                  <div className="flex justify-between text-xs">
-                    <span>Battery</span>
-                    <span>{device.battery}%</span>
-                  </div>
-                  <Progress value={device.battery} className="h-1" />
-                  <p className="text-xs text-slate-600">
-                    Last sync: {device.lastSync}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+  const formatDateTime = (dateInput: string | Date) => {
+    const date =
+      typeof dateInput === "string" ? new Date(dateInput) : dateInput;
+    return date.toLocaleString();
+  };
 
-      <Tabs defaultValue="sleep" className="w-full">
+  const renderWhoopData = (deviceData: WearableData[]) => {
+    const sleepData = deviceData.find((d) => d.metadata?.whoopSleep)?.metadata
+      ?.whoopSleep;
+    const recoveryData = deviceData.find((d) => d.metadata?.whoopRecovery)
+      ?.metadata?.whoopRecovery;
+    const strainData = deviceData.find((d) => d.metadata?.whoopStrain)?.metadata
+      ?.whoopStrain;
+
+    if (!sleepData || !recoveryData || !strainData) {
+      return (
+        <Card>
+          <CardContent className="p-6">
+            <p className="text-center text-slate-600">
+              No WHOOP data available
+            </p>
+          </CardContent>
+        </Card>
+      );
+    }
+
+    return (
+      <Tabs defaultValue="insights" className="w-full">
         <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="insights">Insights</TabsTrigger>
           <TabsTrigger value="sleep">Sleep</TabsTrigger>
           <TabsTrigger value="recovery">Recovery</TabsTrigger>
-          <TabsTrigger value="stress">Stress</TabsTrigger>
-          <TabsTrigger value="insights">Insights</TabsTrigger>
+          <TabsTrigger value="strain">Strain</TabsTrigger>
         </TabsList>
+
+        <TabsContent value="insights" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Brain className="w-5 h-5" />
+                WHOOP Insights
+              </CardTitle>
+              <CardDescription>
+                Personalized insights based on your WHOOP data
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <Alert>
+                  <CheckCircle2 className="h-4 w-4" />
+                  <AlertDescription>
+                    <strong>Recovery Insight:</strong> Your HRV is{" "}
+                    {recoveryData.hrvRmssdMilli.toFixed(1)}ms, which is above
+                    your baseline. This indicates excellent recovery - ideal for
+                    challenging workouts or important tasks.
+                  </AlertDescription>
+                </Alert>
+
+                <Alert>
+                  <Moon className="h-4 w-4" />
+                  <AlertDescription>
+                    <strong>Sleep Insight:</strong> Your sleep efficiency is{" "}
+                    {sleepData.sleepEfficiencyPercentage}%, which is excellent.
+                    Your deep sleep percentage is optimal for recovery.
+                  </AlertDescription>
+                </Alert>
+
+                <Alert>
+                  <Zap className="h-4 w-4" />
+                  <AlertDescription>
+                    <strong>Strain Insight:</strong> Your current strain of{" "}
+                    {strainData.strain.toFixed(1)}
+                    suggests moderate activity. Consider balancing with recovery
+                    activities.
+                  </AlertDescription>
+                </Alert>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
         <TabsContent value="sleep" className="space-y-6">
           {/* Sleep Overview */}
@@ -270,14 +219,11 @@ export function WearablesIntegration() {
                       Sleep Duration
                     </p>
                     <p className="text-2xl font-bold text-slate-900">
-                      {sleepData.lastNight.duration}h
+                      {convertMillisToHours(sleepData.totalInBedTimeMilli)}
                     </p>
                   </div>
                   <Moon className="w-8 h-8 text-blue-600" />
                 </div>
-                <p className="text-xs text-slate-600 mt-2">
-                  {sleepData.lastNight.bedtime} - {sleepData.lastNight.wakeTime}
-                </p>
               </CardContent>
             </Card>
 
@@ -286,16 +232,16 @@ export function WearablesIntegration() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-slate-600">
-                      Sleep Quality
+                      Sleep Performance
                     </p>
                     <p className="text-2xl font-bold text-slate-900">
-                      {sleepData.lastNight.quality}%
+                      {sleepData.sleepPerformancePercentage}%
                     </p>
                   </div>
                   <BarChart3 className="w-8 h-8 text-green-600" />
                 </div>
                 <Progress
-                  value={sleepData.lastNight.quality}
+                  value={sleepData.sleepPerformancePercentage}
                   className="mt-2"
                 />
               </CardContent>
@@ -309,7 +255,7 @@ export function WearablesIntegration() {
                       Sleep Efficiency
                     </p>
                     <p className="text-2xl font-bold text-slate-900">
-                      {sleepData.lastNight.efficiency}%
+                      {sleepData.sleepEfficiencyPercentage}%
                     </p>
                   </div>
                   <Target className="w-8 h-8 text-purple-600" />
@@ -323,26 +269,27 @@ export function WearablesIntegration() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-slate-600">
-                      Weekly Avg
+                      Deep Sleep
                     </p>
                     <p className="text-2xl font-bold text-slate-900">
-                      {sleepData.weeklyAverage.duration}h
+                      {convertMillisToHours(
+                        sleepData.totalSlowWaveSleepTimeMilli,
+                      )}
                     </p>
                   </div>
-                  <TrendingUp className="w-8 h-8 text-orange-600" />
+                  <Moon className="w-8 h-8 text-indigo-600" />
                 </div>
-                <p className="text-xs text-green-600 mt-2">
-                  {sleepData.weeklyAverage.trend} vs last week
-                </p>
               </CardContent>
             </Card>
           </div>
 
-          {/* Sleep Stages */}
+          {/* Sleep Stages Breakdown */}
           <Card>
             <CardHeader>
               <CardTitle>Sleep Stages Breakdown</CardTitle>
-              <CardDescription>Last night's sleep composition</CardDescription>
+              <CardDescription>
+                Last night's sleep composition from WHOOP
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -353,12 +300,28 @@ export function WearablesIntegration() {
                   </div>
                   <div className="text-right">
                     <span className="font-bold">
-                      {formatSleepStage(sleepData.lastNight.deepSleep)}
+                      {convertMillisToHours(
+                        sleepData.totalSlowWaveSleepTimeMilli,
+                      )}
                     </span>
-                    <p className="text-xs text-slate-600">25% of total</p>
+                    <p className="text-xs text-slate-600">
+                      {Math.round(
+                        (sleepData.totalSlowWaveSleepTimeMilli /
+                          sleepData.totalInBedTimeMilli) *
+                          100,
+                      )}
+                      % of total
+                    </p>
                   </div>
                 </div>
-                <Progress value={25} className="h-2" />
+                <Progress
+                  value={
+                    (sleepData.totalSlowWaveSleepTimeMilli /
+                      sleepData.totalInBedTimeMilli) *
+                    100
+                  }
+                  className="h-2"
+                />
 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -367,12 +330,26 @@ export function WearablesIntegration() {
                   </div>
                   <div className="text-right">
                     <span className="font-bold">
-                      {formatSleepStage(sleepData.lastNight.remSleep)}
+                      {convertMillisToHours(sleepData.totalRemSleepTimeMilli)}
                     </span>
-                    <p className="text-xs text-slate-600">19% of total</p>
+                    <p className="text-xs text-slate-600">
+                      {Math.round(
+                        (sleepData.totalRemSleepTimeMilli /
+                          sleepData.totalInBedTimeMilli) *
+                          100,
+                      )}
+                      % of total
+                    </p>
                   </div>
                 </div>
-                <Progress value={19} className="h-2" />
+                <Progress
+                  value={
+                    (sleepData.totalRemSleepTimeMilli /
+                      sleepData.totalInBedTimeMilli) *
+                    100
+                  }
+                  className="h-2"
+                />
 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -381,29 +358,32 @@ export function WearablesIntegration() {
                   </div>
                   <div className="text-right">
                     <span className="font-bold">
-                      {formatSleepStage(sleepData.lastNight.lightSleep)}
+                      {convertMillisToHours(sleepData.totalLightSleepTimeMilli)}
                     </span>
-                    <p className="text-xs text-slate-600">56% of total</p>
+                    <p className="text-xs text-slate-600">
+                      {Math.round(
+                        (sleepData.totalLightSleepTimeMilli /
+                          sleepData.totalInBedTimeMilli) *
+                          100,
+                      )}
+                      % of total
+                    </p>
                   </div>
                 </div>
-                <Progress value={56} className="h-2" />
+                <Progress
+                  value={
+                    (sleepData.totalLightSleepTimeMilli /
+                      sleepData.totalInBedTimeMilli) *
+                    100
+                  }
+                  className="h-2"
+                />
               </div>
             </CardContent>
           </Card>
-
-          {/* Sleep Recommendations */}
-          <Alert>
-            <CheckCircle2 className="h-4 w-4" />
-            <AlertDescription>
-              <strong>Sleep Insight:</strong> Your deep sleep percentage is
-              optimal (25%). Maintain your current bedtime routine for continued
-              recovery benefits.
-            </AlertDescription>
-          </Alert>
         </TabsContent>
 
         <TabsContent value="recovery" className="space-y-6">
-          {/* Recovery Overview */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Card>
               <CardContent className="p-6">
@@ -413,24 +393,28 @@ export function WearablesIntegration() {
                       Recovery Score
                     </p>
                     <p className="text-3xl font-bold text-slate-900">
-                      {recoveryData.current.score}
+                      {recoveryData.recoveryScore}
                     </p>
                   </div>
                   <div className="text-right">
                     <Badge
-                      className={getStatusColor(recoveryData.current.status)}
+                      className={
+                        recoveryData.recoveryScore >= 80
+                          ? "text-green-600 bg-green-50 border-green-200"
+                          : recoveryData.recoveryScore >= 60
+                            ? "text-yellow-600 bg-yellow-50 border-yellow-200"
+                            : "text-red-600 bg-red-50 border-red-200"
+                      }
                     >
-                      {recoveryData.current.status}
+                      {recoveryData.recoveryScore >= 80
+                        ? "Optimal"
+                        : recoveryData.recoveryScore >= 60
+                          ? "Good"
+                          : "Low"}
                     </Badge>
-                    <div className="flex items-center gap-1 mt-1">
-                      <TrendingUp className="w-3 h-3 text-green-600" />
-                      <span className="text-xs text-green-600">
-                        {recoveryData.current.trend}
-                      </span>
-                    </div>
                   </div>
                 </div>
-                <Progress value={recoveryData.current.score} className="mt-3" />
+                <Progress value={recoveryData.recoveryScore} className="mt-3" />
               </CardContent>
             </Card>
 
@@ -440,7 +424,7 @@ export function WearablesIntegration() {
                   <div>
                     <p className="text-sm font-medium text-slate-600">HRV</p>
                     <p className="text-2xl font-bold text-slate-900">
-                      {recoveryData.current.hrv}ms
+                      {recoveryData.hrvRmssdMilli.toFixed(1)}ms
                     </p>
                   </div>
                   <Heart className="w-8 h-8 text-red-500" />
@@ -457,7 +441,7 @@ export function WearablesIntegration() {
                       Resting HR
                     </p>
                     <p className="text-2xl font-bold text-slate-900">
-                      {recoveryData.current.restingHR}
+                      {recoveryData.restingHeartRate}
                     </p>
                   </div>
                   <Activity className="w-8 h-8 text-blue-500" />
@@ -466,341 +450,236 @@ export function WearablesIntegration() {
               </CardContent>
             </Card>
           </div>
-
-          {/* Weekly Recovery Trend */}
-          <Card>
-            <CardHeader>
-              <CardTitle>7-Day Recovery Trend</CardTitle>
-              <CardDescription>
-                Track your recovery patterns over time
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {recoveryData.weekly.map((score, index) => {
-                  const days = [
-                    "Mon",
-                    "Tue",
-                    "Wed",
-                    "Thu",
-                    "Fri",
-                    "Sat",
-                    "Sun",
-                  ];
-                  const isToday = index === 6;
-                  return (
-                    <div key={days[index]} className="flex items-center gap-4">
-                      <div className="w-12 text-sm font-medium text-slate-600">
-                        {days[index]}
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex justify-between text-sm mb-1">
-                          <span>Recovery Score</span>
-                          <span
-                            className={
-                              isToday
-                                ? "font-bold text-slate-900"
-                                : "text-slate-600"
-                            }
-                          >
-                            {score}
-                          </span>
-                        </div>
-                        <Progress
-                          value={score}
-                          className={`h-2 ${isToday ? "ring-2 ring-blue-200" : ""}`}
-                        />
-                      </div>
-                      <div className="w-16 text-right">
-                        <Badge
-                          variant="outline"
-                          className={
-                            score >= 80
-                              ? "text-green-700 border-green-200"
-                              : score >= 60
-                                ? "text-yellow-700 border-yellow-200"
-                                : "text-red-700 border-red-200"
-                          }
-                        >
-                          {score >= 80
-                            ? "Optimal"
-                            : score >= 60
-                              ? "Good"
-                              : "Low"}
-                        </Badge>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Alert>
-            <Heart className="h-4 w-4" />
-            <AlertDescription>
-              <strong>Recovery Insight:</strong> Your HRV is 15% above your
-              baseline, indicating excellent recovery. This is an ideal day for
-              challenging workouts or important tasks.
-            </AlertDescription>
-          </Alert>
         </TabsContent>
 
-        <TabsContent value="stress" className="space-y-6">
-          {/* Current Stress Level */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Zap className="w-5 h-5" />
-                Current Stress Level
-              </CardTitle>
-              <CardDescription>
-                Real-time stress monitoring based on HRV and heart rate
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <p className="text-4xl font-bold text-slate-900">
-                    {stressData.current.level}
-                  </p>
-                  <p className="text-sm text-slate-600">out of 10</p>
-                </div>
-                <div className="text-right">
-                  <Badge className={getStatusColor(stressData.current.status)}>
-                    {stressData.current.status} stress
-                  </Badge>
-                  <p className="text-xs text-slate-600 mt-1">
-                    Trend: {stressData.current.trend}
-                  </p>
-                </div>
-              </div>
-              <Progress value={stressData.current.level * 10} className="h-3" />
-              <div className="flex justify-between text-xs text-slate-600 mt-2">
-                <span>Relaxed (0-2)</span>
-                <span>Moderate (3-6)</span>
-                <span>High (7-10)</span>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Daily Stress Pattern */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Daily Stress Pattern</CardTitle>
-              <CardDescription>
-                How your stress levels change throughout the day
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {stressData.daily.map((entry) => (
-                  <div key={entry.time} className="flex items-center gap-4">
-                    <div className="w-16 text-sm font-medium text-slate-600">
-                      {entry.time}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex justify-between text-sm mb-1">
-                        <span className="capitalize">{entry.activity}</span>
-                        <span className="font-medium">{entry.stress}</span>
-                      </div>
-                      <div className="h-2 bg-slate-200 rounded-full overflow-hidden">
-                        <div
-                          className={`h-full rounded-full transition-all ${
-                            entry.stress <= 2
-                              ? "bg-green-500"
-                              : entry.stress <= 4
-                                ? "bg-yellow-500"
-                                : "bg-red-500"
-                          }`}
-                          style={{ width: `${(entry.stress / 10) * 100}%` }}
-                        />
-                      </div>
-                    </div>
-                    <div className="w-20 text-right">
-                      <Badge
-                        variant="outline"
-                        className={
-                          entry.stress <= 2
-                            ? "text-green-700 border-green-200"
-                            : entry.stress <= 4
-                              ? "text-yellow-700 border-yellow-200"
-                              : "text-red-700 border-red-200"
-                        }
-                      >
-                        {entry.stress <= 2
-                          ? "Low"
-                          : entry.stress <= 4
-                            ? "Moderate"
-                            : "High"}
-                      </Badge>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Stress Management Tips */}
+        <TabsContent value="strain" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Alert>
-              <CheckCircle2 className="h-4 w-4" />
-              <AlertDescription>
-                <strong>Good News:</strong> Your stress levels are well-managed
-                today. Your afternoon focus session shows optimal stress for
-                productivity.
-              </AlertDescription>
-            </Alert>
-            <Alert>
-              <AlertTriangle className="h-4 w-4" />
-              <AlertDescription>
-                <strong>Tip:</strong> Consider a 5-minute breathing exercise
-                before your 3 PM meeting to maintain low stress levels.
-              </AlertDescription>
-            </Alert>
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-slate-600">
+                      Daily Strain
+                    </p>
+                    <p className="text-3xl font-bold text-slate-900">
+                      {strainData.strain.toFixed(1)}
+                    </p>
+                  </div>
+                  <Zap className="w-8 h-8 text-orange-600" />
+                </div>
+                <Progress
+                  value={(strainData.strain / 21) * 100}
+                  className="mt-3"
+                />
+                <p className="text-xs text-slate-600 mt-2">
+                  Moderate strain level
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-slate-600">
+                      Avg Heart Rate
+                    </p>
+                    <p className="text-2xl font-bold text-slate-900">
+                      {strainData.averageHeartRate} bpm
+                    </p>
+                  </div>
+                  <Heart className="w-8 h-8 text-red-500" />
+                </div>
+                <p className="text-xs text-slate-600 mt-2">Today's average</p>
+              </CardContent>
+            </Card>
           </div>
         </TabsContent>
-
-        <TabsContent value="insights" className="space-y-6">
-          {/* Productivity-Biometrics Correlations */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <BarChart3 className="w-5 h-5" />
-                Productivity-Biometrics Insights
-              </CardTitle>
-              <CardDescription>
-                How your physical metrics impact your performance
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {productivityInsights.map((insight) => (
-                  <div
-                    key={insight.title}
-                    className="p-4 bg-slate-50 rounded-lg border"
-                  >
-                    <div className="flex items-start gap-3">
-                      <insight.icon
-                        className={`w-6 h-6 ${insight.color} mt-1`}
-                      />
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <h4 className="font-semibold text-slate-900">
-                            {insight.metric}
-                          </h4>
-                          <Badge className="bg-green-100 text-green-800">
-                            {insight.correlation}
-                          </Badge>
-                        </div>
-                        <p className="text-sm text-slate-600 mb-2">
-                          {insight.insight}
-                        </p>
-                        <p className="text-sm font-medium text-slate-900">
-                          💡 {insight.recommendation}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* AI-Powered Scheduling Recommendations */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Calendar className="w-5 h-5" />
-                Today's Scheduling Recommendations
-              </CardTitle>
-              <CardDescription>
-                Optimize your schedule based on your current biometric readiness
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {schedulingRecommendations.map((rec) => (
-                  <div
-                    key={rec.time}
-                    className="flex items-center justify-between p-4 bg-white rounded-lg border"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="text-center">
-                        <Clock className="w-5 h-5 text-slate-600 mx-auto mb-1" />
-                        <p className="text-sm font-medium text-slate-900">
-                          {rec.time}
-                        </p>
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-slate-900 mb-1">
-                          {rec.activity}
-                        </h4>
-                        <p className="text-sm text-slate-600">{rec.reason}</p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <Badge className={getStatusColor(rec.status)}>
-                        {rec.status}
-                      </Badge>
-                      <p className="text-xs text-slate-600 mt-1">
-                        {rec.confidence}% confidence
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Weekly Biometric Summary */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Weekly Biometric Summary</CardTitle>
-              <CardDescription>
-                Key trends and patterns from this week
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="text-center p-4 bg-green-50 rounded-lg border border-green-200">
-                  <Moon className="w-8 h-8 text-green-600 mx-auto mb-2" />
-                  <h4 className="font-semibold text-green-900 mb-1">
-                    Sleep Quality
-                  </h4>
-                  <p className="text-2xl font-bold text-green-900">82%</p>
-                  <p className="text-sm text-green-700">+5% vs last week</p>
-                </div>
-                <div className="text-center p-4 bg-blue-50 rounded-lg border border-blue-200">
-                  <Heart className="w-8 h-8 text-blue-600 mx-auto mb-2" />
-                  <h4 className="font-semibold text-blue-900 mb-1">Recovery</h4>
-                  <p className="text-2xl font-bold text-blue-900">84</p>
-                  <p className="text-sm text-blue-700">Consistently high</p>
-                </div>
-                <div className="text-center p-4 bg-purple-50 rounded-lg border border-purple-200">
-                  <Zap className="w-8 h-8 text-purple-600 mx-auto mb-2" />
-                  <h4 className="font-semibold text-purple-900 mb-1">
-                    Stress Management
-                  </h4>
-                  <p className="text-2xl font-bold text-purple-900">2.8</p>
-                  <p className="text-sm text-purple-700">Well controlled</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Action Items */}
-          <Alert>
-            <Brain className="h-4 w-4" />
-            <AlertDescription>
-              <strong>AI Recommendation:</strong> Based on your biometric
-              patterns, schedule your most challenging tasks between 9-11 AM
-              when your HRV peaks and stress is lowest. Consider a 20-minute
-              walk at 2 PM to maintain afternoon productivity.
-            </AlertDescription>
-          </Alert>
-        </TabsContent>
       </Tabs>
+    );
+  };
+
+  const renderDeviceSpecificData = (device: WearableDevice) => {
+    const deviceData = getDeviceData(device.id);
+
+    switch (device.brand) {
+      case "whoop":
+        return renderWhoopData(deviceData);
+      case "garmin":
+        return (
+          <Card>
+            <CardContent className="p-6">
+              <p className="text-center text-slate-600">
+                Garmin integration coming soon...
+              </p>
+            </CardContent>
+          </Card>
+        );
+      case "appleWatch":
+        return (
+          <Card>
+            <CardContent className="p-6">
+              <p className="text-center text-slate-600">
+                Apple Watch integration coming soon...
+              </p>
+            </CardContent>
+          </Card>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Add Device Dialog */}
+      <Dialog open={showAddDevice} onOpenChange={onShowAddDevice}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Add Wearable Device</DialogTitle>
+            <DialogDescription>
+              Connect a new wearable device to track your health metrics
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="brand">Brand</Label>
+              <Select
+                value={newDeviceBrand}
+                onValueChange={(value) => setNewDeviceBrand(value as any)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select device brand" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="whoop">WHOOP</SelectItem>
+                  <SelectItem value="garmin" disabled>
+                    Garmin (Coming Soon)
+                  </SelectItem>
+                  <SelectItem value="appleWatch" disabled>
+                    Apple Watch (Coming Soon)
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="name">Device Name</Label>
+              <Input
+                id="name"
+                value={newDeviceName}
+                onChange={(e) => setNewDeviceName(e.target.value)}
+                placeholder="e.g., My WHOOP 4.0"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="model">Model</Label>
+              <Input
+                id="model"
+                value={newDeviceModel}
+                onChange={(e) => setNewDeviceModel(e.target.value)}
+                placeholder="e.g., WHOOP 4.0"
+              />
+            </div>
+          </div>
+
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={() => onShowAddDevice(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleAddDevice}>Add Device</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Connected Devices */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle>Connected Devices</CardTitle>
+              <CardDescription>
+                Manage your connected wearable devices
+              </CardDescription>
+            </div>
+            <Button onClick={() => onShowAddDevice(true)}>
+              <Plus className="w-4 h-4 mr-2" />
+              Add Device
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent>
+          {connectedDevices.length === 0 ? (
+            <div className="text-center py-8">
+              <Watch className="w-12 h-12 text-slate-400 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-slate-900 mb-2">
+                No devices connected
+              </h3>
+              <p className="text-slate-600 mb-4">
+                Connect your first wearable device to start tracking your
+                biometric data
+              </p>
+              <Button onClick={() => onShowAddDevice(true)}>
+                <Plus className="w-4 h-4 mr-2" />
+                Add Your First Device
+              </Button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {connectedDevices.map((device) => (
+                <button
+                  key={device.id}
+                  type="button"
+                  className={`w-full text-left p-4 rounded-lg border cursor-pointer transition-colors ${
+                    selectedDevice?.id === device.id
+                      ? "bg-blue-50 border-blue-200 ring-2 ring-blue-200"
+                      : "bg-green-50 border-green-200 hover:bg-green-100"
+                  }`}
+                  onClick={() => onSelectDevice(device)}
+                  aria-label={`Select ${device.name} device`}
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      {getBrandIcon(device.brand)}
+                      <span className="font-medium text-sm">{device.name}</span>
+                    </div>
+                    <Wifi className="w-4 h-4 text-green-600" />
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-xs text-slate-600">
+                      {getBrandName(device.brand)} • {device.model}
+                    </p>
+                    <p className="text-xs text-slate-600">
+                      Last sync:{" "}
+                      {device.lastSync
+                        ? formatDateTime(device.lastSync)
+                        : "Never"}
+                    </p>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Device-Specific Data */}
+      {selectedDevice && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              {getBrandIcon(selectedDevice.brand)}
+              {selectedDevice.name} Data
+            </CardTitle>
+            <CardDescription>
+              {getBrandName(selectedDevice.brand)} biometric data and insights
+            </CardDescription>
+          </CardHeader>
+          <CardContent>{renderDeviceSpecificData(selectedDevice)}</CardContent>
+        </Card>
+      )}
     </div>
   );
 }
