@@ -1,32 +1,42 @@
-"use client"
+"use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { getTimeOfDay, getOptimalActivities, type TimeOfDay } from "@/utils/time-utils"
-import { Calendar, Clock, Zap, ArrowRight } from "lucide-react"
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  type TimeOfDay,
+  getOptimalActivities,
+  getTimeOfDay,
+} from "@/utils/time-utils";
+import { ArrowRight, Calendar, Clock, Zap } from "lucide-react";
 
 interface ScheduleIntegrationProps {
   checkinData?: {
-    energy: number[]
-    mood: number[]
-    focus: number[]
-    timeOfDay: TimeOfDay
-  }
+    energy: number[];
+    mood: number[];
+    focus: number[];
+    timeOfDay: TimeOfDay;
+  };
 }
 
 export function ScheduleIntegration({ checkinData }: ScheduleIntegrationProps) {
-  const currentTime = getTimeOfDay()
-  const optimalActivities = getOptimalActivities(currentTime)
+  const currentTime = getTimeOfDay();
+  const _optimalActivities = getOptimalActivities(currentTime);
 
   const getScheduleSuggestions = () => {
-    if (!checkinData) return []
+    if (!checkinData) return [];
 
-    const energy = checkinData.energy[0]
-    const mood = checkinData.mood[0]
-    const focus = checkinData.focus[0]
+    const energy = checkinData.energy[0];
+    const mood = checkinData.mood[0];
+    const focus = checkinData.focus[0];
 
-    const suggestions = []
+    const suggestions = [];
 
     if (energy >= 8 && focus >= 7) {
       suggestions.push({
@@ -34,27 +44,27 @@ export function ScheduleIntegration({ checkinData }: ScheduleIntegrationProps) {
         activity: "Deep Work Session",
         duration: "2 hours",
         reasoning: "High energy and focus - perfect for complex tasks",
-      })
+      });
     } else if (energy >= 6 && mood >= 7) {
       suggestions.push({
         type: "collaborative",
         activity: "Team Meetings",
         duration: "1 hour",
         reasoning: "Good energy and mood - ideal for collaboration",
-      })
+      });
     } else if (energy < 6) {
       suggestions.push({
         type: "admin",
         activity: "Administrative Tasks",
         duration: "30 minutes",
         reasoning: "Lower energy - handle lighter tasks",
-      })
+      });
     }
 
-    return suggestions
-  }
+    return suggestions;
+  };
 
-  const suggestions = getScheduleSuggestions()
+  const suggestions = getScheduleSuggestions();
 
   return (
     <Card>
@@ -63,7 +73,9 @@ export function ScheduleIntegration({ checkinData }: ScheduleIntegrationProps) {
           <Calendar className="w-5 h-5" />
           Schedule Integration
         </CardTitle>
-        <CardDescription>AI-powered schedule adjustments based on your check-in</CardDescription>
+        <CardDescription>
+          AI-powered schedule adjustments based on your check-in
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {checkinData ? (
@@ -93,19 +105,27 @@ export function ScheduleIntegration({ checkinData }: ScheduleIntegrationProps) {
             {/* Schedule Suggestions */}
             {suggestions.length > 0 && (
               <div className="space-y-3">
-                <h4 className="text-sm font-medium">Recommended Next Activities</h4>
-                {suggestions.map((suggestion, index) => (
-                  <div key={index} className="p-3 bg-blue-50 rounded-lg border border-blue-200">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <Zap className="w-4 h-4 text-blue-600" />
-                        <span className="font-medium text-blue-900">{suggestion.activity}</span>
+                <h4 className="text-sm font-medium">
+                  Recommended Next Activities
+                </h4>
+                {suggestions.map((suggestion) => (
+                  <div
+                    key={suggestion.id}
+                    className="p-3 bg-blue-50 rounded-lg border border-blue-200"
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="mt-1">
+                        <div className="w-2 h-2 rounded-full bg-blue-500" />
                       </div>
-                      <Badge variant="outline" className="text-blue-700">
-                        {suggestion.duration}
-                      </Badge>
+                      <div>
+                        <h4 className="font-medium text-slate-900">
+                          {suggestion.activity}
+                        </h4>
+                        <p className="text-sm text-slate-600">
+                          {suggestion.reasoning}
+                        </p>
+                      </div>
                     </div>
-                    <p className="text-sm text-blue-800">{suggestion.reasoning}</p>
                   </div>
                 ))}
               </div>
@@ -126,10 +146,12 @@ export function ScheduleIntegration({ checkinData }: ScheduleIntegrationProps) {
         ) : (
           <div className="text-center py-6">
             <Clock className="w-8 h-8 text-slate-400 mx-auto mb-2" />
-            <p className="text-sm text-slate-600">Complete a check-in to get personalized schedule suggestions</p>
+            <p className="text-sm text-slate-600">
+              Complete a check-in to get personalized schedule suggestions
+            </p>
           </div>
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

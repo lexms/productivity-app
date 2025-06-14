@@ -1,13 +1,8 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Badge } from "@/components/ui/badge"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -15,24 +10,46 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Progress } from "@/components/ui/progress"
-import { Plus, Clock, Play, Pause, CheckCircle2, Circle, Star, Calendar, Filter, MoreHorizontal } from "lucide-react"
-import { TaskDetail } from "./task-detail"
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Calendar,
+  CheckCircle2,
+  Circle,
+  Clock,
+  Filter,
+  MoreHorizontal,
+  Pause,
+  Play,
+  Plus,
+  Star,
+} from "lucide-react";
+import { useState } from "react";
+import { TaskDetail } from "./task-detail";
 
 interface Task {
-  id: string
-  title: string
-  description: string
-  priority: "low" | "medium" | "high"
-  category: string
-  status: "pending" | "in-progress" | "completed" | "skipped"
-  estimatedDuration: number
-  actualDuration?: number
-  points: number
-  scheduledDate: string
-  timerActive: boolean
-  timerSeconds: number
+  id: string;
+  title: string;
+  description: string;
+  priority: "low" | "medium" | "high";
+  category: string;
+  status: "pending" | "in-progress" | "completed" | "skipped";
+  estimatedDuration: number;
+  actualDuration?: number;
+  points: number;
+  scheduledDate: string;
+  timerActive: boolean;
+  timerSeconds: number;
 }
 
 export function TaskManager() {
@@ -40,7 +57,8 @@ export function TaskManager() {
     {
       id: "1",
       title: "Complete project proposal",
-      description: "Draft and review the Q1 project proposal for client presentation",
+      description:
+        "Draft and review the Q1 project proposal for client presentation",
       priority: "high",
       category: "Work",
       status: "in-progress",
@@ -78,62 +96,63 @@ export function TaskManager() {
       timerActive: false,
       timerSeconds: 0,
     },
-  ])
+  ]);
 
-  const [filter, setFilter] = useState("all")
+  const [filter, setFilter] = useState("all");
   const [newTask, setNewTask] = useState({
     title: "",
     description: "",
     priority: "medium" as const,
     category: "",
     estimatedDuration: 30,
-  })
-  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null)
-  const [taskDetailOpen, setTaskDetailOpen] = useState(false)
+  });
+  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
+  const [taskDetailOpen, setTaskDetailOpen] = useState(false);
 
   const priorityColors = {
     low: "bg-green-100 text-green-800",
     medium: "bg-yellow-100 text-yellow-800",
     high: "bg-red-100 text-red-800",
-  }
+  };
 
   const statusColors = {
     pending: "bg-slate-100 text-slate-800",
     "in-progress": "bg-blue-100 text-blue-800",
     completed: "bg-green-100 text-green-800",
     skipped: "bg-gray-100 text-gray-800",
-  }
+  };
 
   const filteredTasks = tasks.filter((task) => {
-    if (filter === "all") return true
-    return task.status === filter
-  })
+    if (filter === "all") return true;
+    return task.status === filter;
+  });
 
   const toggleTaskStatus = (taskId: string) => {
     setTasks(
       tasks.map((task) => {
         if (task.id === taskId) {
-          const newStatus = task.status === "completed" ? "pending" : "completed"
-          return { ...task, status: newStatus }
+          const newStatus =
+            task.status === "completed" ? "pending" : "completed";
+          return { ...task, status: newStatus };
         }
-        return task
+        return task;
       }),
-    )
-  }
+    );
+  };
 
   const toggleTimer = (taskId: string) => {
     setTasks(
       tasks.map((task) => {
         if (task.id === taskId) {
-          return { ...task, timerActive: !task.timerActive }
+          return { ...task, timerActive: !task.timerActive };
         }
-        return task
+        return task;
       }),
-    )
-  }
+    );
+  };
 
   const addTask = () => {
-    if (!newTask.title) return
+    if (!newTask.title) return;
 
     const task: Task = {
       id: Date.now().toString(),
@@ -147,48 +166,57 @@ export function TaskManager() {
       scheduledDate: new Date().toISOString().split("T")[0],
       timerActive: false,
       timerSeconds: 0,
-    }
+    };
 
-    setTasks([...tasks, task])
+    setTasks([...tasks, task]);
     setNewTask({
       title: "",
       description: "",
       priority: "medium",
       category: "",
       estimatedDuration: 30,
-    })
-  }
+    });
+  };
 
   const openTaskDetail = (taskId: string) => {
-    setSelectedTaskId(taskId)
-    setTaskDetailOpen(true)
-  }
+    setSelectedTaskId(taskId);
+    setTaskDetailOpen(true);
+  };
 
   const handleTaskSave = (updatedTask: Task) => {
-    setTasks(tasks.map((task) => (task.id === updatedTask.id ? updatedTask : task)))
-  }
+    setTasks(
+      tasks.map((task) => (task.id === updatedTask.id ? updatedTask : task)),
+    );
+  };
 
   const handleTaskDelete = (taskId: string) => {
-    setTasks(tasks.filter((task) => task.id !== taskId))
-    setTaskDetailOpen(false)
-  }
+    setTasks(tasks.filter((task) => task.id !== taskId));
+    setTaskDetailOpen(false);
+  };
 
   const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60)
-    const secs = seconds % 60
-    return `${mins}:${secs.toString().padStart(2, "0")}`
-  }
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  };
 
-  const completedTasks = tasks.filter((task) => task.status === "completed").length
-  const totalTasks = tasks.length
-  const completionRate = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0
+  const completedTasks = tasks.filter(
+    (task) => task.status === "completed",
+  ).length;
+  const totalTasks = tasks.length;
+  const completionRate =
+    totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="flex-1 min-w-0">
-          <h2 className="text-xl sm:text-2xl font-bold break-words">Task Manager</h2>
-          <p className="text-slate-600 text-sm sm:text-base">Organize and track your daily tasks</p>
+          <h2 className="text-xl sm:text-2xl font-bold break-words">
+            Task Manager
+          </h2>
+          <p className="text-slate-600 text-sm sm:text-base">
+            Organize and track your daily tasks
+          </p>
         </div>
         <Dialog>
           <DialogTrigger asChild>
@@ -200,7 +228,9 @@ export function TaskManager() {
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
               <DialogTitle>Add New Task</DialogTitle>
-              <DialogDescription>Create a new task to add to your list.</DialogDescription>
+              <DialogDescription>
+                Create a new task to add to your list.
+              </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
               <div className="space-y-2">
@@ -208,7 +238,9 @@ export function TaskManager() {
                 <Input
                   id="title"
                   value={newTask.title}
-                  onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
+                  onChange={(e) =>
+                    setNewTask({ ...newTask, title: e.target.value })
+                  }
                   placeholder="Enter task title"
                 />
               </div>
@@ -217,7 +249,9 @@ export function TaskManager() {
                 <Textarea
                   id="description"
                   value={newTask.description}
-                  onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
+                  onChange={(e) =>
+                    setNewTask({ ...newTask, description: e.target.value })
+                  }
                   placeholder="Enter task description"
                   rows={3}
                 />
@@ -227,7 +261,12 @@ export function TaskManager() {
                   <Label htmlFor="priority">Priority</Label>
                   <Select
                     value={newTask.priority}
-                    onValueChange={(value: "low" | "medium" | "high") => setNewTask({ ...newTask, priority: value })}
+                    onValueChange={(value) =>
+                      setNewTask({
+                        ...newTask,
+                        priority: value as "low" | "medium" | "high",
+                      })
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select priority" />
@@ -244,7 +283,9 @@ export function TaskManager() {
                   <Input
                     id="category"
                     value={newTask.category}
-                    onChange={(e) => setNewTask({ ...newTask, category: e.target.value })}
+                    onChange={(e) =>
+                      setNewTask({ ...newTask, category: e.target.value })
+                    }
                     placeholder="e.g., Work, Personal"
                   />
                 </div>
@@ -255,7 +296,12 @@ export function TaskManager() {
                   id="duration"
                   type="number"
                   value={newTask.estimatedDuration}
-                  onChange={(e) => setNewTask({ ...newTask, estimatedDuration: Number.parseInt(e.target.value) || 30 })}
+                  onChange={(e) =>
+                    setNewTask({
+                      ...newTask,
+                      estimatedDuration: Number.parseInt(e.target.value) || 30,
+                    })
+                  }
                   min="5"
                   max="480"
                 />
@@ -288,7 +334,9 @@ export function TaskManager() {
             <div className="flex items-center justify-between">
               <div className="flex-1 min-w-0">
                 <p className="text-xs sm:text-sm text-slate-600">Completed</p>
-                <p className="text-xl sm:text-2xl font-bold">{completedTasks}</p>
+                <p className="text-xl sm:text-2xl font-bold">
+                  {completedTasks}
+                </p>
               </div>
               <div className="w-10 h-10 sm:w-12 sm:h-12 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
                 <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
@@ -301,8 +349,12 @@ export function TaskManager() {
           <CardContent className="p-3 sm:p-4">
             <div className="flex items-center justify-between">
               <div className="flex-1 min-w-0">
-                <p className="text-xs sm:text-sm text-slate-600">Completion Rate</p>
-                <p className="text-xl sm:text-2xl font-bold">{Math.round(completionRate)}%</p>
+                <p className="text-xs sm:text-sm text-slate-600">
+                  Completion Rate
+                </p>
+                <p className="text-xl sm:text-2xl font-bold">
+                  {Math.round(completionRate)}%
+                </p>
               </div>
               <div className="w-10 h-10 sm:w-12 sm:h-12 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
                 <Star className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
@@ -348,21 +400,37 @@ export function TaskManager() {
                   </Button>
                   <div className="flex-1 min-w-0">
                     <div className="mb-2">
-                      <h3
-                        className={`font-medium cursor-pointer hover:text-blue-600 mb-2 break-words ${
-                          task.status === "completed" ? "line-through text-slate-500" : ""
+                      <button
+                        type="button"
+                        className={`font-medium text-left cursor-pointer hover:text-blue-600 mb-2 break-words bg-transparent border-none p-0 w-full ${
+                          task.status === "completed"
+                            ? "line-through text-slate-500"
+                            : ""
                         }`}
                         onClick={() => openTaskDetail(task.id)}
+                        aria-label={`Open details for task: ${task.title}`}
                       >
-                        {task.title}
-                      </h3>
+                        <h3 className="font-medium">{task.title}</h3>
+                      </button>
                       <div className="flex flex-wrap items-center gap-1 sm:gap-2">
-                        <Badge className={`${priorityColors[task.priority]} text-xs`}>{task.priority}</Badge>
-                        <Badge className={`${statusColors[task.status]} text-xs`}>{task.status.replace("-", " ")}</Badge>
-                        <Badge variant="outline" className="text-xs">{task.category}</Badge>
+                        <Badge
+                          className={`${priorityColors[task.priority]} text-xs`}
+                        >
+                          {task.priority}
+                        </Badge>
+                        <Badge
+                          className={`${statusColors[task.status]} text-xs`}
+                        >
+                          {task.status.replace("-", " ")}
+                        </Badge>
+                        <Badge variant="outline" className="text-xs">
+                          {task.category}
+                        </Badge>
                       </div>
                     </div>
-                    <p className="text-sm text-slate-600 mb-3 break-words">{task.description}</p>
+                    <p className="text-sm text-slate-600 mb-3 break-words">
+                      {task.description}
+                    </p>
                     <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-sm text-slate-500">
                       <div className="flex items-center gap-1">
                         <Clock className="w-4 h-4 flex-shrink-0" />
@@ -374,7 +442,9 @@ export function TaskManager() {
                       </div>
                       <div className="flex items-center gap-1">
                         <Calendar className="w-4 h-4 flex-shrink-0" />
-                        <span className="truncate">{new Date(task.scheduledDate).toLocaleDateString()}</span>
+                        <span className="truncate">
+                          {new Date(task.scheduledDate).toLocaleDateString()}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -382,18 +452,29 @@ export function TaskManager() {
                 <div className="flex items-center justify-between sm:justify-end gap-2 sm:flex-col sm:items-end">
                   {task.status === "in-progress" && (
                     <div className="flex items-center gap-2 bg-blue-50 px-3 py-2 rounded-md">
-                      <span className="text-sm font-mono whitespace-nowrap">{formatTime(task.timerSeconds)}</span>
+                      <span className="text-sm font-mono whitespace-nowrap">
+                        {formatTime(task.timerSeconds)}
+                      </span>
                       <Button
                         size="sm"
                         variant={task.timerActive ? "destructive" : "default"}
                         onClick={() => toggleTimer(task.id)}
                         className="h-7 px-2 flex-shrink-0"
                       >
-                        {task.timerActive ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3" />}
+                        {task.timerActive ? (
+                          <Pause className="w-3 h-3" />
+                        ) : (
+                          <Play className="w-3 h-3" />
+                        )}
                       </Button>
                     </div>
                   )}
-                  <Button variant="ghost" size="sm" onClick={() => openTaskDetail(task.id)} className="flex-shrink-0">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => openTaskDetail(task.id)}
+                    className="flex-shrink-0"
+                  >
                     <MoreHorizontal className="w-4 h-4" />
                   </Button>
                 </div>
@@ -406,9 +487,13 @@ export function TaskManager() {
           <Card>
             <CardContent className="p-8 text-center">
               <Circle className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-slate-900 mb-2">No tasks found</h3>
+              <h3 className="text-lg font-medium text-slate-900 mb-2">
+                No tasks found
+              </h3>
               <p className="text-slate-600 mb-4">
-                {filter === "all" ? "Get started by adding your first task." : `No ${filter} tasks at the moment.`}
+                {filter === "all"
+                  ? "Get started by adding your first task."
+                  : `No ${filter} tasks at the moment.`}
               </p>
               {filter === "all" && (
                 <Dialog>
@@ -421,7 +506,9 @@ export function TaskManager() {
                   <DialogContent className="sm:max-w-[425px]">
                     <DialogHeader>
                       <DialogTitle>Add New Task</DialogTitle>
-                      <DialogDescription>Create a new task to add to your list.</DialogDescription>
+                      <DialogDescription>
+                        Create a new task to add to your list.
+                      </DialogDescription>
                     </DialogHeader>
                     <div className="space-y-4 py-4">
                       <div className="space-y-2">
@@ -429,7 +516,9 @@ export function TaskManager() {
                         <Input
                           id="title"
                           value={newTask.title}
-                          onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
+                          onChange={(e) =>
+                            setNewTask({ ...newTask, title: e.target.value })
+                          }
                           placeholder="Enter task title"
                         />
                       </div>
@@ -438,7 +527,12 @@ export function TaskManager() {
                         <Textarea
                           id="description"
                           value={newTask.description}
-                          onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
+                          onChange={(e) =>
+                            setNewTask({
+                              ...newTask,
+                              description: e.target.value,
+                            })
+                          }
                           placeholder="Enter task description"
                           rows={3}
                         />
@@ -448,8 +542,11 @@ export function TaskManager() {
                           <Label htmlFor="priority">Priority</Label>
                           <Select
                             value={newTask.priority}
-                            onValueChange={(value: "low" | "medium" | "high") =>
-                              setNewTask({ ...newTask, priority: value })
+                            onValueChange={(value) =>
+                              setNewTask({
+                                ...newTask,
+                                priority: value as "low" | "medium" | "high",
+                              })
                             }
                           >
                             <SelectTrigger>
@@ -467,19 +564,30 @@ export function TaskManager() {
                           <Input
                             id="category"
                             value={newTask.category}
-                            onChange={(e) => setNewTask({ ...newTask, category: e.target.value })}
+                            onChange={(e) =>
+                              setNewTask({
+                                ...newTask,
+                                category: e.target.value,
+                              })
+                            }
                             placeholder="e.g., Work, Personal"
                           />
                         </div>
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="duration">Estimated Duration (minutes)</Label>
+                        <Label htmlFor="duration">
+                          Estimated Duration (minutes)
+                        </Label>
                         <Input
                           id="duration"
                           type="number"
                           value={newTask.estimatedDuration}
                           onChange={(e) =>
-                            setNewTask({ ...newTask, estimatedDuration: Number.parseInt(e.target.value) || 30 })
+                            setNewTask({
+                              ...newTask,
+                              estimatedDuration:
+                                Number.parseInt(e.target.value) || 30,
+                            })
                           }
                           min="5"
                           max="480"
@@ -507,5 +615,5 @@ export function TaskManager() {
         />
       )}
     </div>
-  )
+  );
 }

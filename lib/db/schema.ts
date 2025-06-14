@@ -1,5 +1,16 @@
-import { pgTable, text, integer, boolean, timestamp, decimal, jsonb, uuid, varchar, date } from "drizzle-orm/pg-core"
-import { relations } from "drizzle-orm"
+import { relations } from "drizzle-orm";
+import {
+  boolean,
+  date,
+  decimal,
+  integer,
+  jsonb,
+  pgTable,
+  text,
+  timestamp,
+  uuid,
+  varchar,
+} from "drizzle-orm/pg-core";
 
 // Users table
 export const users = pgTable("users", {
@@ -7,14 +18,14 @@ export const users = pgTable("users", {
   email: varchar("email", { length: 255 }).notNull().unique(),
   name: varchar("name", { length: 255 }).notNull(),
   avatar: text("avatar"),
-  timezone: varchar("timezone", { length: 50 }).default("UTC"),
+  timezone: varchar("timezone", { length: 50 }).defaultTo("UTC"),
   preferences: jsonb("preferences")
     .$type<{
-      autoScheduling: boolean
-      deepWorkPreference: boolean
-      meetingBatching: boolean
-      notificationsEnabled: boolean
-      theme: "light" | "dark" | "system"
+      autoScheduling: boolean;
+      deepWorkPreference: boolean;
+      meetingBatching: boolean;
+      notificationsEnabled: boolean;
+      theme: "light" | "dark" | "system";
     }>()
     .default({
       autoScheduling: true,
@@ -25,7 +36,7 @@ export const users = pgTable("users", {
     }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
-})
+});
 
 // Teams table for collaboration
 export const teams = pgTable("teams", {
@@ -37,7 +48,7 @@ export const teams = pgTable("teams", {
     .notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
-})
+});
 
 // Team memberships
 export const teamMembers = pgTable("team_members", {
@@ -50,7 +61,7 @@ export const teamMembers = pgTable("team_members", {
     .notNull(),
   role: varchar("role", { length: 50 }).default("member"), // 'owner', 'admin', 'member'
   joinedAt: timestamp("joined_at").defaultNow().notNull(),
-})
+});
 
 // Tasks table
 export const tasks = pgTable("tasks", {
@@ -71,14 +82,14 @@ export const tasks = pgTable("tasks", {
   completedAt: timestamp("completed_at"),
   tags: jsonb("tags").$type<string[]>().default([]),
   metadata: jsonb("metadata").$type<{
-    timerActive?: boolean
-    timerSeconds?: number
-    convertedFromMeeting?: boolean
-    meetingId?: string
+    timerActive?: boolean;
+    timerSeconds?: number;
+    convertedFromMeeting?: boolean;
+    meetingId?: string;
   }>(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
-})
+});
 
 // Subtasks
 export const subtasks = pgTable("subtasks", {
@@ -90,7 +101,7 @@ export const subtasks = pgTable("subtasks", {
   completed: boolean("completed").default(false),
   order: integer("order").default(0),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-})
+});
 
 // Task comments
 export const taskComments = pgTable("task_comments", {
@@ -103,7 +114,7 @@ export const taskComments = pgTable("task_comments", {
     .notNull(),
   text: text("text").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-})
+});
 
 // Daily check-ins
 export const dailyCheckins = pgTable("daily_checkins", {
@@ -124,7 +135,7 @@ export const dailyCheckins = pgTable("daily_checkins", {
   gratitude: text("gratitude"),
   tomorrow: text("tomorrow"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-})
+});
 
 // Meetings
 export const meetings = pgTable("meetings", {
@@ -145,13 +156,13 @@ export const meetings = pgTable("meetings", {
   decisions: jsonb("decisions").$type<string[]>().default([]),
   transcript: text("transcript"),
   metrics: jsonb("metrics").$type<{
-    speakingDistribution: Array<{ name: string; percentage: number }>
-    topicsDiscussed: Array<{ topic: string; duration: number }>
-    sentimentScore: number
+    speakingDistribution: Array<{ name: string; percentage: number }>;
+    topicsDiscussed: Array<{ topic: string; duration: number }>;
+    sentimentScore: number;
   }>(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
-})
+});
 
 // Meeting action items
 export const meetingActionItems = pgTable("meeting_action_items", {
@@ -166,7 +177,7 @@ export const meetingActionItems = pgTable("meeting_action_items", {
   convertedToTask: boolean("converted_to_task").default(false),
   taskId: uuid("task_id").references(() => tasks.id),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-})
+});
 
 // Wearable devices
 export const wearableDevices = pgTable("wearable_devices", {
@@ -181,12 +192,12 @@ export const wearableDevices = pgTable("wearable_devices", {
   connected: boolean("connected").default(false),
   lastSync: timestamp("last_sync"),
   settings: jsonb("settings").$type<{
-    syncFrequency: number // in minutes
-    dataTypes: string[]
+    syncFrequency: number; // in minutes
+    dataTypes: string[];
   }>(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
-})
+});
 
 // Wearable data
 export const wearableData = pgTable("wearable_data", {
@@ -202,24 +213,24 @@ export const wearableData = pgTable("wearable_data", {
   value: decimal("value", { precision: 10, scale: 2 }),
   metadata: jsonb("metadata").$type<{
     sleepStages?: {
-      deep: number
-      light: number
-      rem: number
-    }
+      deep: number;
+      light: number;
+      rem: number;
+    };
     heartRateZones?: {
-      resting: number
-      fat_burn: number
-      cardio: number
-      peak: number
-    }
+      resting: number;
+      fat_burn: number;
+      cardio: number;
+      peak: number;
+    };
     stressLevels?: Array<{
-      time: string
-      level: number
-      activity: string
-    }>
+      time: string;
+      level: number;
+      activity: string;
+    }>;
   }>(),
   timestamp: timestamp("timestamp").defaultNow().notNull(),
-})
+});
 
 // Schedule optimization
 export const scheduleOptimizations = pgTable("schedule_optimizations", {
@@ -231,22 +242,22 @@ export const scheduleOptimizations = pgTable("schedule_optimizations", {
   schedule: jsonb("schedule")
     .$type<
       Array<{
-        id: string
-        time: string
-        activity: string
-        type: string
-        priority: string
-        energy: number
-        reasoning: string
+        id: string;
+        time: string;
+        activity: string;
+        type: string;
+        priority: string;
+        energy: number;
+        reasoning: string;
       }>
     >()
     .notNull(),
   dataSourcesUsed: jsonb("data_sources_used")
     .$type<{
-      tasks: boolean
-      meetings: boolean
-      checkins: boolean
-      wearables: boolean
+      tasks: boolean;
+      meetings: boolean;
+      checkins: boolean;
+      wearables: boolean;
     }>()
     .default({
       tasks: true,
@@ -258,7 +269,7 @@ export const scheduleOptimizations = pgTable("schedule_optimizations", {
   adherenceScore: integer("adherence_score"), // 0-100, how well user followed the schedule
   feedback: text("feedback"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-})
+});
 
 // Habit patterns (derived data)
 export const habitPatterns = pgTable("habit_patterns", {
@@ -271,31 +282,31 @@ export const habitPatterns = pgTable("habit_patterns", {
   data: jsonb("data")
     .$type<{
       energyLevels?: Array<{
-        timeRange: string
-        avgEnergy: number
-        activity: string
-        peak: string
-      }>
+        timeRange: string;
+        avgEnergy: number;
+        activity: string;
+        peak: string;
+      }>;
       weeklyPatterns?: Record<
         string,
         {
-          productivity: number
-          meetings: number
-          focusTime: number
+          productivity: number;
+          meetings: number;
+          focusTime: number;
         }
-      >
+      >;
       taskTypes?: Array<{
-        type: string
-        optimalTime: string
-        efficiency: number
-        frequency: string
-      }>
+        type: string;
+        optimalTime: string;
+        efficiency: number;
+        frequency: string;
+      }>;
     }>()
     .notNull(),
   confidence: integer("confidence"), // 0-100, how confident we are in this pattern
   lastCalculated: timestamp("last_calculated").defaultNow().notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-})
+});
 
 // Analytics data
 export const analyticsData = pgTable("analytics_data", {
@@ -307,12 +318,12 @@ export const analyticsData = pgTable("analytics_data", {
   metricType: varchar("metric_type", { length: 50 }).notNull(), // 'productivity', 'focus', 'tasks', 'meetings'
   value: decimal("value", { precision: 10, scale: 2 }).notNull(),
   metadata: jsonb("metadata").$type<{
-    breakdown?: Record<string, number>
-    trends?: Array<{ period: string; value: number }>
-    insights?: string[]
+    breakdown?: Record<string, number>;
+    trends?: Array<{ period: string; value: number }>;
+    insights?: string[];
   }>(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-})
+});
 
 // Achievements and gamification
 export const achievements = pgTable("achievements", {
@@ -323,15 +334,15 @@ export const achievements = pgTable("achievements", {
   category: varchar("category", { length: 50 }).notNull(),
   criteria: jsonb("criteria")
     .$type<{
-      type: string // 'streak', 'count', 'percentage'
-      target: number
-      timeframe?: string
+      type: string; // 'streak', 'count', 'percentage'
+      target: number;
+      timeframe?: string;
     }>()
     .notNull(),
   points: integer("points").default(0),
   rarity: varchar("rarity", { length: 20 }).default("common"), // 'common', 'rare', 'epic', 'legendary'
   createdAt: timestamp("created_at").defaultNow().notNull(),
-})
+});
 
 // User achievements
 export const userAchievements = pgTable("user_achievements", {
@@ -344,7 +355,7 @@ export const userAchievements = pgTable("user_achievements", {
     .notNull(),
   unlockedAt: timestamp("unlocked_at").defaultNow().notNull(),
   progress: integer("progress").default(0), // for tracking partial progress
-})
+});
 
 // Leaderboard entries
 export const leaderboardEntries = pgTable("leaderboard_entries", {
@@ -359,7 +370,7 @@ export const leaderboardEntries = pgTable("leaderboard_entries", {
   rank: integer("rank"),
   date: date("date").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-})
+});
 
 // Notifications
 export const notifications = pgTable("notifications", {
@@ -371,16 +382,16 @@ export const notifications = pgTable("notifications", {
   title: varchar("title", { length: 255 }).notNull(),
   message: text("message").notNull(),
   data: jsonb("data").$type<{
-    taskId?: string
-    meetingId?: string
-    achievementId?: string
-    actionUrl?: string
+    taskId?: string;
+    meetingId?: string;
+    achievementId?: string;
+    actionUrl?: string;
   }>(),
   read: boolean("read").default(false),
   scheduledFor: timestamp("scheduled_for"),
   sentAt: timestamp("sent_at"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-})
+});
 
 // AI insights and recommendations
 export const aiInsights = pgTable("ai_insights", {
@@ -398,7 +409,7 @@ export const aiInsights = pgTable("ai_insights", {
   feedback: varchar("feedback", { length: 20 }), // 'helpful', 'not_helpful', 'irrelevant'
   expiresAt: timestamp("expires_at"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-})
+});
 
 // Relations
 export const usersRelations = relations(users, ({ many }) => ({
@@ -416,7 +427,7 @@ export const usersRelations = relations(users, ({ many }) => ({
   aiInsights: many(aiInsights),
   teamMemberships: many(teamMembers),
   ownedTeams: many(teams),
-}))
+}));
 
 export const teamsRelations = relations(teams, ({ one, many }) => ({
   owner: one(users, {
@@ -425,7 +436,7 @@ export const teamsRelations = relations(teams, ({ one, many }) => ({
   }),
   members: many(teamMembers),
   leaderboardEntries: many(leaderboardEntries),
-}))
+}));
 
 export const teamMembersRelations = relations(teamMembers, ({ one }) => ({
   team: one(teams, {
@@ -436,7 +447,7 @@ export const teamMembersRelations = relations(teamMembers, ({ one }) => ({
     fields: [teamMembers.userId],
     references: [users.id],
   }),
-}))
+}));
 
 export const tasksRelations = relations(tasks, ({ one, many }) => ({
   user: one(users, {
@@ -449,14 +460,14 @@ export const tasksRelations = relations(tasks, ({ one, many }) => ({
     fields: [tasks.id],
     references: [meetingActionItems.taskId],
   }),
-}))
+}));
 
 export const subtasksRelations = relations(subtasks, ({ one }) => ({
   task: one(tasks, {
     fields: [subtasks.taskId],
     references: [tasks.id],
   }),
-}))
+}));
 
 export const taskCommentsRelations = relations(taskComments, ({ one }) => ({
   task: one(tasks, {
@@ -467,14 +478,14 @@ export const taskCommentsRelations = relations(taskComments, ({ one }) => ({
     fields: [taskComments.userId],
     references: [users.id],
   }),
-}))
+}));
 
 export const dailyCheckinsRelations = relations(dailyCheckins, ({ one }) => ({
   user: one(users, {
     fields: [dailyCheckins.userId],
     references: [users.id],
   }),
-}))
+}));
 
 export const meetingsRelations = relations(meetings, ({ one, many }) => ({
   user: one(users, {
@@ -482,26 +493,32 @@ export const meetingsRelations = relations(meetings, ({ one, many }) => ({
     references: [users.id],
   }),
   actionItems: many(meetingActionItems),
-}))
+}));
 
-export const meetingActionItemsRelations = relations(meetingActionItems, ({ one }) => ({
-  meeting: one(meetings, {
-    fields: [meetingActionItems.meetingId],
-    references: [meetings.id],
+export const meetingActionItemsRelations = relations(
+  meetingActionItems,
+  ({ one }) => ({
+    meeting: one(meetings, {
+      fields: [meetingActionItems.meetingId],
+      references: [meetings.id],
+    }),
+    task: one(tasks, {
+      fields: [meetingActionItems.taskId],
+      references: [tasks.id],
+    }),
   }),
-  task: one(tasks, {
-    fields: [meetingActionItems.taskId],
-    references: [tasks.id],
-  }),
-}))
+);
 
-export const wearableDevicesRelations = relations(wearableDevices, ({ one, many }) => ({
-  user: one(users, {
-    fields: [wearableDevices.userId],
-    references: [users.id],
+export const wearableDevicesRelations = relations(
+  wearableDevices,
+  ({ one, many }) => ({
+    user: one(users, {
+      fields: [wearableDevices.userId],
+      references: [users.id],
+    }),
+    data: many(wearableData),
   }),
-  data: many(wearableData),
-}))
+);
 
 export const wearableDataRelations = relations(wearableData, ({ one }) => ({
   user: one(users, {
@@ -512,93 +529,102 @@ export const wearableDataRelations = relations(wearableData, ({ one }) => ({
     fields: [wearableData.deviceId],
     references: [wearableDevices.id],
   }),
-}))
+}));
 
-export const scheduleOptimizationsRelations = relations(scheduleOptimizations, ({ one }) => ({
-  user: one(users, {
-    fields: [scheduleOptimizations.userId],
-    references: [users.id],
+export const scheduleOptimizationsRelations = relations(
+  scheduleOptimizations,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [scheduleOptimizations.userId],
+      references: [users.id],
+    }),
   }),
-}))
+);
 
 export const habitPatternsRelations = relations(habitPatterns, ({ one }) => ({
   user: one(users, {
     fields: [habitPatterns.userId],
     references: [users.id],
   }),
-}))
+}));
 
 export const analyticsDataRelations = relations(analyticsData, ({ one }) => ({
   user: one(users, {
     fields: [analyticsData.userId],
     references: [users.id],
   }),
-}))
+}));
 
 export const achievementsRelations = relations(achievements, ({ many }) => ({
   userAchievements: many(userAchievements),
-}))
+}));
 
-export const userAchievementsRelations = relations(userAchievements, ({ one }) => ({
-  user: one(users, {
-    fields: [userAchievements.userId],
-    references: [users.id],
+export const userAchievementsRelations = relations(
+  userAchievements,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [userAchievements.userId],
+      references: [users.id],
+    }),
+    achievement: one(achievements, {
+      fields: [userAchievements.achievementId],
+      references: [achievements.id],
+    }),
   }),
-  achievement: one(achievements, {
-    fields: [userAchievements.achievementId],
-    references: [achievements.id],
-  }),
-}))
+);
 
-export const leaderboardEntriesRelations = relations(leaderboardEntries, ({ one }) => ({
-  user: one(users, {
-    fields: [leaderboardEntries.userId],
-    references: [users.id],
+export const leaderboardEntriesRelations = relations(
+  leaderboardEntries,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [leaderboardEntries.userId],
+      references: [users.id],
+    }),
+    team: one(teams, {
+      fields: [leaderboardEntries.teamId],
+      references: [teams.id],
+    }),
   }),
-  team: one(teams, {
-    fields: [leaderboardEntries.teamId],
-    references: [teams.id],
-  }),
-}))
+);
 
 export const notificationsRelations = relations(notifications, ({ one }) => ({
   user: one(users, {
     fields: [notifications.userId],
     references: [users.id],
   }),
-}))
+}));
 
 export const aiInsightsRelations = relations(aiInsights, ({ one }) => ({
   user: one(users, {
     fields: [aiInsights.userId],
     references: [users.id],
   }),
-}))
+}));
 
 // Export types
-export type User = typeof users.$inferSelect
-export type   NewUser = typeof users.$inferInsert
-export type Task = typeof tasks.$inferSelect
-export type NewTask = typeof tasks.$inferInsert
-export type Meeting = typeof meetings.$inferSelect
-export type NewMeeting = typeof meetings.$inferInsert
-export type DailyCheckin = typeof dailyCheckins.$inferSelect
-export type NewDailyCheckin = typeof dailyCheckins.$inferInsert
-export type WearableDevice = typeof wearableDevices.$inferSelect
-export type NewWearableDevice = typeof wearableDevices.$inferInsert
-export type WearableData = typeof wearableData.$inferSelect
-export type NewWearableData = typeof wearableData.$inferInsert
-export type ScheduleOptimization = typeof scheduleOptimizations.$inferSelect
-export type NewScheduleOptimization = typeof scheduleOptimizations.$inferInsert
-export type HabitPattern = typeof habitPatterns.$inferSelect
-export type NewHabitPattern = typeof habitPatterns.$inferInsert
-export type Achievement = typeof achievements.$inferSelect
-export type NewAchievement = typeof achievements.$inferInsert
-export type UserAchievement = typeof userAchievements.$inferSelect
-export type NewUserAchievement = typeof userAchievements.$inferInsert
-export type LeaderboardEntry = typeof leaderboardEntries.$inferSelect
-export type NewLeaderboardEntry = typeof leaderboardEntries.$inferInsert
-export type Notification = typeof notifications.$inferSelect
-export type NewNotification = typeof notifications.$inferInsert
-export type AIInsight = typeof aiInsights.$inferSelect
-export type NewAIInsight = typeof aiInsights.$inferInsert
+export type User = typeof users.$inferSelect;
+export type NewUser = typeof users.$inferInsert;
+export type Task = typeof tasks.$inferSelect;
+export type NewTask = typeof tasks.$inferInsert;
+export type Meeting = typeof meetings.$inferSelect;
+export type NewMeeting = typeof meetings.$inferInsert;
+export type DailyCheckin = typeof dailyCheckins.$inferSelect;
+export type NewDailyCheckin = typeof dailyCheckins.$inferInsert;
+export type WearableDevice = typeof wearableDevices.$inferSelect;
+export type NewWearableDevice = typeof wearableDevices.$inferInsert;
+export type WearableData = typeof wearableData.$inferSelect;
+export type NewWearableData = typeof wearableData.$inferInsert;
+export type ScheduleOptimization = typeof scheduleOptimizations.$inferSelect;
+export type NewScheduleOptimization = typeof scheduleOptimizations.$inferInsert;
+export type HabitPattern = typeof habitPatterns.$inferSelect;
+export type NewHabitPattern = typeof habitPatterns.$inferInsert;
+export type Achievement = typeof achievements.$inferSelect;
+export type NewAchievement = typeof achievements.$inferInsert;
+export type UserAchievement = typeof userAchievements.$inferSelect;
+export type NewUserAchievement = typeof userAchievements.$inferInsert;
+export type LeaderboardEntry = typeof leaderboardEntries.$inferSelect;
+export type NewLeaderboardEntry = typeof leaderboardEntries.$inferInsert;
+export type Notification = typeof notifications.$inferSelect;
+export type NewNotification = typeof notifications.$inferInsert;
+export type AIInsight = typeof aiInsights.$inferSelect;
+export type NewAIInsight = typeof aiInsights.$inferInsert;

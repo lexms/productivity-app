@@ -1,19 +1,19 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { DashboardOverview } from "@/components/organisms/dashboard-overview"
-import { SmartCheckinCard } from "@/components/molecules/smart-checkin-card"
-import { ScheduleIntegration } from "@/components/molecules/schedule-integration"
-import { TaskManager } from "./task-manager"
-import { Analytics } from "./analytics"
-import { Leaderboard } from "./leaderboard"
-import { WearablesIntegration } from "./wearables-integration"
-import { MeetingManagement } from "./meeting-management"
-import { ScheduleOptimization } from "./schedule-optimization"
+import { ScheduleIntegration } from "@/components/molecules/schedule-integration";
+import { SmartCheckinCard } from "@/components/molecules/smart-checkin-card";
+import { DashboardOverview } from "@/components/organisms/dashboard-overview";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useState } from "react";
+import { Analytics } from "./analytics";
+import { Leaderboard } from "./leaderboard";
+import { MeetingManagement } from "./meeting-management";
+import { ScheduleOptimization } from "./schedule-optimization";
+import { TaskManager } from "./task-manager";
+import { WearablesIntegration } from "./wearables-integration";
 
 export function Dashboard() {
-  const [activeTab, setActiveTab] = useState("overview")
+  const [activeTab, setActiveTab] = useState("overview");
 
   // Mock user data
   const userData = {
@@ -26,7 +26,7 @@ export function Dashboard() {
     rank: 3,
     tasksToday: 8,
     completedToday: 6,
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4">
@@ -80,5 +80,5 @@ export function Dashboard() {
         </Tabs>
       </div>
     </div>
-  )
+  );
 }

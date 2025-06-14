@@ -1,24 +1,34 @@
-import { createClient } from "@/lib/supabase/server"
-import { redirect } from "next/navigation"
-import { ProfileForm } from "@/components/profile/profile-form"
-import { ProfileHeader } from "@/components/profile/profile-header"
-import { AccountSettings } from "@/components/profile/account-settings"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { AccountSettings } from "@/components/profile/account-settings";
+import { ProfileForm } from "@/components/profile/profile-form";
+import { ProfileHeader } from "@/components/profile/profile-header";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
 
 export default async function ProfilePage() {
-  const supabase = await createClient()
+  const supabase = await createClient();
 
   const {
     data: { user },
-  } = await supabase.auth.getUser()
+  } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect("/login")
+    redirect("/login");
   }
 
   // Get user profile data
-  const { data: profile } = await supabase.from("users").select("*").eq("id", user.id).single()
+  const { data: profile } = await supabase
+    .from("users")
+    .select("*")
+    .eq("id", user.id)
+    .single();
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
@@ -35,7 +45,9 @@ export default async function ProfilePage() {
           <Card>
             <CardHeader>
               <CardTitle>Personal Information</CardTitle>
-              <CardDescription>Update your personal details and profile information.</CardDescription>
+              <CardDescription>
+                Update your personal details and profile information.
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <ProfileForm user={user} profile={profile} />
@@ -51,14 +63,18 @@ export default async function ProfilePage() {
           <Card>
             <CardHeader>
               <CardTitle>App Preferences</CardTitle>
-              <CardDescription>Customize your app experience and notification settings.</CardDescription>
+              <CardDescription>
+                Customize your app experience and notification settings.
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-center py-8 text-muted-foreground">Preferences settings coming soon...</div>
+              <div className="text-center py-8 text-muted-foreground">
+                Preferences settings coming soon...
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }

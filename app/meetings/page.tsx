@@ -1,4 +1,4 @@
-import { MeetingManagement } from "@/components/meeting-management"
+import { MeetingManagement } from "@/components/meeting-management";
 
 export default function MeetingsPage() {
   return (
@@ -9,5 +9,5 @@ export default function MeetingsPage() {
       </div>
       <MeetingManagement />
     </div>
-  )
+  );
 }

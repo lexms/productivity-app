@@ -1,14 +1,18 @@
-"use client"
+"use client";
 
-import { Progress } from "@/components/ui/progress"
+import { Progress } from "@/components/ui/progress";
 
 interface ProgressIndicatorProps {
-  label: string
-  value: number
-  showPercentage?: boolean
+  label: string;
+  value: number;
+  showPercentage?: boolean;
 }
 
-export function ProgressIndicator({ label, value, showPercentage = true }: ProgressIndicatorProps) {
+export function ProgressIndicator({
+  label,
+  value,
+  showPercentage = true,
+}: ProgressIndicatorProps) {
   return (
     <div className="space-y-2">
       <div className="flex justify-between text-sm">
@@ -17,5 +21,5 @@ export function ProgressIndicator({ label, value, showPercentage = true }: Progr
       </div>
       <Progress value={value} className="h-2" />
     </div>
-  )
+  );
 }

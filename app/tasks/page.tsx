@@ -1,4 +1,4 @@
-import { TaskManager } from "@/components/task-manager"
+import { TaskManager } from "@/components/task-manager";
 
 export default function TasksPage() {
   return (
@@ -9,5 +9,5 @@ export default function TasksPage() {
       </div>
       <TaskManager />
     </div>
-  )
+  );
 }

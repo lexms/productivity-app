@@ -1,21 +1,40 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Progress } from "@/components/ui/progress"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Calendar, Clock, Target, TrendingUp, BarChart3, Download, X, Filter } from "lucide-react"
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  BarChart3,
+  Calendar,
+  Clock,
+  Download,
+  Filter,
+  Target,
+  TrendingUp,
+  X,
+} from "lucide-react";
+import { useState } from "react";
 
 interface AnalyticsDetailProps {
-  metricType: string
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  metricType: string;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
-export function AnalyticsDetail({ metricType, open, onOpenChange }: AnalyticsDetailProps) {
-  const [timeRange, setTimeRange] = useState("week")
+export function AnalyticsDetail({
+  metricType,
+  open,
+  onOpenChange,
+}: AnalyticsDetailProps) {
+  const [timeRange, setTimeRange] = useState("week");
 
   // Mock data for different metrics
   const productivityData = {
@@ -52,7 +71,7 @@ export function AnalyticsDetail({ metricType, open, onOpenChange }: AnalyticsDet
         "Your average focus time increased by 18 minutes per day",
       ],
     },
-  }
+  };
 
   const focusData = {
     week: {
@@ -88,7 +107,7 @@ export function AnalyticsDetail({ metricType, open, onOpenChange }: AnalyticsDet
         "Morning focus sessions are 32% more effective than afternoon ones",
       ],
     },
-  }
+  };
 
   const taskData = {
     week: {
@@ -127,61 +146,61 @@ export function AnalyticsDetail({ metricType, open, onOpenChange }: AnalyticsDet
         "You're most productive with tasks between 30-45 minutes",
       ],
     },
-  }
+  };
 
   const getMetricData = () => {
     switch (metricType) {
       case "productivity":
-        return productivityData[timeRange as keyof typeof productivityData]
+        return productivityData[timeRange as keyof typeof productivityData];
       case "focus":
-        return focusData[timeRange as keyof typeof focusData]
+        return focusData[timeRange as keyof typeof focusData];
       case "tasks":
-        return taskData[timeRange as keyof typeof taskData]
+        return taskData[timeRange as keyof typeof taskData];
       default:
-        return productivityData[timeRange as keyof typeof productivityData]
+        return productivityData[timeRange as keyof typeof productivityData];
     }
-  }
+  };
 
   const getMetricTitle = () => {
     switch (metricType) {
       case "productivity":
-        return "Productivity Analysis"
+        return "Productivity Analysis";
       case "focus":
-        return "Focus Time Analysis"
+        return "Focus Time Analysis";
       case "tasks":
-        return "Task Completion Analysis"
+        return "Task Completion Analysis";
       default:
-        return "Metric Analysis"
+        return "Metric Analysis";
     }
-  }
+  };
 
   const getMetricIcon = () => {
     switch (metricType) {
       case "productivity":
-        return <Target className="w-5 h-5" />
+        return <Target className="w-5 h-5" />;
       case "focus":
-        return <Clock className="w-5 h-5" />
+        return <Clock className="w-5 h-5" />;
       case "tasks":
-        return <BarChart3 className="w-5 h-5" />
+        return <BarChart3 className="w-5 h-5" />;
       default:
-        return <BarChart3 className="w-5 h-5" />
+        return <BarChart3 className="w-5 h-5" />;
     }
-  }
+  };
 
   const getMetricUnit = () => {
     switch (metricType) {
       case "productivity":
-        return "%"
+        return "%";
       case "focus":
-        return "h"
+        return "h";
       case "tasks":
-        return ""
+        return "";
       default:
-        return ""
+        return "";
     }
-  }
+  };
 
-  const data = getMetricData()
+  const data = getMetricData();
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -261,13 +280,19 @@ export function AnalyticsDetail({ metricType, open, onOpenChange }: AnalyticsDet
               <div className="bg-slate-50 p-6 rounded-lg border">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                   <div>
-                    <p className="text-sm text-slate-600">Average {metricType}</p>
+                    <p className="text-sm text-slate-600">
+                      Average {metricType}
+                    </p>
                     <div className="flex items-end gap-2">
                       <p className="text-3xl font-bold">
-                        {metricType === "tasks" ? `${data.completed}/${data.total}` : data.average}
+                        {metricType === "tasks"
+                          ? `${data.completed}/${data.total}`
+                          : data.average}
                         {getMetricUnit()}
                       </p>
-                      <Badge className="mb-1 bg-green-100 text-green-800">{data.trend}</Badge>
+                      <Badge className="mb-1 bg-green-100 text-green-800">
+                        {data.trend}
+                      </Badge>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
@@ -295,47 +320,36 @@ export function AnalyticsDetail({ metricType, open, onOpenChange }: AnalyticsDet
                 </div>
 
                 <div className="space-y-4">
-                  {data.data.map((item, index) => (
-                    <div key={index}>
-                      <div className="flex justify-between text-sm mb-1">
-                        <span>{item.day || item.week}</span>
-                        <span>
-                          {metricType === "tasks"
-                            ? `${item.completed}/${item.total}`
-                            : `${item.value}${getMetricUnit()}`}
-                        </span>
+                  {data.data.map((item) => {
+                    const key = 'day' in item ? item.day : item.week;
+                    const value = 'value' in item ? item.value : `${item.completed}/${item.total}`;
+                    const percentage = 'value' in item 
+                      ? item.value 
+                      : (item.completed / item.total) * 100;
+
+                    return (
+                      <div key={key}>
+                        <div className="flex justify-between text-sm mb-1">
+                          <span>{key}</span>
+                          <span className="font-medium">{value}</span>
+                        </div>
+                        <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-blue-500 rounded-full"
+                            style={{ width: `${percentage}%` }}
+                          />
+                        </div>
                       </div>
-                      {metricType === "tasks" ? (
-                        <div className="h-4 bg-slate-200 rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-purple-500 rounded-full"
-                            style={{ width: `${(item.completed / item.total) * 100}%` }}
-                          />
-                        </div>
-                      ) : (
-                        <div className="h-4 bg-slate-200 rounded-full overflow-hidden">
-                          <div
-                            className={`h-full ${
-                              metricType === "productivity" ? "bg-green-500" : "bg-blue-500"
-                            } rounded-full`}
-                            style={{
-                              width: `${
-                                metricType === "productivity"
-                                  ? item.value
-                                  : (item.value / (metricType === "focus" ? 8 : 100)) * 100
-                              }%`,
-                            }}
-                          />
-                        </div>
-                      )}
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="p-4 bg-white rounded-lg border">
-                  <h3 className="text-sm font-semibold mb-3">Top Performing Day</h3>
+                  <h3 className="text-sm font-semibold mb-3">
+                    Top Performing Day
+                  </h3>
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-2xl font-bold">
@@ -345,8 +359,14 @@ export function AnalyticsDetail({ metricType, open, onOpenChange }: AnalyticsDet
                       </p>
                       <p className="text-sm text-slate-600">
                         {data.data.reduce((max, item) => {
-                          const value = metricType === "tasks" ? item.completed : item.value
-                          return value > (metricType === "tasks" ? max.completed : max.value) ? item : max
+                          const value =
+                            metricType === "tasks"
+                              ? item.completed
+                              : item.value;
+                          return value >
+                            (metricType === "tasks" ? max.completed : max.value)
+                            ? item
+                            : max;
                         }, data.data[0]).day || "Week 2"}
                       </p>
                     </div>
@@ -384,10 +404,23 @@ export function AnalyticsDetail({ metricType, open, onOpenChange }: AnalyticsDet
                     <div className="flex justify-between text-sm">
                       <span>Overall Score</span>
                       <span className="font-medium">
-                        {metricType === "tasks" ? "85%" : metricType === "focus" ? "78%" : "82%"}
+                        {metricType === "tasks"
+                          ? "85%"
+                          : metricType === "focus"
+                            ? "78%"
+                            : "82%"}
                       </span>
                     </div>
-                    <Progress value={metricType === "tasks" ? 85 : metricType === "focus" ? 78 : 82} className="h-2" />
+                    <Progress
+                      value={
+                        metricType === "tasks"
+                          ? 85
+                          : metricType === "focus"
+                            ? 78
+                            : 82
+                      }
+                      className="h-2"
+                    />
                     <p className="text-xs text-slate-600">
                       {metricType === "productivity"
                         ? "Based on task completion and focus time"
@@ -596,32 +629,19 @@ export function AnalyticsDetail({ metricType, open, onOpenChange }: AnalyticsDet
               <div className="bg-white p-6 rounded-lg border">
                 <h3 className="text-sm font-semibold mb-4">Key Insights</h3>
                 <div className="space-y-4">
-                  {data.insights.map((insight, index) => (
-                    <div key={index} className="flex items-start gap-3">
+                  {data.insights.map((insight) => (
+                    <div key={insight.title} className="flex items-start gap-3">
                       <div className="mt-1">
-                        <div
-                          className={`w-6 h-6 rounded-full flex items-center justify-center ${
-                            metricType === "productivity"
-                              ? "bg-green-100"
-                              : metricType === "focus"
-                                ? "bg-blue-100"
-                                : "bg-purple-100"
-                          }`}
-                        >
-                          <span
-                            className={`text-xs font-medium ${
-                              metricType === "productivity"
-                                ? "text-green-700"
-                                : metricType === "focus"
-                                  ? "text-blue-700"
-                                  : "text-purple-700"
-                            }`}
-                          >
-                            {index + 1}
-                          </span>
-                        </div>
+                        <div className="w-2 h-2 rounded-full bg-blue-500" />
                       </div>
-                      <p className="text-sm">{insight}</p>
+                      <div>
+                        <h4 className="font-medium text-slate-900">
+                          {insight.title}
+                        </h4>
+                        <p className="text-sm text-slate-600">
+                          {insight.description}
+                        </p>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -637,18 +657,11 @@ export function AnalyticsDetail({ metricType, open, onOpenChange }: AnalyticsDet
                           <div className="w-3 h-3 rounded-full bg-blue-500" />
                         </div>
                         <div>
-                          <p className="text-sm font-medium">Schedule deep work in the morning</p>
-                          <p className="text-xs text-slate-600">Your productivity is 32% higher between 9-11 AM</p>
-                        </div>
-                      </div>
-                      <div className="flex items-start gap-3">
-                        <div className="mt-1">
-                          <div className="w-3 h-3 rounded-full bg-blue-500" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium">Implement no-meeting Tuesdays</p>
+                          <p className="text-sm font-medium">
+                            Schedule deep work in the morning
+                          </p>
                           <p className="text-xs text-slate-600">
-                            Tuesday is your most productive day - protect it for deep work
+                            Your productivity is 32% higher between 9-11 AM
                           </p>
                         </div>
                       </div>
@@ -657,9 +670,26 @@ export function AnalyticsDetail({ metricType, open, onOpenChange }: AnalyticsDet
                           <div className="w-3 h-3 rounded-full bg-blue-500" />
                         </div>
                         <div>
-                          <p className="text-sm font-medium">Take regular breaks</p>
+                          <p className="text-sm font-medium">
+                            Implement no-meeting Tuesdays
+                          </p>
                           <p className="text-xs text-slate-600">
-                            5-minute breaks every 25 minutes increase your productivity
+                            Tuesday is your most productive day - protect it for
+                            deep work
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <div className="mt-1">
+                          <div className="w-3 h-3 rounded-full bg-blue-500" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium">
+                            Take regular breaks
+                          </p>
+                          <p className="text-xs text-slate-600">
+                            5-minute breaks every 25 minutes increase your
+                            productivity
                           </p>
                         </div>
                       </div>
@@ -673,9 +703,12 @@ export function AnalyticsDetail({ metricType, open, onOpenChange }: AnalyticsDet
                           <div className="w-3 h-3 rounded-full bg-blue-500" />
                         </div>
                         <div>
-                          <p className="text-sm font-medium">Use the Pomodoro technique</p>
+                          <p className="text-sm font-medium">
+                            Use the Pomodoro technique
+                          </p>
                           <p className="text-xs text-slate-600">
-                            25-minute focus sessions with 5-minute breaks work best for you
+                            25-minute focus sessions with 5-minute breaks work
+                            best for you
                           </p>
                         </div>
                       </div>
@@ -684,9 +717,12 @@ export function AnalyticsDetail({ metricType, open, onOpenChange }: AnalyticsDet
                           <div className="w-3 h-3 rounded-full bg-blue-500" />
                         </div>
                         <div>
-                          <p className="text-sm font-medium">Minimize notifications</p>
+                          <p className="text-sm font-medium">
+                            Minimize notifications
+                          </p>
                           <p className="text-xs text-slate-600">
-                            Turn off email and chat notifications during focus sessions
+                            Turn off email and chat notifications during focus
+                            sessions
                           </p>
                         </div>
                       </div>
@@ -695,8 +731,12 @@ export function AnalyticsDetail({ metricType, open, onOpenChange }: AnalyticsDet
                           <div className="w-3 h-3 rounded-full bg-blue-500" />
                         </div>
                         <div>
-                          <p className="text-sm font-medium">Use noise-cancelling headphones</p>
-                          <p className="text-xs text-slate-600">Reduce ambient noise to improve focus quality</p>
+                          <p className="text-sm font-medium">
+                            Use noise-cancelling headphones
+                          </p>
+                          <p className="text-xs text-slate-600">
+                            Reduce ambient noise to improve focus quality
+                          </p>
                         </div>
                       </div>
                     </>
@@ -709,9 +749,12 @@ export function AnalyticsDetail({ metricType, open, onOpenChange }: AnalyticsDet
                           <div className="w-3 h-3 rounded-full bg-blue-500" />
                         </div>
                         <div>
-                          <p className="text-sm font-medium">Break down complex tasks</p>
+                          <p className="text-sm font-medium">
+                            Break down complex tasks
+                          </p>
                           <p className="text-xs text-slate-600">
-                            Tasks broken into smaller steps have a 35% higher completion rate
+                            Tasks broken into smaller steps have a 35% higher
+                            completion rate
                           </p>
                         </div>
                       </div>
@@ -720,9 +763,12 @@ export function AnalyticsDetail({ metricType, open, onOpenChange }: AnalyticsDet
                           <div className="w-3 h-3 rounded-full bg-blue-500" />
                         </div>
                         <div>
-                          <p className="text-sm font-medium">Limit daily tasks to 7-9</p>
+                          <p className="text-sm font-medium">
+                            Limit daily tasks to 7-9
+                          </p>
                           <p className="text-xs text-slate-600">
-                            You're most effective with this number of daily tasks
+                            You're most effective with this number of daily
+                            tasks
                           </p>
                         </div>
                       </div>
@@ -731,8 +777,12 @@ export function AnalyticsDetail({ metricType, open, onOpenChange }: AnalyticsDet
                           <div className="w-3 h-3 rounded-full bg-blue-500" />
                         </div>
                         <div>
-                          <p className="text-sm font-medium">Schedule high-priority tasks in the morning</p>
-                          <p className="text-xs text-slate-600">Morning tasks have a 23% higher completion rate</p>
+                          <p className="text-sm font-medium">
+                            Schedule high-priority tasks in the morning
+                          </p>
+                          <p className="text-xs text-slate-600">
+                            Morning tasks have a 23% higher completion rate
+                          </p>
                         </div>
                       </div>
                     </>
@@ -744,5 +794,5 @@ export function AnalyticsDetail({ metricType, open, onOpenChange }: AnalyticsDet
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

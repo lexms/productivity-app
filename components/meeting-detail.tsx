@@ -1,13 +1,8 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Progress } from "@/components/ui/progress"
-import { Checkbox } from "@/components/ui/checkbox"
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -15,30 +10,39 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
 import {
-  Users,
-  Clock,
-  Calendar,
   BarChart3,
-  FileText,
+  Calendar,
   CheckSquare,
+  Clock,
+  Copy,
+  Download,
+  Edit,
+  FileText,
   ListTodo,
   Mic,
-  Download,
-  Copy,
-  X,
-  Edit,
   Save,
-} from "lucide-react"
+  Users,
+  X,
+} from "lucide-react";
+import { useState } from "react";
 
 interface MeetingDetailProps {
-  meetingId: string
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  meetingId: string;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
-export function MeetingDetail({ meetingId, open, onOpenChange }: MeetingDetailProps) {
+export function MeetingDetail({
+  meetingId,
+  open,
+  onOpenChange,
+}: MeetingDetailProps) {
   // Mock meeting data - in a real app, you would fetch this based on meetingId
   const [meeting, setMeeting] = useState({
     id: meetingId,
@@ -129,23 +133,23 @@ Alex: Sounds good. Let's also discuss budget constraints...
       ],
       sentimentScore: 78,
     },
-  })
+  });
 
-  const [isEditing, setIsEditing] = useState(false)
-  const [editedMeeting, setEditedMeeting] = useState({ ...meeting })
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedMeeting, setEditedMeeting] = useState({ ...meeting });
   const [newActionItem, setNewActionItem] = useState({
     text: "",
     assignee: "",
     priority: "medium",
-  })
+  });
 
   const handleSave = () => {
-    setMeeting(editedMeeting)
-    setIsEditing(false)
-  }
+    setMeeting(editedMeeting);
+    setIsEditing(false);
+  };
 
   const handleAddActionItem = () => {
-    if (!newActionItem.text || !newActionItem.assignee) return
+    if (!newActionItem.text || !newActionItem.assignee) return;
 
     const actionItem = {
       id: `a${Date.now()}`,
@@ -154,28 +158,33 @@ Alex: Sounds good. Let's also discuss budget constraints...
       status: "pending",
       priority: newActionItem.priority,
       convertedToTask: false,
-    }
+    };
 
     setMeeting({
       ...meeting,
       actionItems: [...meeting.actionItems, actionItem],
-    })
+    });
 
     setNewActionItem({
       text: "",
       assignee: "",
       priority: "medium",
-    })
-  }
+    });
+  };
 
   const toggleActionItemStatus = (actionItemId: string) => {
     setMeeting({
       ...meeting,
       actionItems: meeting.actionItems.map((item) =>
-        item.id === actionItemId ? { ...item, status: item.status === "completed" ? "pending" : "completed" } : item,
+        item.id === actionItemId
+          ? {
+              ...item,
+              status: item.status === "completed" ? "pending" : "completed",
+            }
+          : item,
       ),
-    })
-  }
+    });
+  };
 
   const convertToTask = (actionItemId: string) => {
     setMeeting({
@@ -183,45 +192,51 @@ Alex: Sounds good. Let's also discuss budget constraints...
       actionItems: meeting.actionItems.map((item) =>
         item.id === actionItemId ? { ...item, convertedToTask: true } : item,
       ),
-    })
-  }
+    });
+  };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
       day: "numeric",
-    })
-  }
+    });
+  };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case "high":
-        return "bg-red-100 text-red-800"
+        return "bg-red-100 text-red-800";
       case "medium":
-        return "bg-yellow-100 text-yellow-800"
+        return "bg-yellow-100 text-yellow-800";
       case "low":
-        return "bg-green-100 text-green-800"
+        return "bg-green-100 text-green-800";
       default:
-        return "bg-slate-100 text-slate-800"
+        return "bg-slate-100 text-slate-800";
     }
-  }
+  };
 
   const getEfficiencyColor = (efficiency: number) => {
-    if (efficiency >= 85) return "text-green-600"
-    if (efficiency >= 70) return "text-yellow-600"
-    return "text-red-600"
-  }
+    if (efficiency >= 85) return "text-green-600";
+    if (efficiency >= 70) return "text-yellow-600";
+    return "text-red-600";
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <div className="flex items-center justify-between">
-            <DialogTitle className="text-xl">{isEditing ? "Edit Meeting" : meeting.title}</DialogTitle>
+            <DialogTitle className="text-xl">
+              {isEditing ? "Edit Meeting" : meeting.title}
+            </DialogTitle>
             <div className="flex items-center gap-2">
               {!isEditing && (
-                <Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsEditing(true)}
+                >
                   <Edit className="w-4 h-4 mr-1" />
                   Edit
                 </Button>
@@ -238,7 +253,9 @@ Alex: Sounds good. Let's also discuss budget constraints...
             </div>
           </div>
           <DialogDescription>
-            {isEditing ? "Make changes to this meeting" : "Meeting details and analysis"}
+            {isEditing
+              ? "Make changes to this meeting"
+              : "Meeting details and analysis"}
           </DialogDescription>
         </DialogHeader>
 
@@ -251,7 +268,9 @@ Alex: Sounds good. Let's also discuss budget constraints...
               <Input
                 id="title"
                 value={editedMeeting.title}
-                onChange={(e) => setEditedMeeting({ ...editedMeeting, title: e.target.value })}
+                onChange={(e) =>
+                  setEditedMeeting({ ...editedMeeting, title: e.target.value })
+                }
               />
             </div>
 
@@ -264,7 +283,9 @@ Alex: Sounds good. Let's also discuss budget constraints...
                   id="date"
                   type="date"
                   value={editedMeeting.date}
-                  onChange={(e) => setEditedMeeting({ ...editedMeeting, date: e.target.value })}
+                  onChange={(e) =>
+                    setEditedMeeting({ ...editedMeeting, date: e.target.value })
+                  }
                 />
               </div>
               <div className="space-y-2">
@@ -275,7 +296,12 @@ Alex: Sounds good. Let's also discuss budget constraints...
                   id="startTime"
                   type="time"
                   value={editedMeeting.startTime}
-                  onChange={(e) => setEditedMeeting({ ...editedMeeting, startTime: e.target.value })}
+                  onChange={(e) =>
+                    setEditedMeeting({
+                      ...editedMeeting,
+                      startTime: e.target.value,
+                    })
+                  }
                 />
               </div>
               <div className="space-y-2">
@@ -286,7 +312,12 @@ Alex: Sounds good. Let's also discuss budget constraints...
                   id="endTime"
                   type="time"
                   value={editedMeeting.endTime}
-                  onChange={(e) => setEditedMeeting({ ...editedMeeting, endTime: e.target.value })}
+                  onChange={(e) =>
+                    setEditedMeeting({
+                      ...editedMeeting,
+                      endTime: e.target.value,
+                    })
+                  }
                 />
               </div>
             </div>
@@ -301,7 +332,9 @@ Alex: Sounds good. Let's also discuss budget constraints...
                 onChange={(e) =>
                   setEditedMeeting({
                     ...editedMeeting,
-                    participants: e.target.value.split(",").map((p) => p.trim()),
+                    participants: e.target.value
+                      .split(",")
+                      .map((p) => p.trim()),
                   })
                 }
               />
@@ -314,7 +347,12 @@ Alex: Sounds good. Let's also discuss budget constraints...
               <Textarea
                 id="summary"
                 value={editedMeeting.summary}
-                onChange={(e) => setEditedMeeting({ ...editedMeeting, summary: e.target.value })}
+                onChange={(e) =>
+                  setEditedMeeting({
+                    ...editedMeeting,
+                    summary: e.target.value,
+                  })
+                }
                 rows={3}
               />
             </div>
@@ -343,31 +381,40 @@ Alex: Sounds good. Let's also discuss budget constraints...
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-slate-50 rounded-lg">
                 <div className="flex items-center gap-3">
                   <Calendar className="w-5 h-5 text-slate-600" />
-                  <span className="text-sm font-medium">{formatDate(meeting.date)}</span>
+                  <span className="text-sm font-medium">
+                    {formatDate(meeting.date)}
+                  </span>
                   <span className="inline-block w-1 h-1 rounded-full bg-slate-300" />
                   <Clock className="w-5 h-5 text-slate-600" />
                   <span className="text-sm font-medium">
-                    {meeting.startTime} - {meeting.endTime} ({meeting.duration} min)
+                    {meeting.startTime} - {meeting.endTime} ({meeting.duration}{" "}
+                    min)
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Users className="w-5 h-5 text-slate-600" />
-                  <span className="text-sm font-medium">{meeting.participants.length} participants</span>
+                  <span className="text-sm font-medium">
+                    {meeting.participants.length} participants
+                  </span>
                 </div>
               </div>
 
               <div className="space-y-4">
                 <div>
-                  <h3 className="text-sm font-semibold mb-2">Meeting Summary</h3>
-                  <p className="text-sm text-slate-700 bg-white p-3 rounded-md border">{meeting.summary}</p>
+                  <h3 className="text-sm font-semibold mb-2">
+                    Meeting Summary
+                  </h3>
+                  <p className="text-sm text-slate-700 bg-white p-3 rounded-md border">
+                    {meeting.summary}
+                  </p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <h3 className="text-sm font-semibold mb-2">Key Points</h3>
                     <ul className="space-y-2">
-                      {meeting.keyPoints.map((point, index) => (
-                        <li key={index} className="flex items-start gap-2">
+                      {meeting.keyPoints.map((point) => (
+                        <li key={point} className="flex items-start gap-2">
                           <div className="mt-1 min-w-[12px]">•</div>
                           <span className="text-sm text-slate-700">{point}</span>
                         </li>
@@ -376,10 +423,12 @@ Alex: Sounds good. Let's also discuss budget constraints...
                   </div>
 
                   <div>
-                    <h3 className="text-sm font-semibold mb-2">Decisions Made</h3>
+                    <h3 className="text-sm font-semibold mb-2">
+                      Decisions Made
+                    </h3>
                     <ul className="space-y-2">
-                      {meeting.decisions.map((decision, index) => (
-                        <li key={index} className="flex items-start gap-2">
+                      {meeting.decisions.map((decision) => (
+                        <li key={decision} className="flex items-start gap-2">
                           <div className="mt-1 min-w-[12px]">•</div>
                           <span className="text-sm text-slate-700">{decision}</span>
                         </li>
@@ -391,8 +440,8 @@ Alex: Sounds good. Let's also discuss budget constraints...
                 <div>
                   <h3 className="text-sm font-semibold mb-2">Participants</h3>
                   <div className="flex flex-wrap gap-2">
-                    {meeting.participants.map((participant, index) => (
-                      <Badge key={index} variant="outline">
+                    {meeting.participants.map((participant) => (
+                      <Badge key={participant} variant="outline">
                         {participant}
                       </Badge>
                     ))}
@@ -404,8 +453,12 @@ Alex: Sounds good. Let's also discuss budget constraints...
                     <BarChart3 className="w-4 h-4" /> Meeting Efficiency
                   </h3>
                   <div className="flex justify-between items-center mb-1">
-                    <span className="text-sm text-slate-600">Overall Score</span>
-                    <span className={`text-sm font-medium ${getEfficiencyColor(meeting.efficiency)}`}>
+                    <span className="text-sm text-slate-600">
+                      Overall Score
+                    </span>
+                    <span
+                      className={`text-sm font-medium ${getEfficiencyColor(meeting.efficiency)}`}
+                    >
                       {meeting.efficiency}%
                     </span>
                   </div>
@@ -422,40 +475,66 @@ Alex: Sounds good. Let's also discuss budget constraints...
             <TabsContent value="action-items" className="space-y-4 py-4">
               <div className="space-y-4">
                 <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                  <h3 className="text-sm font-semibold text-blue-900 mb-3">Add New Action Item</h3>
+                  <h3 className="text-sm font-semibold text-blue-900 mb-3">
+                    Add New Action Item
+                  </h3>
                   <div className="space-y-3">
                     <div>
-                      <label htmlFor="action-text" className="text-xs font-medium text-blue-800">
+                      <label
+                        htmlFor="action-text"
+                        className="text-xs font-medium text-blue-800"
+                      >
                         Action Item
                       </label>
                       <Input
                         id="action-text"
                         placeholder="Enter action item..."
                         value={newActionItem.text}
-                        onChange={(e) => setNewActionItem({ ...newActionItem, text: e.target.value })}
+                        onChange={(e) =>
+                          setNewActionItem({
+                            ...newActionItem,
+                            text: e.target.value,
+                          })
+                        }
                       />
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label htmlFor="assignee" className="text-xs font-medium text-blue-800">
+                        <label
+                          htmlFor="assignee"
+                          className="text-xs font-medium text-blue-800"
+                        >
                           Assignee
                         </label>
                         <Input
                           id="assignee"
                           placeholder="Who is responsible?"
                           value={newActionItem.assignee}
-                          onChange={(e) => setNewActionItem({ ...newActionItem, assignee: e.target.value })}
+                          onChange={(e) =>
+                            setNewActionItem({
+                              ...newActionItem,
+                              assignee: e.target.value,
+                            })
+                          }
                         />
                       </div>
                       <div>
-                        <label htmlFor="priority" className="text-xs font-medium text-blue-800">
+                        <label
+                          htmlFor="priority"
+                          className="text-xs font-medium text-blue-800"
+                        >
                           Priority
                         </label>
                         <select
                           id="priority"
                           className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm"
                           value={newActionItem.priority}
-                          onChange={(e) => setNewActionItem({ ...newActionItem, priority: e.target.value })}
+                          onChange={(e) =>
+                            setNewActionItem({
+                              ...newActionItem,
+                              priority: e.target.value,
+                            })
+                          }
                         >
                           <option value="low">Low</option>
                           <option value="medium">Medium</option>
@@ -469,30 +548,44 @@ Alex: Sounds good. Let's also discuss budget constraints...
                   </div>
                 </div>
 
-                <h3 className="text-sm font-semibold">Action Items ({meeting.actionItems.length})</h3>
+                <h3 className="text-sm font-semibold">
+                  Action Items ({meeting.actionItems.length})
+                </h3>
                 <div className="space-y-3">
                   {meeting.actionItems.map((item) => (
-                    <div key={item.id} className="flex items-start justify-between p-3 rounded-md bg-white border">
+                    <div
+                      key={item.id}
+                      className="flex items-start justify-between p-3 rounded-md bg-white border"
+                    >
                       <div className="flex items-start gap-3">
                         <div className="pt-0.5">
                           <Checkbox
                             checked={item.status === "completed"}
-                            onCheckedChange={() => toggleActionItemStatus(item.id)}
+                            onCheckedChange={() =>
+                              toggleActionItemStatus(item.id)
+                            }
                           />
                         </div>
                         <div>
                           <p
                             className={`text-sm ${
-                              item.status === "completed" ? "line-through text-slate-500" : "text-slate-900"
+                              item.status === "completed"
+                                ? "line-through text-slate-500"
+                                : "text-slate-900"
                             }`}
                           >
                             {item.text}
                           </p>
                           <div className="flex items-center gap-2 mt-1">
-                            <Badge variant="outline" className="text-xs py-0 px-1">
+                            <Badge
+                              variant="outline"
+                              className="text-xs py-0 px-1"
+                            >
                               {item.assignee}
                             </Badge>
-                            <Badge className={`text-xs py-0 px-1 ${getPriorityColor(item.priority)}`}>
+                            <Badge
+                              className={`text-xs py-0 px-1 ${getPriorityColor(item.priority)}`}
+                            >
                               {item.priority}
                             </Badge>
                           </div>
@@ -514,15 +607,23 @@ Alex: Sounds good. Let's also discuss budget constraints...
                 </div>
 
                 <div className="flex justify-between items-center mt-4">
-                  <span className="text-sm text-slate-600">Completion Progress</span>
+                  <span className="text-sm text-slate-600">
+                    Completion Progress
+                  </span>
                   <span className="text-sm font-medium">
-                    {meeting.actionItems.filter((item) => item.status === "completed").length}/
-                    {meeting.actionItems.length}
+                    {
+                      meeting.actionItems.filter(
+                        (item) => item.status === "completed",
+                      ).length
+                    }
+                    /{meeting.actionItems.length}
                   </span>
                 </div>
                 <Progress
                   value={
-                    (meeting.actionItems.filter((item) => item.status === "completed").length /
+                    (meeting.actionItems.filter(
+                      (item) => item.status === "completed",
+                    ).length /
                       meeting.actionItems.length) *
                     100
                   }
@@ -547,13 +648,16 @@ Alex: Sounds good. Let's also discuss budget constraints...
               </div>
 
               <div className="bg-white p-4 rounded-lg border overflow-auto max-h-[400px]">
-                <pre className="text-sm text-slate-700 whitespace-pre-wrap font-sans">{meeting.transcript}</pre>
+                <pre className="text-sm text-slate-700 whitespace-pre-wrap font-sans">
+                  {meeting.transcript}
+                </pre>
               </div>
 
               <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-md">
                 <p className="text-sm text-yellow-800">
-                  <strong>Note:</strong> This transcript was automatically generated and may contain errors. You can
-                  edit it by clicking the Edit button above.
+                  <strong>Note:</strong> This transcript was automatically
+                  generated and may contain errors. You can edit it by clicking
+                  the Edit button above.
                 </p>
               </div>
             </TabsContent>
@@ -561,30 +665,44 @@ Alex: Sounds good. Let's also discuss budget constraints...
             <TabsContent value="metrics" className="space-y-4 py-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <h3 className="text-sm font-semibold mb-3">Speaking Distribution</h3>
+                  <h3 className="text-sm font-semibold mb-3">
+                    Speaking Distribution
+                  </h3>
                   <div className="space-y-3">
-                    {meeting.metrics.speakingDistribution.map((person, index) => (
-                      <div key={index}>
+                    {meeting.metrics.speakingDistribution.map((person) => (
+                      <div key={person.name}>
                         <div className="flex justify-between text-sm mb-1">
                           <span>{person.name}</span>
                           <span>{person.percentage}%</span>
                         </div>
-                        <Progress value={person.percentage} className="h-2" />
+                        <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-blue-500 rounded-full"
+                            style={{ width: `${person.percentage}%` }}
+                          />
+                        </div>
                       </div>
                     ))}
                   </div>
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-semibold mb-3">Topics Discussed</h3>
+                  <h3 className="text-sm font-semibold mb-3">
+                    Topics Discussed
+                  </h3>
                   <div className="space-y-3">
-                    {meeting.metrics.topicsDiscussed.map((topic, index) => (
-                      <div key={index}>
+                    {meeting.metrics.topicsDiscussed.map((topic) => (
+                      <div key={topic.topic}>
                         <div className="flex justify-between text-sm mb-1">
                           <span>{topic.topic}</span>
                           <span>{topic.duration} min</span>
                         </div>
-                        <Progress value={(topic.duration / meeting.duration) * 100} className="h-2" />
+                        <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-blue-500 rounded-full"
+                            style={{ width: `${(topic.duration / 60) * 100}%` }}
+                          />
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -592,34 +710,47 @@ Alex: Sounds good. Let's also discuss budget constraints...
               </div>
 
               <div className="mt-6">
-                <h3 className="text-sm font-semibold mb-3">Meeting Sentiment</h3>
+                <h3 className="text-sm font-semibold mb-3">
+                  Meeting Sentiment
+                </h3>
                 <div className="flex items-center gap-4">
                   <div className="w-16 h-16 rounded-full bg-gradient-to-r from-red-500 via-yellow-500 to-green-500 relative">
                     <div
                       className="absolute w-4 h-4 bg-white rounded-full transform -translate-y-1/2"
-                      style={{ left: `${meeting.metrics.sentimentScore}%`, top: "50%" }}
-                    ></div>
+                      style={{
+                        left: `${meeting.metrics.sentimentScore}%`,
+                        top: "50%",
+                      }}
+                    />
                   </div>
                   <div>
-                    <p className="text-lg font-bold">{meeting.metrics.sentimentScore}/100</p>
-                    <p className="text-sm text-slate-600">Overall Positive Sentiment</p>
+                    <p className="text-lg font-bold">
+                      {meeting.metrics.sentimentScore}/100
+                    </p>
+                    <p className="text-sm text-slate-600">
+                      Overall Positive Sentiment
+                    </p>
                   </div>
                 </div>
               </div>
 
               <div className="mt-6 p-4 bg-slate-50 rounded-lg">
-                <h3 className="text-sm font-semibold mb-2">Meeting Efficiency Insights</h3>
+                <h3 className="text-sm font-semibold mb-2">
+                  Meeting Efficiency Insights
+                </h3>
                 <ul className="space-y-2 text-sm text-slate-700">
                   <li className="flex items-start gap-2">
                     <div className="mt-1 min-w-[12px]">•</div>
                     <span>
-                      This meeting was <strong>12% more efficient</strong> than your average meetings
+                      This meeting was <strong>12% more efficient</strong> than
+                      your average meetings
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <div className="mt-1 min-w-[12px]">•</div>
                     <span>
-                      <strong>Speaking balance</strong> was better than 75% of your meetings
+                      <strong>Speaking balance</strong> was better than 75% of
+                      your meetings
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
@@ -631,7 +762,8 @@ Alex: Sounds good. Let's also discuss budget constraints...
                   <li className="flex items-start gap-2">
                     <div className="mt-1 min-w-[12px]">•</div>
                     <span>
-                      Meeting could have been <strong>5 minutes shorter</strong> based on content
+                      Meeting could have been <strong>5 minutes shorter</strong>{" "}
+                      based on content
                     </span>
                   </li>
                 </ul>
@@ -645,7 +777,9 @@ Alex: Sounds good. Let's also discuss budget constraints...
                     <FileText className="w-8 h-8 text-blue-600" />
                     <div>
                       <h3 className="font-medium">Meeting Summary</h3>
-                      <p className="text-sm text-slate-600">Concise overview with key points</p>
+                      <p className="text-sm text-slate-600">
+                        Concise overview with key points
+                      </p>
                     </div>
                   </div>
                   <Button className="w-full">
@@ -659,7 +793,9 @@ Alex: Sounds good. Let's also discuss budget constraints...
                     <CheckSquare className="w-8 h-8 text-green-600" />
                     <div>
                       <h3 className="font-medium">Action Items</h3>
-                      <p className="text-sm text-slate-600">List of tasks and assignments</p>
+                      <p className="text-sm text-slate-600">
+                        List of tasks and assignments
+                      </p>
                     </div>
                   </div>
                   <Button className="w-full">
@@ -673,7 +809,9 @@ Alex: Sounds good. Let's also discuss budget constraints...
                     <Mic className="w-8 h-8 text-purple-600" />
                     <div>
                       <h3 className="font-medium">Full Transcript</h3>
-                      <p className="text-sm text-slate-600">Complete meeting conversation</p>
+                      <p className="text-sm text-slate-600">
+                        Complete meeting conversation
+                      </p>
                     </div>
                   </div>
                   <Button className="w-full">
@@ -687,7 +825,9 @@ Alex: Sounds good. Let's also discuss budget constraints...
                     <BarChart3 className="w-8 h-8 text-orange-600" />
                     <div>
                       <h3 className="font-medium">Meeting Analytics</h3>
-                      <p className="text-sm text-slate-600">Detailed metrics and insights</p>
+                      <p className="text-sm text-slate-600">
+                        Detailed metrics and insights
+                      </p>
                     </div>
                   </div>
                   <Button className="w-full">
@@ -700,11 +840,15 @@ Alex: Sounds good. Let's also discuss budget constraints...
               <div className="mt-4 p-4 bg-slate-50 rounded-lg">
                 <h3 className="text-sm font-semibold mb-2">Share Meeting</h3>
                 <div className="flex items-center gap-2">
-                  <Input placeholder="Enter email addresses..." className="flex-1" />
+                  <Input
+                    placeholder="Enter email addresses..."
+                    className="flex-1"
+                  />
                   <Button>Share</Button>
                 </div>
                 <p className="text-xs text-slate-500 mt-2">
-                  Recipients will receive a link to view this meeting summary and action items
+                  Recipients will receive a link to view this meeting summary
+                  and action items
                 </p>
               </div>
             </TabsContent>
@@ -712,5 +856,5 @@ Alex: Sounds good. Let's also discuss budget constraints...
         )}
       </DialogContent>
     </Dialog>
-  )
+  );
 }

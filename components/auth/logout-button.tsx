@@ -1,9 +1,5 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { LogOut, Loader2 } from "lucide-react"
-import { useAuth } from "./auth-provider"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,13 +10,17 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { Loader2, LogOut } from "lucide-react";
+import { useState } from "react";
+import { useAuth } from "./auth-provider";
 
 interface LogoutButtonProps {
-  variant?: "default" | "ghost" | "outline"
-  size?: "default" | "sm" | "lg"
-  showIcon?: boolean
-  showText?: boolean
+  variant?: "default" | "ghost" | "outline";
+  size?: "default" | "sm" | "lg";
+  showIcon?: boolean;
+  showText?: boolean;
 }
 
 export function LogoutButton({
@@ -29,19 +29,19 @@ export function LogoutButton({
   showIcon = true,
   showText = true,
 }: LogoutButtonProps) {
-  const [isLoading, setIsLoading] = useState(false)
-  const { signOut } = useAuth()
+  const [isLoading, setIsLoading] = useState(false);
+  const { signOut } = useAuth();
 
   const handleSignOut = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      await signOut()
+      await signOut();
     } catch (error) {
-      console.error("Error signing out:", error)
+      console.error("Error signing out:", error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <AlertDialog>
@@ -51,7 +51,9 @@ export function LogoutButton({
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : (
             <>
-              {showIcon && <LogOut className={`h-4 w-4 ${showText ? "mr-2" : ""}`} />}
+              {showIcon && (
+                <LogOut className={`h-4 w-4 ${showText ? "mr-2" : ""}`} />
+              )}
               {showText && "Sign Out"}
             </>
           )}
@@ -61,7 +63,8 @@ export function LogoutButton({
         <AlertDialogHeader>
           <AlertDialogTitle>Sign Out</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to sign out? You'll need to sign in again to access your dashboard.
+            Are you sure you want to sign out? You'll need to sign in again to
+            access your dashboard.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -79,5 +82,5 @@ export function LogoutButton({
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  )
+  );
 }

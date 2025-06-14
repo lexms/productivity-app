@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import { UserHeader } from "@/components/molecules/user-header"
-import { StatsGrid } from "@/components/molecules/stats-grid"
-import { DailyCheckinCard } from "@/components/molecules/daily-checkin-card"
-import { AiCoachCard } from "@/components/molecules/ai-coach-card"
-import { WeeklyProgress } from "@/components/molecules/weekly-progress"
+import { AiCoachCard } from "@/components/molecules/ai-coach-card";
+import { DailyCheckinCard } from "@/components/molecules/daily-checkin-card";
+import { StatsGrid } from "@/components/molecules/stats-grid";
+import { UserHeader } from "@/components/molecules/user-header";
+import { WeeklyProgress } from "@/components/molecules/weekly-progress";
 
 export function DashboardOverview() {
   // Mock user data moved inside the component
@@ -18,12 +18,16 @@ export function DashboardOverview() {
     rank: 3,
     tasksToday: 8,
     completedToday: 6,
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       <div className="max-w-7xl mx-auto p-4 space-y-6">
-        <UserHeader name={userData.name} points={userData.points} streak={userData.streak} />
+        <UserHeader
+          name={userData.name}
+          points={userData.points}
+          streak={userData.streak}
+        />
 
         <StatsGrid
           tasksToday={userData.tasksToday}
@@ -41,5 +45,5 @@ export function DashboardOverview() {
         <WeeklyProgress weeklyProgress={userData.weeklyProgress} />
       </div>
     </div>
-  )
+  );
 }

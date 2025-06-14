@@ -1,9 +1,6 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -11,28 +8,59 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Watch, Smartphone, Heart, Activity, Wifi, RefreshCw, CheckCircle2, AlertTriangle, Loader2 } from "lucide-react"
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import {
+  Activity,
+  AlertTriangle,
+  CheckCircle2,
+  Heart,
+  Loader2,
+  RefreshCw,
+  Smartphone,
+  Watch,
+  Wifi,
+} from "lucide-react";
+import { useState } from "react";
 
-interface WearableConnectProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  onConnect: (device: any) => void
+interface Device {
+  id: string | null;
+  name: string;
+  permissions: {
+    sleep: boolean;
+    heartRate: boolean;
+    activity: boolean;
+    stress: boolean;
+    location: boolean;
+  };
+  connected: boolean;
+  lastSync: string;
 }
 
-export function WearableConnect({ open, onOpenChange, onConnect }: WearableConnectProps) {
-  const [step, setStep] = useState(1)
-  const [selectedDevice, setSelectedDevice] = useState<string | null>(null)
-  const [isScanning, setIsScanning] = useState(false)
-  const [isConnecting, setIsConnecting] = useState(false)
-  const [connectionSuccess, setConnectionSuccess] = useState(false)
+interface WearableConnectProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onConnect: (device: Device) => void;
+}
+
+export function WearableConnect({
+  open,
+  onOpenChange,
+  onConnect,
+}: WearableConnectProps) {
+  const [step, setStep] = useState(1);
+  const [selectedDevice, setSelectedDevice] = useState<string | null>(null);
+  const [isScanning, setIsScanning] = useState(false);
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [connectionSuccess, setConnectionSuccess] = useState(false);
   const [dataPermissions, setDataPermissions] = useState({
     sleep: true,
     heartRate: true,
     activity: true,
     stress: true,
     location: false,
-  })
+  });
 
   const availableDevices = [
     { id: "apple-watch", name: "Apple Watch", type: "smartwatch", icon: Watch },
@@ -40,63 +68,80 @@ export function WearableConnect({ open, onOpenChange, onConnect }: WearableConne
     { id: "oura", name: "Oura Ring", type: "ring", icon: Heart },
     { id: "garmin", name: "Garmin", type: "sports-watch", icon: Watch },
     { id: "whoop", name: "Whoop", type: "band", icon: Heart },
-    { id: "samsung", name: "Samsung Galaxy Watch", type: "smartwatch", icon: Watch },
+    {
+      id: "samsung",
+      name: "Samsung Galaxy Watch",
+      type: "smartwatch",
+      icon: Watch,
+    },
     { id: "google", name: "Google Fit", type: "app", icon: Smartphone },
     { id: "withings", name: "Withings", type: "health-device", icon: Heart },
-  ]
+  ];
 
   const discoveredDevices = [
-    { id: "apple-watch-series7", name: "Apple Watch Series 7", batteryLevel: 78, signalStrength: 92 },
-    { id: "oura-gen3", name: "Oura Ring Gen 3", batteryLevel: 45, signalStrength: 85 },
-  ]
+    {
+      id: "apple-watch-series7",
+      name: "Apple Watch Series 7",
+      batteryLevel: 78,
+      signalStrength: 92,
+    },
+    {
+      id: "oura-gen3",
+      name: "Oura Ring Gen 3",
+      batteryLevel: 45,
+      signalStrength: 85,
+    },
+  ];
 
   const handleStartScan = () => {
-    setIsScanning(true)
+    setIsScanning(true);
     // Simulate scanning delay
     setTimeout(() => {
-      setIsScanning(false)
-      setStep(2)
-    }, 2000)
-  }
+      setIsScanning(false);
+      setStep(2);
+    }, 2000);
+  };
 
   const handleConnect = () => {
-    if (!selectedDevice) return
+    if (!selectedDevice) return;
 
-    setIsConnecting(true)
+    setIsConnecting(true);
     // Simulate connection delay
     setTimeout(() => {
-      setIsConnecting(false)
-      setConnectionSuccess(true)
+      setIsConnecting(false);
+      setConnectionSuccess(true);
       // Move to permissions step after showing success
       setTimeout(() => {
-        setStep(3)
-      }, 1000)
-    }, 2000)
-  }
+        setStep(3);
+      }, 1000);
+    }, 2000);
+  };
 
   const handleFinish = () => {
     // Create a mock connected device object
     const connectedDevice = {
       id: selectedDevice,
-      name: discoveredDevices.find((d) => d.id === selectedDevice)?.name || "Unknown Device",
+      name:
+        discoveredDevices.find((d) => d.id === selectedDevice)?.name ||
+        "Unknown Device",
       permissions: dataPermissions,
       connected: true,
       lastSync: new Date().toISOString(),
-    }
+    };
 
-    onConnect(connectedDevice)
-    onOpenChange(false)
+    onConnect(connectedDevice);
+    onOpenChange(false);
     // Reset state for next time
-    setStep(1)
-    setSelectedDevice(null)
-    setConnectionSuccess(false)
-  }
+    setStep(1);
+    setSelectedDevice(null);
+    setConnectionSuccess(false);
+  };
 
   const getSignalStrengthColor = (strength: number) => {
-    if (strength >= 80) return "bg-green-500"
-    if (strength >= 60) return "bg-yellow-500"
-    return "bg-red-500"
-  }
+    if (strength >= 80) return "bg-green-500";
+    if (strength >= 60) return "bg-yellow-500";
+    return "bg-red-500";
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -129,7 +174,11 @@ export function WearableConnect({ open, onOpenChange, onConnect }: WearableConne
             </div>
 
             <div className="pt-4">
-              <Button onClick={handleStartScan} disabled={!selectedDevice || isScanning} className="w-full">
+              <Button
+                onClick={handleStartScan}
+                disabled={!selectedDevice || isScanning}
+                className="w-full"
+              >
                 {isScanning ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -150,22 +199,31 @@ export function WearableConnect({ open, onOpenChange, onConnect }: WearableConne
           <div className="space-y-4 py-4">
             <div className="flex justify-between items-center">
               <h3 className="text-sm font-medium">Available Devices</h3>
-              <Button variant="ghost" size="sm" onClick={handleStartScan} disabled={isScanning}>
-                <RefreshCw className={`w-4 h-4 mr-1 ${isScanning ? "animate-spin" : ""}`} />
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleStartScan}
+                disabled={isScanning}
+              >
+                <RefreshCw
+                  className={`w-4 h-4 mr-1 ${isScanning ? "animate-spin" : ""}`}
+                />
                 Refresh
               </Button>
             </div>
 
             <div className="space-y-3">
               {discoveredDevices.map((device) => (
-                <div
+                <button
                   key={device.id}
-                  className={`p-4 rounded-lg border cursor-pointer transition-colors ${
+                  type="button"
+                  className={`w-full text-left p-4 rounded-lg border cursor-pointer transition-colors ${
                     selectedDevice === device.id
                       ? "bg-blue-50 border-blue-200"
                       : "bg-white border-slate-200 hover:bg-slate-50"
                   }`}
                   onClick={() => setSelectedDevice(device.id)}
+                  aria-label={`Select ${device.name} device with ${device.signalStrength}% signal and ${device.batteryLevel}% battery`}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
@@ -174,26 +232,36 @@ export function WearableConnect({ open, onOpenChange, onConnect }: WearableConne
                         <p className="font-medium">{device.name}</p>
                         <div className="flex items-center gap-2 mt-1">
                           <div className="flex items-center gap-1">
-                            <div className={`w-2 h-2 rounded-full ${getSignalStrengthColor(device.signalStrength)}`} />
-                            <span className="text-xs text-slate-500">{device.signalStrength}%</span>
+                            <div
+                              className={`w-2 h-2 rounded-full ${getSignalStrengthColor(device.signalStrength)}`}
+                            />
+                            <span className="text-xs text-slate-500">
+                              {device.signalStrength}%
+                            </span>
                           </div>
                           <span className="text-xs text-slate-500">•</span>
                           <div className="flex items-center gap-1">
                             <div
                               className={`w-2 h-2 rounded-full ${
-                                device.batteryLevel > 20 ? "bg-green-500" : "bg-red-500"
+                                device.batteryLevel > 20
+                                  ? "bg-green-500"
+                                  : "bg-red-500"
                               }`}
                             />
-                            <span className="text-xs text-slate-500">{device.batteryLevel}%</span>
+                            <span className="text-xs text-slate-500">
+                              {device.batteryLevel}%
+                            </span>
                           </div>
                         </div>
                       </div>
                     </div>
                     <div className="h-5 w-5 rounded-full border flex items-center justify-center">
-                      {selectedDevice === device.id && <div className="h-3 w-3 rounded-full bg-blue-600" />}
+                      {selectedDevice === device.id && (
+                        <div className="h-3 w-3 rounded-full bg-blue-600" />
+                      )}
                     </div>
                   </div>
-                </div>
+                </button>
               ))}
             </div>
 
@@ -224,10 +292,13 @@ export function WearableConnect({ open, onOpenChange, onConnect }: WearableConne
         {step === 3 && (
           <div className="space-y-4 py-4">
             <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <h3 className="text-sm font-semibold text-blue-900 mb-2">Data Access Permissions</h3>
+              <h3 className="text-sm font-semibold text-blue-900 mb-2">
+                Data Access Permissions
+              </h3>
               <p className="text-xs text-blue-800 mb-4">
-                Select which data you want to share with the productivity app. This helps provide personalized insights
-                based on your biometrics.
+                Select which data you want to share with the productivity app.
+                This helps provide personalized insights based on your
+                biometrics.
               </p>
 
               <div className="space-y-3">
@@ -241,7 +312,9 @@ export function WearableConnect({ open, onOpenChange, onConnect }: WearableConne
                   <Switch
                     id="sleep"
                     checked={dataPermissions.sleep}
-                    onCheckedChange={(checked) => setDataPermissions({ ...dataPermissions, sleep: checked })}
+                    onCheckedChange={(checked) =>
+                      setDataPermissions({ ...dataPermissions, sleep: checked })
+                    }
                   />
                 </div>
 
@@ -255,7 +328,12 @@ export function WearableConnect({ open, onOpenChange, onConnect }: WearableConne
                   <Switch
                     id="heartRate"
                     checked={dataPermissions.heartRate}
-                    onCheckedChange={(checked) => setDataPermissions({ ...dataPermissions, heartRate: checked })}
+                    onCheckedChange={(checked) =>
+                      setDataPermissions({
+                        ...dataPermissions,
+                        heartRate: checked,
+                      })
+                    }
                   />
                 </div>
 
@@ -269,7 +347,12 @@ export function WearableConnect({ open, onOpenChange, onConnect }: WearableConne
                   <Switch
                     id="activity"
                     checked={dataPermissions.activity}
-                    onCheckedChange={(checked) => setDataPermissions({ ...dataPermissions, activity: checked })}
+                    onCheckedChange={(checked) =>
+                      setDataPermissions({
+                        ...dataPermissions,
+                        activity: checked,
+                      })
+                    }
                   />
                 </div>
 
@@ -283,7 +366,12 @@ export function WearableConnect({ open, onOpenChange, onConnect }: WearableConne
                   <Switch
                     id="stress"
                     checked={dataPermissions.stress}
-                    onCheckedChange={(checked) => setDataPermissions({ ...dataPermissions, stress: checked })}
+                    onCheckedChange={(checked) =>
+                      setDataPermissions({
+                        ...dataPermissions,
+                        stress: checked,
+                      })
+                    }
                   />
                 </div>
 
@@ -297,7 +385,12 @@ export function WearableConnect({ open, onOpenChange, onConnect }: WearableConne
                   <Switch
                     id="location"
                     checked={dataPermissions.location}
-                    onCheckedChange={(checked) => setDataPermissions({ ...dataPermissions, location: checked })}
+                    onCheckedChange={(checked) =>
+                      setDataPermissions({
+                        ...dataPermissions,
+                        location: checked,
+                      })
+                    }
                   />
                 </div>
               </div>
@@ -305,8 +398,9 @@ export function WearableConnect({ open, onOpenChange, onConnect }: WearableConne
 
             <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-md">
               <p className="text-xs text-yellow-800">
-                <strong>Note:</strong> You can change these permissions at any time in the settings. Your data is
-                encrypted and never shared with third parties.
+                <strong>Note:</strong> You can change these permissions at any
+                time in the settings. Your data is encrypted and never shared
+                with third parties.
               </p>
             </div>
           </div>
@@ -314,7 +408,11 @@ export function WearableConnect({ open, onOpenChange, onConnect }: WearableConne
 
         <DialogFooter>
           {step > 1 && (
-            <Button variant="outline" onClick={() => setStep(step - 1)} className="mr-auto">
+            <Button
+              variant="outline"
+              onClick={() => setStep(step - 1)}
+              className="mr-auto"
+            >
               Back
             </Button>
           )}
@@ -327,5 +425,5 @@ export function WearableConnect({ open, onOpenChange, onConnect }: WearableConne
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

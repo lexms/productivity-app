@@ -1,14 +1,7 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Badge } from "@/components/ui/badge"
-import { Progress } from "@/components/ui/progress"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -16,132 +9,154 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { CheckCircle2, Clock, Calendar, Star, Play, Pause, MessageCircle, History, Trash2, Save, X } from "lucide-react"
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Calendar,
+  CheckCircle2,
+  Clock,
+  History,
+  MessageCircle,
+  Pause,
+  Play,
+  Save,
+  Star,
+  Trash2,
+  X,
+} from "lucide-react";
+import { useState } from "react";
 
-interface TaskDetailProps {
-  taskId: string
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  onSave: (task: any) => void
-  onDelete: (taskId: string) => void
+interface Task {
+  id: string;
+  title: string;
+  description: string;
+  status: string;
+  priority: string;
+  category: string;
+  dueDate: string;
+  tags: string[];
+  estimatedDuration: number;
+  actualDuration: number;
+  points: number;
+  scheduledDate: string;
+  timerActive: boolean;
+  timerSeconds: number;
+  subtasks: Array<{
+    id: string;
+    text: string;
+    completed: boolean;
+  }>;
+  comments: Array<{
+    id: string;
+    author: string;
+    text: string;
+    timestamp: string;
+  }>;
+  history: Array<{
+    action: string;
+    timestamp: string;
+  }>;
 }
 
-export function TaskDetail({ taskId, open, onOpenChange, onSave, onDelete }: TaskDetailProps) {
-  // Mock task data - in a real app, you would fetch this based on taskId
-  const [task, setTask] = useState({
-    id: taskId,
-    title: "Complete project proposal",
-    description: "Draft and review the Q1 project proposal for client presentation",
-    priority: "high",
-    category: "Work",
-    status: "in-progress",
-    estimatedDuration: 120,
-    actualDuration: 45,
-    points: 50,
-    scheduledDate: "2024-01-15",
-    timerActive: false,
-    timerSeconds: 2700,
-    tags: ["client", "proposal", "q1"],
-    subtasks: [
-      { id: "st1", text: "Research competitor offerings", completed: true },
-      { id: "st2", text: "Draft executive summary", completed: true },
-      { id: "st3", text: "Create project timeline", completed: false },
-      { id: "st4", text: "Prepare budget estimates", completed: false },
-    ],
-    comments: [
-      {
-        id: "c1",
-        author: "Sarah Chen",
-        text: "Don't forget to include the new pricing model in the proposal.",
-        timestamp: "2024-01-14T14:23:00",
-      },
-      {
-        id: "c2",
-        author: "Alex Johnson",
-        text: "I'll add that section today. Also planning to include case studies.",
-        timestamp: "2024-01-14T15:45:00",
-      },
-    ],
-    history: [
-      { action: "Created task", timestamp: "2024-01-13T09:15:00" },
-      { action: "Updated description", timestamp: "2024-01-13T11:30:00" },
-      { action: "Started timer", timestamp: "2024-01-14T10:00:00" },
-      { action: "Added subtasks", timestamp: "2024-01-14T13:45:00" },
-    ],
-  })
+interface TaskDetailProps {
+  task: Task;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onSave: (task: Task) => void;
+  onDelete: (taskId: string) => void;
+}
 
-  const [newComment, setNewComment] = useState("")
-  const [newSubtask, setNewSubtask] = useState("")
-  const [isEditing, setIsEditing] = useState(false)
-  const [editedTask, setEditedTask] = useState({ ...task })
+export function TaskDetail({
+  task,
+  open,
+  onOpenChange,
+  onSave,
+  onDelete,
+}: TaskDetailProps) {
+  const [editedTask, setEditedTask] = useState(task);
+  const [newComment, setNewComment] = useState("");
+  const [newSubtask, setNewSubtask] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
 
   const handleSave = () => {
-    setTask(editedTask)
-    onSave(editedTask)
-    setIsEditing(false)
-  }
+    setEditedTask(task);
+    onSave(editedTask);
+    setIsEditing(false);
+  };
 
   const handleAddComment = () => {
-    if (!newComment.trim()) return
+    if (!newComment.trim()) return;
 
     const comment = {
       id: `c${Date.now()}`,
       author: "Alex Johnson",
       text: newComment,
       timestamp: new Date().toISOString(),
-    }
+    };
 
-    setTask({
-      ...task,
-      comments: [...task.comments, comment],
-    })
-    setNewComment("")
-  }
+    setEditedTask({
+      ...editedTask,
+      comments: [...editedTask.comments, comment],
+    });
+    setNewComment("");
+  };
 
   const handleAddSubtask = () => {
-    if (!newSubtask.trim()) return
+    if (!newSubtask.trim()) return;
 
     const subtask = {
       id: `st${Date.now()}`,
       text: newSubtask,
       completed: false,
-    }
+    };
 
-    setTask({
-      ...task,
-      subtasks: [...task.subtasks, subtask],
-    })
-    setNewSubtask("")
-  }
+    setEditedTask({
+      ...editedTask,
+      subtasks: [...editedTask.subtasks, subtask],
+    });
+    setNewSubtask("");
+  };
 
   const toggleSubtask = (subtaskId: string) => {
-    setTask({
-      ...task,
-      subtasks: task.subtasks.map((st) => (st.id === subtaskId ? { ...st, completed: !st.completed } : st)),
-    })
-  }
+    setEditedTask({
+      ...editedTask,
+      subtasks: editedTask.subtasks.map((st) =>
+        st.id === subtaskId ? { ...st, completed: !st.completed } : st,
+      ),
+    });
+  };
 
   const toggleTimer = () => {
-    setTask({
-      ...task,
-      timerActive: !task.timerActive,
-    })
-  }
+    setEditedTask({
+      ...editedTask,
+      timerActive: !editedTask.timerActive,
+    });
+  };
 
   const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60)
-    const secs = seconds % 60
-    return `${mins}:${secs.toString().padStart(2, "0")}`
-  }
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
       day: "numeric",
-    })
-  }
+    });
+  };
 
   const formatTimestamp = (timestamp: string) => {
     return new Date(timestamp).toLocaleString("en-US", {
@@ -149,31 +164,37 @@ export function TaskDetail({ taskId, open, onOpenChange, onSave, onDelete }: Tas
       day: "numeric",
       hour: "numeric",
       minute: "2-digit",
-    })
-  }
+    });
+  };
 
   const priorityColors = {
     low: "bg-green-100 text-green-800",
     medium: "bg-yellow-100 text-yellow-800",
     high: "bg-red-100 text-red-800",
-  }
+  };
 
   const statusColors = {
     pending: "bg-slate-100 text-slate-800",
     "in-progress": "bg-blue-100 text-blue-800",
     completed: "bg-green-100 text-green-800",
     skipped: "bg-gray-100 text-gray-800",
-  }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <div className="flex items-center justify-between">
-            <DialogTitle className="text-xl">{isEditing ? "Edit Task" : "Task Details"}</DialogTitle>
+            <DialogTitle className="text-xl">
+              {isEditing ? "Edit Task" : "Task Details"}
+            </DialogTitle>
             <div className="flex items-center gap-2">
               {!isEditing && (
-                <Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsEditing(true)}
+                >
                   Edit
                 </Button>
               )}
@@ -189,7 +210,9 @@ export function TaskDetail({ taskId, open, onOpenChange, onSave, onDelete }: Tas
             </div>
           </div>
           <DialogDescription>
-            {isEditing ? "Make changes to this task" : "View and manage task details"}
+            {isEditing
+              ? "Make changes to this task"
+              : "View and manage task details"}
           </DialogDescription>
         </DialogHeader>
 
@@ -200,7 +223,9 @@ export function TaskDetail({ taskId, open, onOpenChange, onSave, onDelete }: Tas
               <Input
                 id="title"
                 value={editedTask.title}
-                onChange={(e) => setEditedTask({ ...editedTask, title: e.target.value })}
+                onChange={(e) =>
+                  setEditedTask({ ...editedTask, title: e.target.value })
+                }
               />
             </div>
             <div className="space-y-2">
@@ -208,7 +233,9 @@ export function TaskDetail({ taskId, open, onOpenChange, onSave, onDelete }: Tas
               <Textarea
                 id="description"
                 value={editedTask.description}
-                onChange={(e) => setEditedTask({ ...editedTask, description: e.target.value })}
+                onChange={(e) =>
+                  setEditedTask({ ...editedTask, description: e.target.value })
+                }
                 rows={3}
               />
             </div>
@@ -217,7 +244,9 @@ export function TaskDetail({ taskId, open, onOpenChange, onSave, onDelete }: Tas
                 <Label htmlFor="priority">Priority</Label>
                 <Select
                   value={editedTask.priority}
-                  onValueChange={(value) => setEditedTask({ ...editedTask, priority: value })}
+                  onValueChange={(value) =>
+                    setEditedTask({ ...editedTask, priority: value })
+                  }
                 >
                   <SelectTrigger id="priority">
                     <SelectValue placeholder="Select priority" />
@@ -233,7 +262,9 @@ export function TaskDetail({ taskId, open, onOpenChange, onSave, onDelete }: Tas
                 <Label htmlFor="status">Status</Label>
                 <Select
                   value={editedTask.status}
-                  onValueChange={(value) => setEditedTask({ ...editedTask, status: value })}
+                  onValueChange={(value) =>
+                    setEditedTask({ ...editedTask, status: value })
+                  }
                 >
                   <SelectTrigger id="status">
                     <SelectValue placeholder="Select status" />
@@ -253,7 +284,9 @@ export function TaskDetail({ taskId, open, onOpenChange, onSave, onDelete }: Tas
                 <Input
                   id="category"
                   value={editedTask.category}
-                  onChange={(e) => setEditedTask({ ...editedTask, category: e.target.value })}
+                  onChange={(e) =>
+                    setEditedTask({ ...editedTask, category: e.target.value })
+                  }
                 />
               </div>
               <div className="space-y-2">
@@ -262,19 +295,29 @@ export function TaskDetail({ taskId, open, onOpenChange, onSave, onDelete }: Tas
                   id="scheduledDate"
                   type="date"
                   value={editedTask.scheduledDate}
-                  onChange={(e) => setEditedTask({ ...editedTask, scheduledDate: e.target.value })}
+                  onChange={(e) =>
+                    setEditedTask({
+                      ...editedTask,
+                      scheduledDate: e.target.value,
+                    })
+                  }
                 />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="estimatedDuration">Estimated Duration (min)</Label>
+                <Label htmlFor="estimatedDuration">
+                  Estimated Duration (min)
+                </Label>
                 <Input
                   id="estimatedDuration"
                   type="number"
                   value={editedTask.estimatedDuration}
                   onChange={(e) =>
-                    setEditedTask({ ...editedTask, estimatedDuration: Number.parseInt(e.target.value) || 0 })
+                    setEditedTask({
+                      ...editedTask,
+                      estimatedDuration: Number.parseInt(e.target.value) || 0,
+                    })
                   }
                 />
               </div>
@@ -284,7 +327,12 @@ export function TaskDetail({ taskId, open, onOpenChange, onSave, onDelete }: Tas
                   id="points"
                   type="number"
                   value={editedTask.points}
-                  onChange={(e) => setEditedTask({ ...editedTask, points: Number.parseInt(e.target.value) || 0 })}
+                  onChange={(e) =>
+                    setEditedTask({
+                      ...editedTask,
+                      points: Number.parseInt(e.target.value) || 0,
+                    })
+                  }
                 />
               </div>
             </div>
@@ -294,7 +342,10 @@ export function TaskDetail({ taskId, open, onOpenChange, onSave, onDelete }: Tas
                 id="tags"
                 value={editedTask.tags.join(", ")}
                 onChange={(e) =>
-                  setEditedTask({ ...editedTask, tags: e.target.value.split(",").map((tag) => tag.trim()) })
+                  setEditedTask({
+                    ...editedTask,
+                    tags: e.target.value.split(",").map((tag) => tag.trim()),
+                  })
                 }
               />
             </div>
@@ -319,8 +370,18 @@ export function TaskDetail({ taskId, open, onOpenChange, onSave, onDelete }: Tas
 
             <TabsContent value="details" className="space-y-4 py-4">
               <div className="flex flex-wrap gap-2 mb-4">
-                <Badge className={priorityColors[task.priority as keyof typeof priorityColors]}>{task.priority}</Badge>
-                <Badge className={statusColors[task.status as keyof typeof statusColors]}>
+                <Badge
+                  className={
+                    priorityColors[task.priority as keyof typeof priorityColors]
+                  }
+                >
+                  {task.priority}
+                </Badge>
+                <Badge
+                  className={
+                    statusColors[task.status as keyof typeof statusColors]
+                  }
+                >
                   {task.status.replace("-", " ")}
                 </Badge>
                 <Badge variant="outline">{task.category}</Badge>
@@ -332,16 +393,22 @@ export function TaskDetail({ taskId, open, onOpenChange, onSave, onDelete }: Tas
               </div>
 
               <div className="space-y-2">
-                <p className="text-sm font-medium text-slate-700">Description</p>
+                <p className="text-sm font-medium text-slate-700">
+                  Description
+                </p>
                 <p className="text-sm text-slate-600">{task.description}</p>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm font-medium text-slate-700">Scheduled Date</p>
+                  <p className="text-sm font-medium text-slate-700">
+                    Scheduled Date
+                  </p>
                   <div className="flex items-center gap-2 mt-1">
                     <Calendar className="w-4 h-4 text-slate-500" />
-                    <span className="text-sm">{formatDate(task.scheduledDate)}</span>
+                    <span className="text-sm">
+                      {formatDate(task.scheduledDate)}
+                    </span>
                   </div>
                 </div>
                 <div>
@@ -355,17 +422,25 @@ export function TaskDetail({ taskId, open, onOpenChange, onSave, onDelete }: Tas
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm font-medium text-slate-700">Estimated Duration</p>
+                  <p className="text-sm font-medium text-slate-700">
+                    Estimated Duration
+                  </p>
                   <div className="flex items-center gap-2 mt-1">
                     <Clock className="w-4 h-4 text-slate-500" />
-                    <span className="text-sm">{task.estimatedDuration} minutes</span>
+                    <span className="text-sm">
+                      {task.estimatedDuration} minutes
+                    </span>
                   </div>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-slate-700">Time Spent</p>
+                  <p className="text-sm font-medium text-slate-700">
+                    Time Spent
+                  </p>
                   <div className="flex items-center gap-2 mt-1">
                     <Clock className="w-4 h-4 text-slate-500" />
-                    <span className="text-sm">{task.actualDuration || 0} minutes</span>
+                    <span className="text-sm">
+                      {task.actualDuration || 0} minutes
+                    </span>
                   </div>
                 </div>
               </div>
@@ -373,8 +448,12 @@ export function TaskDetail({ taskId, open, onOpenChange, onSave, onDelete }: Tas
               {task.status === "in-progress" && (
                 <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mt-4">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-blue-800">Focus Timer</span>
-                    <span className="text-lg font-mono text-blue-900">{formatTime(task.timerSeconds)}</span>
+                    <span className="text-sm font-medium text-blue-800">
+                      Focus Timer
+                    </span>
+                    <span className="text-lg font-mono text-blue-900">
+                      {formatTime(task.timerSeconds)}
+                    </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Button
@@ -396,7 +475,10 @@ export function TaskDetail({ taskId, open, onOpenChange, onSave, onDelete }: Tas
                       )}
                     </Button>
                     <Progress
-                      value={(task.timerSeconds / (task.estimatedDuration * 60)) * 100}
+                      value={
+                        (task.timerSeconds / (task.estimatedDuration * 60)) *
+                        100
+                      }
                       className="flex-1 h-2"
                     />
                   </div>
@@ -411,7 +493,7 @@ export function TaskDetail({ taskId, open, onOpenChange, onSave, onDelete }: Tas
                   value={newSubtask}
                   onChange={(e) => setNewSubtask(e.target.value)}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter") handleAddSubtask()
+                    if (e.key === "Enter") handleAddSubtask();
                   }}
                 />
                 <Button onClick={handleAddSubtask}>Add</Button>
@@ -423,14 +505,21 @@ export function TaskDetail({ taskId, open, onOpenChange, onSave, onDelete }: Tas
                     key={subtask.id}
                     className="flex items-center gap-2 p-2 rounded-md hover:bg-slate-50 transition-colors"
                   >
-                    <Button variant="ghost" size="sm" className="p-0 h-auto" onClick={() => toggleSubtask(subtask.id)}>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="p-0 h-auto"
+                      onClick={() => toggleSubtask(subtask.id)}
+                    >
                       {subtask.completed ? (
                         <CheckCircle2 className="w-5 h-5 text-green-600" />
                       ) : (
                         <div className="w-5 h-5 rounded-full border-2 border-slate-300" />
                       )}
                     </Button>
-                    <span className={`text-sm ${subtask.completed ? "line-through text-slate-500" : "text-slate-900"}`}>
+                    <span
+                      className={`text-sm ${subtask.completed ? "line-through text-slate-500" : "text-slate-900"}`}
+                    >
                       {subtask.text}
                     </span>
                   </div>
@@ -447,13 +536,16 @@ export function TaskDetail({ taskId, open, onOpenChange, onSave, onDelete }: Tas
                 <Progress
                   value={
                     task.subtasks.length > 0
-                      ? (task.subtasks.filter((st) => st.completed).length / task.subtasks.length) * 100
+                      ? (task.subtasks.filter((st) => st.completed).length /
+                          task.subtasks.length) *
+                        100
                       : 0
                   }
                   className="h-2"
                 />
                 <p className="text-xs text-slate-500 mt-1 text-right">
-                  {task.subtasks.filter((st) => st.completed).length}/{task.subtasks.length} completed
+                  {task.subtasks.filter((st) => st.completed).length}/
+                  {task.subtasks.length} completed
                 </p>
               </div>
             </TabsContent>
@@ -465,7 +557,7 @@ export function TaskDetail({ taskId, open, onOpenChange, onSave, onDelete }: Tas
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter") handleAddComment()
+                    if (e.key === "Enter") handleAddComment();
                   }}
                 />
                 <Button onClick={handleAddComment}>Post</Button>
@@ -475,8 +567,12 @@ export function TaskDetail({ taskId, open, onOpenChange, onSave, onDelete }: Tas
                 {task.comments.map((comment) => (
                   <div key={comment.id} className="p-3 bg-slate-50 rounded-lg">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="font-medium text-slate-900">{comment.author}</span>
-                      <span className="text-xs text-slate-500">{formatTimestamp(comment.timestamp)}</span>
+                      <span className="font-medium text-slate-900">
+                        {comment.author}
+                      </span>
+                      <span className="text-xs text-slate-500">
+                        {formatTimestamp(comment.timestamp)}
+                      </span>
                     </div>
                     <p className="text-sm text-slate-700">{comment.text}</p>
                   </div>
@@ -493,14 +589,18 @@ export function TaskDetail({ taskId, open, onOpenChange, onSave, onDelete }: Tas
 
             <TabsContent value="history" className="space-y-4 py-4">
               <div className="space-y-4">
-                {task.history.map((item, index) => (
-                  <div key={index} className="flex items-start gap-3">
+                {task.history.map((item) => (
+                  <div key={item.timestamp} className="flex items-start gap-3">
                     <div className="mt-1">
                       <History className="w-4 h-4 text-slate-500" />
                     </div>
                     <div>
-                      <p className="text-sm text-slate-900">{item.action}</p>
-                      <p className="text-xs text-slate-500">{formatTimestamp(item.timestamp)}</p>
+                      <p className="text-sm font-medium text-slate-900">
+                        {item.action}
+                      </p>
+                      <p className="text-xs text-slate-500">
+                        {new Date(item.timestamp).toLocaleString()}
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -519,5 +619,5 @@ export function TaskDetail({ taskId, open, onOpenChange, onSave, onDelete }: Tas
         )}
       </DialogContent>
     </Dialog>
-  )
+  );
 }

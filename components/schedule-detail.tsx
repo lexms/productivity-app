@@ -1,11 +1,7 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -13,21 +9,60 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Clock, Brain, Coffee, Users, Target, Zap, Settings, X, Save, Trash2, Edit } from "lucide-react"
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Brain,
+  Clock,
+  Coffee,
+  Edit,
+  Save,
+  Settings,
+  Target,
+  Trash2,
+  Users,
+  X,
+  Zap,
+} from "lucide-react";
+import { useState } from "react";
 
-interface ScheduleDetailProps {
-  timeSlot?: any
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  onSave?: (timeSlot: any) => void
-  onDelete?: (timeSlotId: string) => void
-  onClose?: () => void
+interface TimeSlot {
+  id: string;
+  activity: string;
+  time: string;
+  type: string;
+  priority: string;
+  energy: number;
+  reasoning: string;
 }
 
-export function ScheduleDetail({ timeSlot, open, onOpenChange, onSave, onDelete, onClose }: ScheduleDetailProps) {
-  const isCreating = !timeSlot
-  const [isEditing, setIsEditing] = useState(isCreating)
+interface ScheduleDetailProps {
+  timeSlot?: TimeSlot;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onSave?: (timeSlot: TimeSlot) => void;
+  onDelete?: (timeSlotId: string) => void;
+  onClose?: () => void;
+}
+
+export function ScheduleDetail({
+  timeSlot,
+  open,
+  onOpenChange,
+  onSave,
+  onDelete,
+  onClose,
+}: ScheduleDetailProps) {
+  const isCreating = !timeSlot;
+  const [isEditing, setIsEditing] = useState(isCreating);
 
   // Default values for new time slot
   const defaultTimeSlot = {
@@ -38,82 +73,84 @@ export function ScheduleDetail({ timeSlot, open, onOpenChange, onSave, onDelete,
     priority: "medium",
     energy: 7,
     reasoning: "",
-  }
+  };
 
-  const [editedTimeSlot, setEditedTimeSlot] = useState(timeSlot || defaultTimeSlot)
+  const [editedTimeSlot, setEditedTimeSlot] = useState(
+    timeSlot || defaultTimeSlot,
+  );
 
   const handleSave = () => {
     if (onSave) {
-      onSave(editedTimeSlot)
+      onSave(editedTimeSlot);
     }
-    setIsEditing(false)
-    onOpenChange(false)
-  }
+    setIsEditing(false);
+    onOpenChange(false);
+  };
 
   const handleClose = () => {
     if (onClose) {
-      onClose()
+      onClose();
     }
-    onOpenChange(false)
-  }
+    onOpenChange(false);
+  };
 
   const handleDelete = () => {
     if (onDelete && timeSlot?.id) {
-      onDelete(timeSlot.id)
+      onDelete(timeSlot.id);
     }
-    onOpenChange(false)
-  }
+    onOpenChange(false);
+  };
 
   const getActivityIcon = (type: string) => {
     switch (type) {
       case "deep-work":
-        return <Brain className="w-4 h-4" />
+        return <Brain className="w-4 h-4" />;
       case "meeting":
-        return <Users className="w-4 h-4" />
+        return <Users className="w-4 h-4" />;
       case "break":
-        return <Coffee className="w-4 h-4" />
+        return <Coffee className="w-4 h-4" />;
       case "communication":
-        return <Target className="w-4 h-4" />
+        return <Target className="w-4 h-4" />;
       case "admin":
-        return <Settings className="w-4 h-4" />
+        return <Settings className="w-4 h-4" />;
       case "focused-work":
-        return <Zap className="w-4 h-4" />
+        return <Zap className="w-4 h-4" />;
       default:
-        return <Clock className="w-4 h-4" />
+        return <Clock className="w-4 h-4" />;
     }
-  }
+  };
 
   const getActivityColor = (type: string) => {
     switch (type) {
       case "deep-work":
-        return "bg-purple-100 text-purple-800 border-purple-200"
+        return "bg-purple-100 text-purple-800 border-purple-200";
       case "meeting":
-        return "bg-blue-100 text-blue-800 border-blue-200"
+        return "bg-blue-100 text-blue-800 border-blue-200";
       case "break":
-        return "bg-green-100 text-green-800 border-green-200"
+        return "bg-green-100 text-green-800 border-green-200";
       case "communication":
-        return "bg-orange-100 text-orange-800 border-orange-200"
+        return "bg-orange-100 text-orange-800 border-orange-200";
       case "admin":
-        return "bg-slate-100 text-slate-800 border-slate-200"
+        return "bg-slate-100 text-slate-800 border-slate-200";
       case "focused-work":
-        return "bg-indigo-100 text-indigo-800 border-indigo-200"
+        return "bg-indigo-100 text-indigo-800 border-indigo-200";
       default:
-        return "bg-slate-100 text-slate-800 border-slate-200"
+        return "bg-slate-100 text-slate-800 border-slate-200";
     }
-  }
+  };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case "high":
-        return "bg-red-100 text-red-800"
+        return "bg-red-100 text-red-800";
       case "medium":
-        return "bg-yellow-100 text-yellow-800"
+        return "bg-yellow-100 text-yellow-800";
       case "low":
-        return "bg-green-100 text-green-800"
+        return "bg-green-100 text-green-800";
       default:
-        return "bg-slate-100 text-slate-800"
+        return "bg-slate-100 text-slate-800";
     }
-  }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -129,12 +166,22 @@ export function ScheduleDetail({ timeSlot, open, onOpenChange, onSave, onDelete,
             </DialogTitle>
             <div className="flex items-center gap-2">
               {!isEditing && !isCreating && (
-                <Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsEditing(true)}
+                >
                   <Edit className="w-4 h-4 mr-1" />
                   Edit
                 </Button>
               )}
-              <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={handleClose} aria-label="Close">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 p-0"
+                onClick={handleClose}
+                aria-label="Close"
+              >
                 <X className="h-4 w-4" />
               </Button>
             </div>
@@ -156,7 +203,12 @@ export function ScheduleDetail({ timeSlot, open, onOpenChange, onSave, onDelete,
                 id="activity"
                 placeholder="Enter activity name"
                 value={editedTimeSlot.activity}
-                onChange={(e) => setEditedTimeSlot({ ...editedTimeSlot, activity: e.target.value })}
+                onChange={(e) =>
+                  setEditedTimeSlot({
+                    ...editedTimeSlot,
+                    activity: e.target.value,
+                  })
+                }
               />
             </div>
 
@@ -167,14 +219,21 @@ export function ScheduleDetail({ timeSlot, open, onOpenChange, onSave, onDelete,
                   id="time"
                   type="time"
                   value={editedTimeSlot.time}
-                  onChange={(e) => setEditedTimeSlot({ ...editedTimeSlot, time: e.target.value })}
+                  onChange={(e) =>
+                    setEditedTimeSlot({
+                      ...editedTimeSlot,
+                      time: e.target.value,
+                    })
+                  }
                 />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="type">Activity Type</Label>
                 <Select
                   value={editedTimeSlot.type}
-                  onValueChange={(value) => setEditedTimeSlot({ ...editedTimeSlot, type: value })}
+                  onValueChange={(value) =>
+                    setEditedTimeSlot({ ...editedTimeSlot, type: value })
+                  }
                 >
                   <SelectTrigger id="type">
                     <SelectValue placeholder="Select type" />
@@ -196,7 +255,9 @@ export function ScheduleDetail({ timeSlot, open, onOpenChange, onSave, onDelete,
                 <Label htmlFor="priority">Priority</Label>
                 <Select
                   value={editedTimeSlot.priority}
-                  onValueChange={(value) => setEditedTimeSlot({ ...editedTimeSlot, priority: value })}
+                  onValueChange={(value) =>
+                    setEditedTimeSlot({ ...editedTimeSlot, priority: value })
+                  }
                 >
                   <SelectTrigger id="priority">
                     <SelectValue placeholder="Select priority" />
@@ -217,7 +278,10 @@ export function ScheduleDetail({ timeSlot, open, onOpenChange, onSave, onDelete,
                   max="10"
                   value={editedTimeSlot.energy}
                   onChange={(e) =>
-                    setEditedTimeSlot({ ...editedTimeSlot, energy: Number.parseInt(e.target.value) || 5 })
+                    setEditedTimeSlot({
+                      ...editedTimeSlot,
+                      energy: Number.parseInt(e.target.value) || 5,
+                    })
                   }
                 />
               </div>
@@ -229,12 +293,22 @@ export function ScheduleDetail({ timeSlot, open, onOpenChange, onSave, onDelete,
                 id="reasoning"
                 placeholder="Why is this the optimal time for this activity?"
                 value={editedTimeSlot.reasoning}
-                onChange={(e) => setEditedTimeSlot({ ...editedTimeSlot, reasoning: e.target.value })}
+                onChange={(e) =>
+                  setEditedTimeSlot({
+                    ...editedTimeSlot,
+                    reasoning: e.target.value,
+                  })
+                }
               />
             </div>
 
             <DialogFooter>
-              <Button variant="outline" onClick={() => (isCreating ? handleClose() : setIsEditing(false))}>
+              <Button
+                variant="outline"
+                onClick={() =>
+                  isCreating ? handleClose() : setIsEditing(false)
+                }
+              >
                 Cancel
               </Button>
               <Button onClick={handleSave}>
@@ -248,9 +322,13 @@ export function ScheduleDetail({ timeSlot, open, onOpenChange, onSave, onDelete,
             <div className="flex items-center gap-2 mb-4">
               <Badge className={getActivityColor(editedTimeSlot.type)}>
                 {getActivityIcon(editedTimeSlot.type)}
-                <span className="ml-1 capitalize">{editedTimeSlot.type.replace("-", " ")}</span>
+                <span className="ml-1 capitalize">
+                  {editedTimeSlot.type.replace("-", " ")}
+                </span>
               </Badge>
-              <Badge className={getPriorityColor(editedTimeSlot.priority)}>{editedTimeSlot.priority} priority</Badge>
+              <Badge className={getPriorityColor(editedTimeSlot.priority)}>
+                {editedTimeSlot.priority} priority
+              </Badge>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -262,7 +340,9 @@ export function ScheduleDetail({ timeSlot, open, onOpenChange, onSave, onDelete,
                 </div>
               </div>
               <div>
-                <p className="text-sm font-medium text-slate-700">Energy Level</p>
+                <p className="text-sm font-medium text-slate-700">
+                  Energy Level
+                </p>
                 <div className="flex items-center gap-2 mt-1">
                   <Zap className="w-4 h-4 text-slate-500" />
                   <span className="text-sm">{editedTimeSlot.energy}/10</span>
@@ -273,25 +353,31 @@ export function ScheduleDetail({ timeSlot, open, onOpenChange, onSave, onDelete,
             {editedTimeSlot.reasoning && (
               <div className="space-y-2">
                 <p className="text-sm font-medium text-slate-700">Reasoning</p>
-                <p className="text-sm text-slate-600 p-3 bg-slate-50 rounded-md">{editedTimeSlot.reasoning}</p>
+                <p className="text-sm text-slate-600 p-3 bg-slate-50 rounded-md">
+                  {editedTimeSlot.reasoning}
+                </p>
               </div>
             )}
 
             <div className="space-y-2">
-              <p className="text-sm font-medium text-slate-700">Optimization Tips</p>
+              <p className="text-sm font-medium text-slate-700">
+                Optimization Tips
+              </p>
               <div className="space-y-2">
                 {editedTimeSlot.type === "deep-work" && (
                   <>
                     <div className="flex items-start gap-2">
                       <div className="mt-1 min-w-[12px]">•</div>
                       <p className="text-sm text-slate-600">
-                        Consider using the Pomodoro technique (25 min work, 5 min break) during this session
+                        Consider using the Pomodoro technique (25 min work, 5
+                        min break) during this session
                       </p>
                     </div>
                     <div className="flex items-start gap-2">
                       <div className="mt-1 min-w-[12px]">•</div>
                       <p className="text-sm text-slate-600">
-                        Turn off notifications and close email to minimize distractions
+                        Turn off notifications and close email to minimize
+                        distractions
                       </p>
                     </div>
                   </>
@@ -301,12 +387,15 @@ export function ScheduleDetail({ timeSlot, open, onOpenChange, onSave, onDelete,
                   <>
                     <div className="flex items-start gap-2">
                       <div className="mt-1 min-w-[12px]">•</div>
-                      <p className="text-sm text-slate-600">Send an agenda 15 minutes before the meeting starts</p>
+                      <p className="text-sm text-slate-600">
+                        Send an agenda 15 minutes before the meeting starts
+                      </p>
                     </div>
                     <div className="flex items-start gap-2">
                       <div className="mt-1 min-w-[12px]">•</div>
                       <p className="text-sm text-slate-600">
-                        End the meeting 5 minutes early to allow for transition time
+                        End the meeting 5 minutes early to allow for transition
+                        time
                       </p>
                     </div>
                   </>
@@ -316,25 +405,33 @@ export function ScheduleDetail({ timeSlot, open, onOpenChange, onSave, onDelete,
                   <>
                     <div className="flex items-start gap-2">
                       <div className="mt-1 min-w-[12px]">•</div>
-                      <p className="text-sm text-slate-600">Step away from your screen to reduce eye strain</p>
-                    </div>
-                    <div className="flex items-start gap-2">
-                      <div className="mt-1 min-w-[12px]">•</div>
-                      <p className="text-sm text-slate-600">Try a quick 5-minute stretching routine to boost energy</p>
-                    </div>
-                  </>
-                )}
-
-                {(editedTimeSlot.type === "communication" || editedTimeSlot.type === "admin") && (
-                  <>
-                    <div className="flex items-start gap-2">
-                      <div className="mt-1 min-w-[12px]">•</div>
-                      <p className="text-sm text-slate-600">Batch similar tasks together to improve efficiency</p>
+                      <p className="text-sm text-slate-600">
+                        Step away from your screen to reduce eye strain
+                      </p>
                     </div>
                     <div className="flex items-start gap-2">
                       <div className="mt-1 min-w-[12px]">•</div>
                       <p className="text-sm text-slate-600">
-                        Set a time limit for email processing to avoid getting sidetracked
+                        Try a quick 5-minute stretching routine to boost energy
+                      </p>
+                    </div>
+                  </>
+                )}
+
+                {(editedTimeSlot.type === "communication" ||
+                  editedTimeSlot.type === "admin") && (
+                  <>
+                    <div className="flex items-start gap-2">
+                      <div className="mt-1 min-w-[12px]">•</div>
+                      <p className="text-sm text-slate-600">
+                        Batch similar tasks together to improve efficiency
+                      </p>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <div className="mt-1 min-w-[12px]">•</div>
+                      <p className="text-sm text-slate-600">
+                        Set a time limit for email processing to avoid getting
+                        sidetracked
                       </p>
                     </div>
                   </>
@@ -354,5 +451,5 @@ export function ScheduleDetail({ timeSlot, open, onOpenChange, onSave, onDelete,
         )}
       </DialogContent>
     </Dialog>
-  )
+  );
 }

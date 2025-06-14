@@ -1,65 +1,77 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Badge } from "@/components/ui/badge"
-import { Progress } from "@/components/ui/progress"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogFooter,
-} from "@/components/ui/dialog"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dialog";
 import {
-  Users,
-  Upload,
-  FileText,
-  CheckCircle2,
-  Clock,
-  Calendar,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
   BarChart3,
-  ChevronDown,
-  Plus,
-  Mic,
-  FileAudio,
-  FileTextIcon,
-  MoreHorizontal,
+  Calendar,
+  CheckCircle2,
   CheckSquare,
+  ChevronDown,
+  Clock,
+  FileAudio,
+  FileText,
+  FileTextIcon,
   ListTodo,
   MessageSquare,
+  Mic,
+  MoreHorizontal,
+  Plus,
   Trash2,
-} from "lucide-react"
+  Upload,
+  Users,
+} from "lucide-react";
+import { useState } from "react";
 
 interface Meeting {
-  id: string
-  title: string
-  date: string
-  duration: number
-  participants: string[]
-  status: "analyzed" | "pending" | "in-progress"
-  efficiency: number
-  actionItems: ActionItem[]
-  summary: string
-  transcript?: string
+  id: string;
+  title: string;
+  date: string;
+  duration: number;
+  participants: string[];
+  status: "analyzed" | "pending" | "in-progress";
+  efficiency: number;
+  actionItems: ActionItem[];
+  summary: string;
+  transcript?: string;
 }
 
 interface ActionItem {
-  id: string
-  text: string
-  assignee: string
-  status: "pending" | "completed"
-  priority: "low" | "medium" | "high"
-  convertedToTask: boolean
+  id: string;
+  text: string;
+  assignee: string;
+  status: "pending" | "completed";
+  priority: "low" | "medium" | "high";
+  convertedToTask: boolean;
 }
 
 export function MeetingManagement() {
@@ -106,7 +118,13 @@ export function MeetingManagement() {
       title: "Weekly Team Standup",
       date: "2024-01-17",
       duration: 25,
-      participants: ["Alex Johnson", "Sarah Chen", "Mike Wilson", "Emma Davis", "David Lee"],
+      participants: [
+        "Alex Johnson",
+        "Sarah Chen",
+        "Mike Wilson",
+        "Emma Davis",
+        "David Lee",
+      ],
       status: "analyzed",
       efficiency: 92,
       actionItems: [
@@ -135,33 +153,40 @@ export function MeetingManagement() {
       title: "Client Feedback Session",
       date: "2024-01-18",
       duration: 60,
-      participants: ["Alex Johnson", "Sarah Chen", "Client: John Smith", "Client: Lisa Wong"],
+      participants: [
+        "Alex Johnson",
+        "Sarah Chen",
+        "Client: John Smith",
+        "Client: Lisa Wong",
+      ],
       status: "pending",
       efficiency: 0,
       actionItems: [],
       summary: "",
     },
-  ])
+  ]);
 
-  const [selectedMeeting, setSelectedMeeting] = useState<Meeting | null>(null)
-  const [uploadDialogOpen, setUploadDialogOpen] = useState(false)
-  const [uploadFile, setUploadFile] = useState<File | null>(null)
-  const [uploadType, setUploadType] = useState<"transcript" | "recording">("transcript")
-  const [isAnalyzing, setIsAnalyzing] = useState(false)
+  const [selectedMeeting, setSelectedMeeting] = useState<Meeting | null>(null);
+  const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
+  const [uploadFile, setUploadFile] = useState<File | null>(null);
+  const [uploadType, setUploadType] = useState<"transcript" | "recording">(
+    "transcript",
+  );
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setUploadFile(e.target.files[0])
+    if (e.target.files?.[0]) {
+      setUploadFile(e.target.files[0]);
     }
-  }
+  };
 
   const handleUpload = () => {
-    setIsAnalyzing(true)
+    setIsAnalyzing(true);
     // Simulate analysis process
     setTimeout(() => {
-      setIsAnalyzing(false)
-      setUploadDialogOpen(false)
-      setUploadFile(null)
+      setIsAnalyzing(false);
+      setUploadDialogOpen(false);
+      setUploadFile(null);
 
       // Update the meeting with mock analysis results
       if (selectedMeeting) {
@@ -192,61 +217,66 @@ export function MeetingManagement() {
               ],
               summary:
                 "Client provided feedback on the latest prototype. They liked the overall direction but requested changes to the navigation and color scheme. Timeline concerns were raised regarding the delivery of the reporting feature. Team committed to providing an updated timeline by next week.",
-            }
+            };
           }
-          return meeting
-        })
-        setMeetings(updatedMeetings)
+          return meeting;
+        });
+        setMeetings(updatedMeetings);
       }
-    }, 3000)
-  }
+    }, 3000);
+  };
 
   const handleConvertToTask = (meetingId: string, actionItemId: string) => {
     const updatedMeetings = meetings.map((meeting) => {
       if (meeting.id === meetingId) {
         const updatedActionItems = meeting.actionItems.map((item) => {
           if (item.id === actionItemId) {
-            return { ...item, convertedToTask: true }
+            return { ...item, convertedToTask: true };
           }
-          return item
-        })
-        return { ...meeting, actionItems: updatedActionItems }
+          return item;
+        });
+        return { ...meeting, actionItems: updatedActionItems };
       }
-      return meeting
-    })
-    setMeetings(updatedMeetings)
-  }
+      return meeting;
+    });
+    setMeetings(updatedMeetings);
+  };
 
   const getEfficiencyColor = (efficiency: number) => {
-    if (efficiency >= 85) return "text-green-600"
-    if (efficiency >= 70) return "text-yellow-600"
-    return "text-red-600"
-  }
+    if (efficiency >= 85) return "text-green-600";
+    if (efficiency >= 70) return "text-yellow-600";
+    return "text-red-600";
+  };
 
   const getEfficiencyBadge = (efficiency: number) => {
-    if (efficiency >= 85) return "bg-green-100 text-green-800"
-    if (efficiency >= 70) return "bg-yellow-100 text-yellow-800"
-    return "bg-red-100 text-red-800"
-  }
+    if (efficiency >= 85) return "bg-green-100 text-green-800";
+    if (efficiency >= 70) return "bg-yellow-100 text-yellow-800";
+    return "bg-red-100 text-red-800";
+  };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case "high":
-        return "bg-red-100 text-red-800"
+        return "bg-red-100 text-red-800";
       case "medium":
-        return "bg-yellow-100 text-yellow-800"
+        return "bg-yellow-100 text-yellow-800";
       case "low":
-        return "bg-green-100 text-green-800"
+        return "bg-green-100 text-green-800";
       default:
-        return "bg-slate-100 text-slate-800"
+        return "bg-slate-100 text-slate-800";
     }
-  }
+  };
 
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-slate-900">Meeting Management</h2>
-        <p className="text-slate-600">Analyze transcripts, extract action items, and improve meeting efficiency</p>
+        <h2 className="text-2xl font-bold text-slate-900">
+          Meeting Management
+        </h2>
+        <p className="text-slate-600">
+          Analyze transcripts, extract action items, and improve meeting
+          efficiency
+        </p>
       </div>
 
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -270,7 +300,9 @@ export function MeetingManagement() {
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
               <DialogTitle>Add New Meeting</DialogTitle>
-              <DialogDescription>Create a new meeting record to analyze later</DialogDescription>
+              <DialogDescription>
+                Create a new meeting record to analyze later
+              </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
               <div className="space-y-2">
@@ -289,7 +321,10 @@ export function MeetingManagement() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="participants">Participants</Label>
-                <Input id="participants" placeholder="Enter names separated by commas" />
+                <Input
+                  id="participants"
+                  placeholder="Enter names separated by commas"
+                />
               </div>
             </div>
             <DialogFooter>
@@ -313,8 +348,8 @@ export function MeetingManagement() {
               meeting={meeting}
               onSelect={() => setSelectedMeeting(meeting)}
               onUpload={() => {
-                setSelectedMeeting(meeting)
-                setUploadDialogOpen(true)
+                setSelectedMeeting(meeting);
+                setUploadDialogOpen(true);
               }}
               onConvertToTask={handleConvertToTask}
               getEfficiencyColor={getEfficiencyColor}
@@ -333,8 +368,8 @@ export function MeetingManagement() {
                 meeting={meeting}
                 onSelect={() => setSelectedMeeting(meeting)}
                 onUpload={() => {
-                  setSelectedMeeting(meeting)
-                  setUploadDialogOpen(true)
+                  setSelectedMeeting(meeting);
+                  setUploadDialogOpen(true);
                 }}
                 onConvertToTask={handleConvertToTask}
                 getEfficiencyColor={getEfficiencyColor}
@@ -353,8 +388,8 @@ export function MeetingManagement() {
                 meeting={meeting}
                 onSelect={() => setSelectedMeeting(meeting)}
                 onUpload={() => {
-                  setSelectedMeeting(meeting)
-                  setUploadDialogOpen(true)
+                  setSelectedMeeting(meeting);
+                  setUploadDialogOpen(true);
                 }}
                 onConvertToTask={handleConvertToTask}
                 getEfficiencyColor={getEfficiencyColor}
@@ -370,7 +405,10 @@ export function MeetingManagement() {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Upload Meeting Content</DialogTitle>
-            <DialogDescription>Upload a transcript or recording to analyze and extract action items</DialogDescription>
+            <DialogDescription>
+              Upload a transcript or recording to analyze and extract action
+              items
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="flex space-x-2">
@@ -403,8 +441,14 @@ export function MeetingManagement() {
                     )}
                   </div>
                   <p className="text-sm font-medium">{uploadFile.name}</p>
-                  <p className="text-xs text-slate-500">{(uploadFile.size / 1024 / 1024).toFixed(2)} MB</p>
-                  <Button variant="outline" size="sm" onClick={() => setUploadFile(null)}>
+                  <p className="text-xs text-slate-500">
+                    {(uploadFile.size / 1024 / 1024).toFixed(2)} MB
+                  </p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setUploadFile(null)}
+                  >
                     Remove
                   </Button>
                 </div>
@@ -415,8 +459,11 @@ export function MeetingManagement() {
                   </div>
                   <div className="space-y-2">
                     <p className="text-sm font-medium">
-                      Drag and drop your {uploadType === "transcript" ? "transcript file" : "audio recording"} or click
-                      to browse
+                      Drag and drop your{" "}
+                      {uploadType === "transcript"
+                        ? "transcript file"
+                        : "audio recording"}{" "}
+                      or click to browse
                     </p>
                     <p className="text-xs text-slate-500">
                       {uploadType === "transcript"
@@ -427,11 +474,20 @@ export function MeetingManagement() {
                       id="file-upload"
                       type="file"
                       className="hidden"
-                      accept={uploadType === "transcript" ? ".txt,.docx,.pdf" : "audio/mp3,audio/wav,audio/m4a"}
+                      accept={
+                        uploadType === "transcript"
+                          ? ".txt,.docx,.pdf"
+                          : "audio/mp3,audio/wav,audio/m4a"
+                      }
                       onChange={handleFileChange}
                     />
                     <Label htmlFor="file-upload" className="cursor-pointer">
-                      <Button variant="outline" size="sm" className="mt-2" type="button">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="mt-2"
+                        type="button"
+                      >
                         Browse Files
                       </Button>
                     </Label>
@@ -441,10 +497,16 @@ export function MeetingManagement() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setUploadDialogOpen(false)}>
+            <Button
+              variant="outline"
+              onClick={() => setUploadDialogOpen(false)}
+            >
               Cancel
             </Button>
-            <Button onClick={handleUpload} disabled={!uploadFile || isAnalyzing}>
+            <Button
+              onClick={handleUpload}
+              disabled={!uploadFile || isAnalyzing}
+            >
               {isAnalyzing ? (
                 <>
                   <div className="animate-spin mr-2 h-4 w-4 border-2 border-b-transparent border-white rounded-full" />
@@ -458,17 +520,17 @@ export function MeetingManagement() {
         </DialogContent>
       </Dialog>
     </div>
-  )
+  );
 }
 
 interface MeetingCardProps {
-  meeting: Meeting
-  onSelect: () => void
-  onUpload: () => void
-  onConvertToTask: (meetingId: string, actionItemId: string) => void
-  getEfficiencyColor: (efficiency: number) => string
-  getEfficiencyBadge: (efficiency: number) => string
-  getPriorityColor: (priority: string) => string
+  meeting: Meeting;
+  onSelect?: () => void;
+  onUpload: () => void;
+  onConvertToTask: (meetingId: string, actionItemId: string) => void;
+  getEfficiencyColor: (efficiency: number) => string;
+  getEfficiencyBadge: (efficiency: number) => string;
+  getPriorityColor: (priority: string) => string;
 }
 
 function MeetingCard({
@@ -480,12 +542,16 @@ function MeetingCard({
   getEfficiencyBadge,
   getPriorityColor,
 }: MeetingCardProps) {
-  const [expanded, setExpanded] = useState(false)
+  const [expanded, setExpanded] = useState(false);
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    return date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
-  }
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
 
   return (
     <Card className="hover:shadow-md transition-shadow">
@@ -554,12 +620,16 @@ function MeetingCard({
             {/* Action Items */}
             <div>
               <h4 className="text-sm font-semibold mb-2 flex items-center">
-                <CheckSquare className="w-4 h-4 mr-1" /> Action Items ({meeting.actionItems.length})
+                <CheckSquare className="w-4 h-4 mr-1" /> Action Items (
+                {meeting.actionItems.length})
               </h4>
               <div className="space-y-2">
                 {expanded
                   ? meeting.actionItems.map((item) => (
-                      <div key={item.id} className="flex items-start justify-between p-2 rounded-md bg-slate-50 border">
+                      <div
+                        key={item.id}
+                        className="flex items-start justify-between p-2 rounded-md bg-slate-50 border"
+                      >
                         <div className="flex items-start gap-2">
                           <div className="pt-0.5">
                             {item.status === "completed" ? (
@@ -571,16 +641,23 @@ function MeetingCard({
                           <div>
                             <p
                               className={`text-sm ${
-                                item.status === "completed" ? "line-through text-slate-500" : "text-slate-900"
+                                item.status === "completed"
+                                  ? "line-through text-slate-500"
+                                  : "text-slate-900"
                               }`}
                             >
                               {item.text}
                             </p>
                             <div className="flex items-center gap-2 mt-1">
-                              <Badge variant="outline" className="text-xs py-0 px-1">
+                              <Badge
+                                variant="outline"
+                                className="text-xs py-0 px-1"
+                              >
                                 {item.assignee}
                               </Badge>
-                              <Badge className={`text-xs py-0 px-1 ${getPriorityColor(item.priority)}`}>
+                              <Badge
+                                className={`text-xs py-0 px-1 ${getPriorityColor(item.priority)}`}
+                              >
                                 {item.priority}
                               </Badge>
                             </div>
@@ -600,7 +677,10 @@ function MeetingCard({
                       </div>
                     ))
                   : meeting.actionItems.slice(0, 2).map((item) => (
-                      <div key={item.id} className="flex items-start justify-between p-2 rounded-md bg-slate-50 border">
+                      <div
+                        key={item.id}
+                        className="flex items-start justify-between p-2 rounded-md bg-slate-50 border"
+                      >
                         <div className="flex items-start gap-2">
                           <div className="pt-0.5">
                             {item.status === "completed" ? (
@@ -612,16 +692,23 @@ function MeetingCard({
                           <div>
                             <p
                               className={`text-sm ${
-                                item.status === "completed" ? "line-through text-slate-500" : "text-slate-900"
+                                item.status === "completed"
+                                  ? "line-through text-slate-500"
+                                  : "text-slate-900"
                               }`}
                             >
                               {item.text}
                             </p>
                             <div className="flex items-center gap-2 mt-1">
-                              <Badge variant="outline" className="text-xs py-0 px-1">
+                              <Badge
+                                variant="outline"
+                                className="text-xs py-0 px-1"
+                              >
                                 {item.assignee}
                               </Badge>
-                              <Badge className={`text-xs py-0 px-1 ${getPriorityColor(item.priority)}`}>
+                              <Badge
+                                className={`text-xs py-0 px-1 ${getPriorityColor(item.priority)}`}
+                              >
                                 {item.priority}
                               </Badge>
                             </div>
@@ -642,14 +729,24 @@ function MeetingCard({
                     ))}
 
                 {meeting.actionItems.length > 2 && !expanded && (
-                  <Button variant="ghost" size="sm" className="w-full text-xs" onClick={() => setExpanded(true)}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="w-full text-xs"
+                    onClick={() => setExpanded(true)}
+                  >
                     Show {meeting.actionItems.length - 2} more action items
                     <ChevronDown className="w-3 h-3 ml-1" />
                   </Button>
                 )}
 
                 {expanded && (
-                  <Button variant="ghost" size="sm" className="w-full text-xs" onClick={() => setExpanded(false)}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="w-full text-xs"
+                    onClick={() => setExpanded(false)}
+                  >
                     Show less
                   </Button>
                 )}
@@ -662,7 +759,9 @@ function MeetingCard({
                 <h4 className="text-sm font-semibold flex items-center">
                   <BarChart3 className="w-4 h-4 mr-1" /> Meeting Efficiency
                 </h4>
-                <span className={`text-sm font-medium ${getEfficiencyColor(meeting.efficiency)}`}>
+                <span
+                  className={`text-sm font-medium ${getEfficiencyColor(meeting.efficiency)}`}
+                >
                   {meeting.efficiency}%
                 </span>
               </div>
@@ -697,5 +796,5 @@ function MeetingCard({
         )}
       </CardFooter>
     </Card>
-  )
+  );
 }

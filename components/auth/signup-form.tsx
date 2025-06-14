@@ -1,60 +1,67 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { createClient } from "@/lib/supabase/client"
-import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Github, Mail, Loader2 } from "lucide-react"
-import Link from "next/link"
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { createClient } from "@/lib/supabase/client";
+import { Github, Loader2, Mail } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export function SignupForm() {
   const [formData, setFormData] = useState({
     email: "",
     fullName: "",
     agreeToTerms: false,
-  })
-  const [isLoading, setIsLoading] = useState(false)
-  const [isGoogleLoading, setIsGoogleLoading] = useState(false)
-  const [isGithubLoading, setIsGithubLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [message, setMessage] = useState<string | null>(null)
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [isGithubLoading, setIsGithubLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
 
-  const router = useRouter()
-  const supabase = createClient()
+  const _router = useRouter();
+  const supabase = createClient();
 
   const handleInputChange = (field: string, value: string | boolean) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
-  }
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
 
   const validateForm = () => {
     if (!formData.email || !formData.fullName) {
-      setError("Please fill in all required fields")
-      return false
+      setError("Please fill in all required fields");
+      return false;
     }
 
     if (!formData.agreeToTerms) {
-      setError("Please agree to the terms and conditions")
-      return false
+      setError("Please agree to the terms and conditions");
+      return false;
     }
 
-    return true
-  }
+    return true;
+  };
 
   const handleOTPSignup = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError(null)
+    e.preventDefault();
+    setError(null);
 
-    if (!validateForm()) return
+    if (!validateForm()) return;
 
-    setIsLoading(true)
+    setIsLoading(true);
 
     try {
       const { error } = await supabase.auth.signInWithOtp({
@@ -65,24 +72,25 @@ export function SignupForm() {
           },
           emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
-      })
+      });
 
       if (error) {
-        setError(error.message)
+        setError(error.message);
       } else {
-        setMessage("Check your email for the magic link to complete signup!")
+        setMessage("Check your email for the magic link to complete signup!");
       }
-    } catch (err) {
-      setError("An unexpected error occurred")
+    } catch (_err) {
+      setError("An unexpected error occurred");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleSocialSignup = async (provider: "google" | "github") => {
-    const setLoading = provider === "google" ? setIsGoogleLoading : setIsGithubLoading
-    setLoading(true)
-    setError(null)
+    const setLoading =
+      provider === "google" ? setIsGoogleLoading : setIsGithubLoading;
+    setLoading(true);
+    setError(null);
 
     try {
       const { error } = await supabase.auth.signInWithOAuth({
@@ -90,23 +98,25 @@ export function SignupForm() {
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
         },
-      })
+      });
 
       if (error) {
-        setError(error.message)
+        setError(error.message);
       }
-    } catch (err) {
-      setError("An unexpected error occurred")
+    } catch (_err) {
+      setError("An unexpected error occurred");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <Card className="w-full">
       <CardHeader>
         <CardTitle>Create Account</CardTitle>
-        <CardDescription>Enter your details to receive a magic link</CardDescription>
+        <CardDescription>
+          Enter your details to receive a magic link
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {error && (
@@ -129,7 +139,11 @@ export function SignupForm() {
             onClick={() => handleSocialSignup("google")}
             disabled={isGoogleLoading || isGithubLoading || isLoading}
           >
-            {isGoogleLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Mail className="mr-2 h-4 w-4" />}
+            {isGoogleLoading ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <Mail className="mr-2 h-4 w-4" />
+            )}
             Continue with Google
           </Button>
 
@@ -139,7 +153,11 @@ export function SignupForm() {
             onClick={() => handleSocialSignup("github")}
             disabled={isGoogleLoading || isGithubLoading || isLoading}
           >
-            {isGithubLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Github className="mr-2 h-4 w-4" />}
+            {isGithubLoading ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <Github className="mr-2 h-4 w-4" />
+            )}
             Continue with GitHub
           </Button>
         </div>
@@ -149,7 +167,9 @@ export function SignupForm() {
             <Separator className="w-full" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">Or continue with email</span>
+            <span className="bg-background px-2 text-muted-foreground">
+              Or continue with email
+            </span>
           </div>
         </div>
 
@@ -185,7 +205,9 @@ export function SignupForm() {
             <Checkbox
               id="terms"
               checked={formData.agreeToTerms}
-              onCheckedChange={(checked) => handleInputChange("agreeToTerms", checked === true)}
+              onCheckedChange={(checked) =>
+                handleInputChange("agreeToTerms", checked === true)
+              }
               disabled={isLoading || isGoogleLoading || isGithubLoading}
             />
             <Label htmlFor="terms" className="text-sm font-normal">
@@ -200,7 +222,11 @@ export function SignupForm() {
             </Label>
           </div>
 
-          <Button type="submit" className="w-full" disabled={isLoading || isGoogleLoading || isGithubLoading}>
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={isLoading || isGoogleLoading || isGithubLoading}
+          >
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -215,11 +241,14 @@ export function SignupForm() {
       <CardFooter className="flex flex-col space-y-2">
         <div className="text-sm text-center text-muted-foreground">
           Already have an account?{" "}
-          <Link href="/login" className="text-primary hover:underline font-medium">
+          <Link
+            href="/login"
+            className="text-primary hover:underline font-medium"
+          >
             Sign in
           </Link>
         </div>
       </CardFooter>
     </Card>
-  )
+  );
 }

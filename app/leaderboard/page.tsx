@@ -1,4 +1,4 @@
-import { Leaderboard } from "@/components/leaderboard"
+import { Leaderboard } from "@/components/leaderboard";
 
 export default function LeaderboardPage() {
   return (
@@ -9,5 +9,5 @@ export default function LeaderboardPage() {
       </div>
       <Leaderboard />
     </div>
-  )
+  );
 }

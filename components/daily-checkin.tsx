@@ -1,11 +1,7 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Slider } from "@/components/ui/slider"
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -13,11 +9,15 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Sun, Moon, CheckCircle2, Target, Heart, Brain } from "lucide-react"
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
+import { Textarea } from "@/components/ui/textarea";
+import { Brain, CheckCircle2, Heart, Moon, Sun, Target } from "lucide-react";
+import { useState } from "react";
 
 interface CheckinProps {
-  type: "morning" | "evening"
+  type: "morning" | "evening";
 }
 
 export function DailyCheckin({ type }: CheckinProps) {
@@ -29,24 +29,30 @@ export function DailyCheckin({ type }: CheckinProps) {
     achievements: "",
     challenges: "",
     reflections: "",
-  })
+  });
 
-  const [isCompleted, setIsCompleted] = useState(false)
+  const [isCompleted, setIsCompleted] = useState(false);
 
   const handleSubmit = () => {
-    setIsCompleted(true)
+    setIsCompleted(true);
     // Here you would typically save to your backend
-    console.log("Check-in submitted:", checkinData)
-  }
+    console.log("Check-in submitted:", checkinData);
+  };
 
-  const isMorning = type === "morning"
+  const isMorning = type === "morning";
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          {isMorning ? <Sun className="w-5 h-5 text-yellow-500" /> : <Moon className="w-5 h-5 text-blue-500" />}
-          <span className="font-medium">{isMorning ? "Morning" : "Evening"} Check-in</span>
+          {isMorning ? (
+            <Sun className="w-5 h-5 text-yellow-500" />
+          ) : (
+            <Moon className="w-5 h-5 text-blue-500" />
+          )}
+          <span className="font-medium">
+            {isMorning ? "Morning" : "Evening"} Check-in
+          </span>
         </div>
         {isCompleted ? (
           <Badge className="bg-green-100 text-green-800">
@@ -60,14 +66,24 @@ export function DailyCheckin({ type }: CheckinProps) {
 
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant={isCompleted ? "outline" : "default"} className="w-full" disabled={isCompleted}>
-            {isCompleted ? "View Check-in" : `Complete ${isMorning ? "Morning" : "Evening"} Check-in`}
+          <Button
+            variant={isCompleted ? "outline" : "default"}
+            className="w-full"
+            disabled={isCompleted}
+          >
+            {isCompleted
+              ? "View Check-in"
+              : `Complete ${isMorning ? "Morning" : "Evening"} Check-in`}
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-lg max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              {isMorning ? <Sun className="w-5 h-5 text-yellow-500" /> : <Moon className="w-5 h-5 text-blue-500" />}
+              {isMorning ? (
+                <Sun className="w-5 h-5 text-yellow-500" />
+              ) : (
+                <Moon className="w-5 h-5 text-blue-500" />
+              )}
               {isMorning ? "Morning" : "Evening"} Check-in
             </DialogTitle>
             <DialogDescription>
@@ -87,7 +103,9 @@ export function DailyCheckin({ type }: CheckinProps) {
               <div className="px-3">
                 <Slider
                   value={checkinData.energy}
-                  onValueChange={(value) => setCheckinData({ ...checkinData, energy: value })}
+                  onValueChange={(value) =>
+                    setCheckinData({ ...checkinData, energy: value })
+                  }
                   max={10}
                   min={1}
                   step={1}
@@ -95,7 +113,9 @@ export function DailyCheckin({ type }: CheckinProps) {
                 />
                 <div className="flex justify-between text-xs text-slate-600 mt-1">
                   <span>Low (1)</span>
-                  <span className="font-medium">Current: {checkinData.energy[0]}</span>
+                  <span className="font-medium">
+                    Current: {checkinData.energy[0]}
+                  </span>
                   <span>High (10)</span>
                 </div>
               </div>
@@ -110,7 +130,9 @@ export function DailyCheckin({ type }: CheckinProps) {
               <div className="px-3">
                 <Slider
                   value={checkinData.mood}
-                  onValueChange={(value) => setCheckinData({ ...checkinData, mood: value })}
+                  onValueChange={(value) =>
+                    setCheckinData({ ...checkinData, mood: value })
+                  }
                   max={10}
                   min={1}
                   step={1}
@@ -118,7 +140,9 @@ export function DailyCheckin({ type }: CheckinProps) {
                 />
                 <div className="flex justify-between text-xs text-slate-600 mt-1">
                   <span>😔 (1)</span>
-                  <span className="font-medium">Current: {checkinData.mood[0]}</span>
+                  <span className="font-medium">
+                    Current: {checkinData.mood[0]}
+                  </span>
                   <span>😊 (10)</span>
                 </div>
               </div>
@@ -136,7 +160,9 @@ export function DailyCheckin({ type }: CheckinProps) {
                     id="goals"
                     placeholder="What do you want to accomplish today?"
                     value={checkinData.goals}
-                    onChange={(e) => setCheckinData({ ...checkinData, goals: e.target.value })}
+                    onChange={(e) =>
+                      setCheckinData({ ...checkinData, goals: e.target.value })
+                    }
                   />
                 </div>
 
@@ -147,7 +173,12 @@ export function DailyCheckin({ type }: CheckinProps) {
                     id="priorities"
                     placeholder="List your most important tasks for today"
                     value={checkinData.priorities}
-                    onChange={(e) => setCheckinData({ ...checkinData, priorities: e.target.value })}
+                    onChange={(e) =>
+                      setCheckinData({
+                        ...checkinData,
+                        priorities: e.target.value,
+                      })
+                    }
                   />
                 </div>
               </>
@@ -163,7 +194,12 @@ export function DailyCheckin({ type }: CheckinProps) {
                     id="achievements"
                     placeholder="What did you accomplish today?"
                     value={checkinData.achievements}
-                    onChange={(e) => setCheckinData({ ...checkinData, achievements: e.target.value })}
+                    onChange={(e) =>
+                      setCheckinData({
+                        ...checkinData,
+                        achievements: e.target.value,
+                      })
+                    }
                   />
                 </div>
 
@@ -174,7 +210,12 @@ export function DailyCheckin({ type }: CheckinProps) {
                     id="challenges"
                     placeholder="What obstacles did you encounter?"
                     value={checkinData.challenges}
-                    onChange={(e) => setCheckinData({ ...checkinData, challenges: e.target.value })}
+                    onChange={(e) =>
+                      setCheckinData({
+                        ...checkinData,
+                        challenges: e.target.value,
+                      })
+                    }
                   />
                 </div>
 
@@ -185,7 +226,12 @@ export function DailyCheckin({ type }: CheckinProps) {
                     id="reflections"
                     placeholder="Any insights or thoughts about today?"
                     value={checkinData.reflections}
-                    onChange={(e) => setCheckinData({ ...checkinData, reflections: e.target.value })}
+                    onChange={(e) =>
+                      setCheckinData({
+                        ...checkinData,
+                        reflections: e.target.value,
+                      })
+                    }
                   />
                 </div>
               </>
@@ -210,5 +256,5 @@ export function DailyCheckin({ type }: CheckinProps) {
         </div>
       )}
     </div>
-  )
+  );
 }

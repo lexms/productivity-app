@@ -1,10 +1,6 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Slider } from "@/components/ui/slider"
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -12,17 +8,51 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Sun, Moon, Heart, Brain, Battery, CheckCircle2, Target, X, Save } from "lucide-react"
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Battery,
+  Brain,
+  CheckCircle2,
+  Heart,
+  Moon,
+  Save,
+  Sun,
+  Target,
+  X,
+} from "lucide-react";
+import { useState } from "react";
 
-interface DailyCheckinFormProps {
-  type: "morning" | "evening"
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  onSubmit: (data: any) => void
+export interface CheckinData {
+  energy: number[];
+  mood: number[];
+  focus: number[];
+  goals: string;
+  priorities: string;
+  achievements: string;
+  challenges: string;
+  reflections: string;
+  gratitude: string;
+  tomorrow: string;
+  type: "morning" | "evening";
+  timestamp: string;
 }
 
-export function DailyCheckinForm({ type, open, onOpenChange, onSubmit }: DailyCheckinFormProps) {
+interface DailyCheckinFormProps {
+  type: "morning" | "evening";
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onSubmit: (data: CheckinData) => void;
+}
+
+export function DailyCheckinForm({
+  type,
+  open,
+  onOpenChange,
+  onSubmit,
+}: DailyCheckinFormProps) {
   const [formData, setFormData] = useState({
     energy: [7],
     mood: [8],
@@ -34,18 +64,18 @@ export function DailyCheckinForm({ type, open, onOpenChange, onSubmit }: DailyCh
     reflections: "",
     gratitude: "",
     tomorrow: "",
-  })
+  });
 
   const handleSubmit = () => {
     onSubmit({
       ...formData,
       type,
       timestamp: new Date().toISOString(),
-    })
-    onOpenChange(false)
-  }
+    });
+    onOpenChange(false);
+  };
 
-  const isMorning = type === "morning"
+  const isMorning = type === "morning";
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -92,7 +122,9 @@ export function DailyCheckinForm({ type, open, onOpenChange, onSubmit }: DailyCh
             <div className="px-3">
               <Slider
                 value={formData.energy}
-                onValueChange={(value) => setFormData({ ...formData, energy: value })}
+                onValueChange={(value) =>
+                  setFormData({ ...formData, energy: value })
+                }
                 max={10}
                 min={1}
                 step={1}
@@ -100,7 +132,9 @@ export function DailyCheckinForm({ type, open, onOpenChange, onSubmit }: DailyCh
               />
               <div className="flex justify-between text-xs text-slate-600 mt-1">
                 <span>Low (1)</span>
-                <span className="font-medium">Current: {formData.energy[0]}</span>
+                <span className="font-medium">
+                  Current: {formData.energy[0]}
+                </span>
                 <span>High (10)</span>
               </div>
             </div>
@@ -115,7 +149,9 @@ export function DailyCheckinForm({ type, open, onOpenChange, onSubmit }: DailyCh
             <div className="px-3">
               <Slider
                 value={formData.mood}
-                onValueChange={(value) => setFormData({ ...formData, mood: value })}
+                onValueChange={(value) =>
+                  setFormData({ ...formData, mood: value })
+                }
                 max={10}
                 min={1}
                 step={1}
@@ -138,7 +174,9 @@ export function DailyCheckinForm({ type, open, onOpenChange, onSubmit }: DailyCh
             <div className="px-3">
               <Slider
                 value={formData.focus}
-                onValueChange={(value) => setFormData({ ...formData, focus: value })}
+                onValueChange={(value) =>
+                  setFormData({ ...formData, focus: value })
+                }
                 max={10}
                 min={1}
                 step={1}
@@ -146,7 +184,9 @@ export function DailyCheckinForm({ type, open, onOpenChange, onSubmit }: DailyCh
               />
               <div className="flex justify-between text-xs text-slate-600 mt-1">
                 <span>Scattered (1)</span>
-                <span className="font-medium">Current: {formData.focus[0]}</span>
+                <span className="font-medium">
+                  Current: {formData.focus[0]}
+                </span>
                 <span>Laser (10)</span>
               </div>
             </div>
@@ -164,7 +204,9 @@ export function DailyCheckinForm({ type, open, onOpenChange, onSubmit }: DailyCh
                   id="goals"
                   placeholder="What do you want to accomplish today?"
                   value={formData.goals}
-                  onChange={(e) => setFormData({ ...formData, goals: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, goals: e.target.value })
+                  }
                   rows={3}
                 />
               </div>
@@ -176,7 +218,9 @@ export function DailyCheckinForm({ type, open, onOpenChange, onSubmit }: DailyCh
                   id="priorities"
                   placeholder="List your most important tasks for today"
                   value={formData.priorities}
-                  onChange={(e) => setFormData({ ...formData, priorities: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, priorities: e.target.value })
+                  }
                   rows={3}
                 />
               </div>
@@ -188,7 +232,9 @@ export function DailyCheckinForm({ type, open, onOpenChange, onSubmit }: DailyCh
                   id="gratitude"
                   placeholder="What are you grateful for today?"
                   value={formData.gratitude}
-                  onChange={(e) => setFormData({ ...formData, gratitude: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, gratitude: e.target.value })
+                  }
                   rows={2}
                 />
               </div>
@@ -205,7 +251,9 @@ export function DailyCheckinForm({ type, open, onOpenChange, onSubmit }: DailyCh
                   id="achievements"
                   placeholder="What did you accomplish today?"
                   value={formData.achievements}
-                  onChange={(e) => setFormData({ ...formData, achievements: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, achievements: e.target.value })
+                  }
                   rows={3}
                 />
               </div>
@@ -217,7 +265,9 @@ export function DailyCheckinForm({ type, open, onOpenChange, onSubmit }: DailyCh
                   id="challenges"
                   placeholder="What obstacles did you encounter?"
                   value={formData.challenges}
-                  onChange={(e) => setFormData({ ...formData, challenges: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, challenges: e.target.value })
+                  }
                   rows={3}
                 />
               </div>
@@ -229,7 +279,9 @@ export function DailyCheckinForm({ type, open, onOpenChange, onSubmit }: DailyCh
                   id="reflections"
                   placeholder="Any insights or thoughts about today?"
                   value={formData.reflections}
-                  onChange={(e) => setFormData({ ...formData, reflections: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, reflections: e.target.value })
+                  }
                   rows={3}
                 />
               </div>
@@ -241,7 +293,9 @@ export function DailyCheckinForm({ type, open, onOpenChange, onSubmit }: DailyCh
                   id="tomorrow"
                   placeholder="What will you focus on tomorrow?"
                   value={formData.tomorrow}
-                  onChange={(e) => setFormData({ ...formData, tomorrow: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, tomorrow: e.target.value })
+                  }
                   rows={2}
                 />
               </div>
@@ -257,5 +311,5 @@ export function DailyCheckinForm({ type, open, onOpenChange, onSubmit }: DailyCh
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@/components/ui/badge";
 
 interface StatusBadgeProps {
-  status: "pending" | "in-progress" | "completed" | "skipped"
+  status: "pending" | "in-progress" | "completed" | "skipped";
 }
 
 export function StatusBadge({ status }: StatusBadgeProps) {
@@ -12,7 +12,7 @@ export function StatusBadge({ status }: StatusBadgeProps) {
     "in-progress": "bg-blue-100 text-blue-800",
     completed: "bg-green-100 text-green-800",
     skipped: "bg-gray-100 text-gray-800",
-  }
+  };
 
-  return <Badge className={colors[status]}>{status.replace("-", " ")}</Badge>
+  return <Badge className={colors[status]}>{status.replace("-", " ")}</Badge>;
 }

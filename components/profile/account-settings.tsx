@@ -1,16 +1,8 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { createClient } from "@/lib/supabase/client"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { toast } from "@/hooks/use-toast"
-import { LogoutButton } from "@/components/auth/logout-button"
-import { Loader2, Shield, Trash2 } from "lucide-react"
+import { LogoutButton } from "@/components/auth/logout-button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,20 +13,34 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import type { User } from "@supabase/supabase-js"
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { toast } from "@/hooks/use-toast";
+import { createClient } from "@/lib/supabase/client";
+import type { User } from "@supabase/supabase-js";
+import { Loader2, Shield, Trash2 } from "lucide-react";
+import { useState } from "react";
 
 interface AccountSettingsProps {
-  user: User
+  user: User;
 }
 
 export function AccountSettings({ user }: AccountSettingsProps) {
-  const [isDeletingAccount, setIsDeletingAccount] = useState(false)
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
 
-  const supabase = createClient()
+  const _supabase = createClient();
 
   const handleDeleteAccount = async () => {
-    setIsDeletingAccount(true)
+    setIsDeletingAccount(true);
 
     try {
       // Note: In a real app, you'd want to handle this server-side
@@ -42,17 +48,18 @@ export function AccountSettings({ user }: AccountSettingsProps) {
       toast({
         title: "Account deletion requested",
         description: "Please contact support to complete account deletion.",
-      })
-    } catch (error: any) {
+      });
+    } catch (error: unknown) {
       toast({
         title: "Error",
-        description: error.message || "Failed to delete account.",
+        description:
+          error instanceof Error ? error.message : "Failed to delete account.",
         variant: "destructive",
-      })
+      });
     } finally {
-      setIsDeletingAccount(false)
+      setIsDeletingAccount(false);
     }
-  }
+  };
 
   return (
     <div className="space-y-6">
@@ -63,7 +70,9 @@ export function AccountSettings({ user }: AccountSettingsProps) {
             <Shield className="h-5 w-5" />
             Account Information
           </CardTitle>
-          <CardDescription>View your account details and authentication information.</CardDescription>
+          <CardDescription>
+            View your account details and authentication information.
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -73,7 +82,10 @@ export function AccountSettings({ user }: AccountSettingsProps) {
             </div>
             <div>
               <Label>Account Created</Label>
-              <Input value={new Date(user.created_at).toLocaleDateString()} disabled />
+              <Input
+                value={new Date(user.created_at).toLocaleDateString()}
+                disabled
+              />
             </div>
           </div>
           <div>
@@ -87,7 +99,9 @@ export function AccountSettings({ user }: AccountSettingsProps) {
       <Card>
         <CardHeader>
           <CardTitle>Account Actions</CardTitle>
-          <CardDescription>Manage your account settings and data.</CardDescription>
+          <CardDescription>
+            Manage your account settings and data.
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex flex-col sm:flex-row gap-4">
@@ -95,7 +109,10 @@ export function AccountSettings({ user }: AccountSettingsProps) {
 
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant="destructive" className="flex items-center gap-2">
+                <Button
+                  variant="destructive"
+                  className="flex items-center gap-2"
+                >
                   <Trash2 className="h-4 w-4" />
                   Delete Account
                 </Button>
@@ -104,8 +121,8 @@ export function AccountSettings({ user }: AccountSettingsProps) {
                 <AlertDialogHeader>
                   <AlertDialogTitle>Delete Account</AlertDialogTitle>
                   <AlertDialogDescription>
-                    This action cannot be undone. This will permanently delete your account and remove all your data
-                    from our servers.
+                    This action cannot be undone. This will permanently delete
+                    your account and remove all your data from our servers.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
@@ -131,5 +148,5 @@ export function AccountSettings({ user }: AccountSettingsProps) {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
