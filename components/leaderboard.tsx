@@ -182,15 +182,6 @@ export function Leaderboard() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold text-slate-900">
-          Leaderboard & Achievements
-        </h2>
-        <p className="text-slate-600">
-          Track your progress and compete with others
-        </p>
-      </div>
-
       {/* Personal Stats */}
       <Card>
         <CardHeader>

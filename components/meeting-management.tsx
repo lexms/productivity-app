@@ -269,16 +269,6 @@ export function MeetingManagement() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold text-slate-900">
-          Meeting Management
-        </h2>
-        <p className="text-slate-600">
-          Analyze transcripts, extract action items, and improve meeting
-          efficiency
-        </p>
-      </div>
-
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="flex items-center gap-2">
           <Badge variant="outline" className="px-2 py-1">

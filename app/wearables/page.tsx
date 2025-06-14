@@ -1,13 +1,14 @@
 import { WearablesIntegration } from "@/components/wearables-integration";
+import { PageHeader } from "@/components/molecules/page-header";
 
 export default function WearablesPage() {
   return (
-    <div className="p-4 md:p-6 lg:p-8">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">
-          Wearables Integration
-        </h1>
-        <p className="text-gray-600">Connect and sync your fitness devices</p>
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <PageHeader
+          title="Wearables Integration"
+          description="Connect and sync your fitness devices"
+        />
       </div>
       <WearablesIntegration />
     </div>

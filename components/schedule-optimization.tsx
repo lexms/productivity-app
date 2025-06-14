@@ -61,7 +61,9 @@ export function ScheduleOptimization() {
   const [deepWorkPreference, setDeepWorkPreference] = useState(true);
   const [meetingBatching, setMeetingBatching] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [selectedTimeSlot, setSelectedTimeSlot] = useState<TimeSlot | undefined>(undefined);
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState<
+    TimeSlot | undefined
+  >(undefined);
   const [detailOpen, setDetailOpen] = useState(false);
   const [dataSourcesExpanded, setDataSourcesExpanded] = useState(false);
 
@@ -452,72 +454,62 @@ export function ScheduleOptimization() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-slate-900">
-            Schedule Optimization
-          </h2>
-          <p className="text-slate-600">
-            AI-powered scheduling based on your productivity patterns
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button variant="outline">
-                <Settings className="w-4 h-4 mr-2" />
-                Preferences
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-md">
-              <DialogHeader>
-                <DialogTitle>Schedule Preferences</DialogTitle>
-                <DialogDescription>
-                  Customize your schedule optimization settings
-                </DialogDescription>
-              </DialogHeader>
-              <div className="space-y-4 py-4">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="auto-scheduling">Auto-scheduling</Label>
-                  <Switch
-                    id="auto-scheduling"
-                    checked={autoScheduling}
-                    onCheckedChange={setAutoScheduling}
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="deep-work">Protect deep work time</Label>
-                  <Switch
-                    id="deep-work"
-                    checked={deepWorkPreference}
-                    onCheckedChange={setDeepWorkPreference}
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="meeting-batching">Batch meetings</Label>
-                  <Switch
-                    id="meeting-batching"
-                    checked={meetingBatching}
-                    onCheckedChange={setMeetingBatching}
-                  />
-                </div>
+      <div className="flex items-center gap-3">
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="outline">
+              <Settings className="w-4 h-4 mr-2" />
+              Preferences
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Schedule Preferences</DialogTitle>
+              <DialogDescription>
+                Customize your schedule optimization settings
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="auto-scheduling">Auto-scheduling</Label>
+                <Switch
+                  id="auto-scheduling"
+                  checked={autoScheduling}
+                  onCheckedChange={setAutoScheduling}
+                />
               </div>
-            </DialogContent>
-          </Dialog>
-          <Button onClick={handleRegenerateSchedule} disabled={isGenerating}>
-            {isGenerating ? (
-              <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Generating...
-              </>
-            ) : (
-              <>
-                <RefreshCw className="w-4 h-4 mr-2" />
-                Regenerate Schedule
-              </>
-            )}
-          </Button>
-        </div>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="deep-work">Protect deep work time</Label>
+                <Switch
+                  id="deep-work"
+                  checked={deepWorkPreference}
+                  onCheckedChange={setDeepWorkPreference}
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="meeting-batching">Batch meetings</Label>
+                <Switch
+                  id="meeting-batching"
+                  checked={meetingBatching}
+                  onCheckedChange={setMeetingBatching}
+                />
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+        <Button onClick={handleRegenerateSchedule} disabled={isGenerating}>
+          {isGenerating ? (
+            <>
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              Generating...
+            </>
+          ) : (
+            <>
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Regenerate Schedule
+            </>
+          )}
+        </Button>
       </div>
 
       {/* Data Sources Card */}
@@ -887,9 +879,7 @@ export function ScheduleOptimization() {
                     <div className="text-xs text-slate-500 mt-1">
                       {entry.activity}
                     </div>
-                    <div className="text-xs text-slate-500">
-                      {entry.peak}
-                    </div>
+                    <div className="text-xs text-slate-500">{entry.peak}</div>
                   </div>
                 ))}
               </div>

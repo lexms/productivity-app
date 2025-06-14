@@ -1,11 +1,14 @@
 import { Leaderboard } from "@/components/leaderboard";
+import { PageHeader } from "@/components/molecules/page-header";
 
 export default function LeaderboardPage() {
   return (
-    <div className="p-4 md:p-6 lg:p-8">
+    <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Leaderboard</h1>
-        <p className="text-gray-600">See how you rank against other users</p>
+        <PageHeader
+          title="Leaderboard"
+          description="See how you rank against other users"
+        />
       </div>
       <Leaderboard />
     </div>

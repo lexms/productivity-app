@@ -31,7 +31,7 @@ export default async function ProfilePage() {
     .single();
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
+    <div className="max-w-4xl">
       <ProfileHeader user={user} profile={profile} />
 
       <Tabs defaultValue="profile" className="mt-8">

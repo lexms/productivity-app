@@ -2,6 +2,7 @@
 
 import { DailyCheckin } from "@/components/daily-checkin";
 import { DailyCheckinHistory } from "@/components/daily-checkin-history";
+import { PageHeader } from "@/components/molecules/page-header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -155,107 +156,99 @@ export default function CheckinPage() {
       : 0;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto p-4 md:p-6 lg:p-8">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">
-                Daily Check-ins
-              </h1>
-              <p className="text-gray-600 mt-1">
-                Track your daily mood, energy, goals, and review your progress
-              </p>
-            </div>
+    <div>
+      {/* Header */}
+      <div className="mb-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <PageHeader
+            title="Daily Check-ins"
+            description="Track your daily mood, energy, goals, and review your progress"
+          />
 
-            {/* Quick Stats */}
-            <div className="flex gap-3">
-              <div className="text-center">
-                <div className="text-sm text-gray-600">This Week</div>
-                <div className="font-bold text-lg">{recentCheckins.length}</div>
-                <div className="text-xs text-gray-500">check-ins</div>
-              </div>
-              <div className="text-center">
-                <div className="text-sm text-gray-600">Avg Energy</div>
-                <div className="font-bold text-lg">{avgEnergyThisWeek}/10</div>
-                <div className="text-xs text-gray-500">this week</div>
-              </div>
+          {/* Quick Stats */}
+          <div className="flex gap-3">
+            <div className="text-center">
+              <div className="text-sm text-gray-600">This Week</div>
+              <div className="font-bold text-lg">{recentCheckins.length}</div>
+              <div className="text-xs text-gray-500">check-ins</div>
+            </div>
+            <div className="text-center">
+              <div className="text-sm text-gray-600">Avg Energy</div>
+              <div className="font-bold text-lg">{avgEnergyThisWeek}/10</div>
+              <div className="text-xs text-gray-500">this week</div>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Main Content */}
-        <Tabs defaultValue="today" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-6">
-            <TabsTrigger value="today" className="flex items-center gap-2">
-              <Plus className="w-4 h-4" />
-              Today
-            </TabsTrigger>
-            <TabsTrigger value="history" className="flex items-center gap-2">
-              <Calendar className="w-4 h-4" />
-              History
-            </TabsTrigger>
-          </TabsList>
+      {/* Main Content */}
+      <Tabs defaultValue="today" className="w-full">
+        <TabsList className="grid w-full grid-cols-2 mb-6">
+          <TabsTrigger value="today" className="flex items-center gap-2">
+            <Plus className="w-4 h-4" />
+            Today
+          </TabsTrigger>
+          <TabsTrigger value="history" className="flex items-center gap-2">
+            <Calendar className="w-4 h-4" />
+            History
+          </TabsTrigger>
+        </TabsList>
 
-          {/* Today's Check-in */}
-          <TabsContent value="today" className="space-y-6">
-            <div className="bg-white rounded-lg shadow-sm p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-semibold">Today's Check-in</h2>
-                <Badge variant="outline" className="text-xs">
-                  {new Date().toLocaleDateString("en-US", {
-                    weekday: "long",
-                    month: "short",
-                    day: "numeric",
-                  })}
-                </Badge>
-              </div>
-              <DailyCheckin type="morning" />
+        {/* Today's Check-in */}
+        <TabsContent value="today" className="space-y-6">
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold">Today's Check-in</h2>
+              <Badge variant="outline" className="text-xs">
+                {new Date().toLocaleDateString("en-US", {
+                  weekday: "long",
+                  month: "short",
+                  day: "numeric",
+                })}
+              </Badge>
             </div>
-          </TabsContent>
-
-          {/* Historical View */}
-          <TabsContent value="history" className="space-y-6">
-            {isLoading ? (
-              <div className="bg-white rounded-lg shadow-sm p-8 text-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-4" />
-                <p className="text-gray-600">
-                  Loading your check-in history...
-                </p>
-              </div>
-            ) : (
-              <DailyCheckinHistory
-                checkins={historicalData}
-                onViewDetail={handleViewDetail}
-              />
-            )}
-          </TabsContent>
-        </Tabs>
-
-        {/* Footer Info */}
-        <div className="mt-12 p-6 bg-blue-50 rounded-lg border border-blue-200">
-          <h3 className="text-lg font-semibold text-blue-900 mb-2">
-            💡 Pro Tips
-          </h3>
-          <div className="text-sm text-blue-800 space-y-1">
-            <p>
-              • Complete both morning and evening check-ins for the most
-              comprehensive insights
-            </p>
-            <p>
-              • Use the search feature in History to find specific entries or
-              themes
-            </p>
-            <p>
-              • Review your trends weekly to identify patterns and opportunities
-              for improvement
-            </p>
-            <p>
-              • Pay attention to the AI insights - they can help you optimize
-              your daily routine
-            </p>
+            <DailyCheckin type="morning" />
           </div>
+        </TabsContent>
+
+        {/* Historical View */}
+        <TabsContent value="history" className="space-y-6">
+          {isLoading ? (
+            <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-4" />
+              <p className="text-gray-600">Loading your check-in history...</p>
+            </div>
+          ) : (
+            <DailyCheckinHistory
+              checkins={historicalData}
+              onViewDetail={handleViewDetail}
+            />
+          )}
+        </TabsContent>
+      </Tabs>
+
+      {/* Footer Info */}
+      <div className="mt-12 p-6 bg-blue-50 rounded-lg border border-blue-200">
+        <h3 className="text-lg font-semibold text-blue-900 mb-2">
+          💡 Pro Tips
+        </h3>
+        <div className="text-sm text-blue-800 space-y-1">
+          <p>
+            • Complete both morning and evening check-ins for the most
+            comprehensive insights
+          </p>
+          <p>
+            • Use the search feature in History to find specific entries or
+            themes
+          </p>
+          <p>
+            • Review your trends weekly to identify patterns and opportunities
+            for improvement
+          </p>
+          <p>
+            • Pay attention to the AI insights - they can help you optimize your
+            daily routine
+          </p>
         </div>
       </div>
     </div>
