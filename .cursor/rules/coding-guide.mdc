@@ -3,6 +3,9 @@ description:
 globs: 
 alwaysApply: true
 ---
-1. When making components always refer to Atomic Components Principle
-2. Use flex and gap to make distance between components instead of space
-3. optimize the based style to mobile friendly style then use md lg breakpoint to adapt on desktop
+1. For variable naming always use camelCase
+2. When making components always refer to Atomic Components Principle
+3. Use flex and gap to make distance between components instead of space
+4. optimize the based style to mobile friendly style then use md lg breakpoint to adapt on desktop
+5. When designing database always ask whether is it for consistency or availability, if it for availability then it should use jsonb structure if it for consistency then it should be typed strictyl
+6. As much as possible use the data type from lib/db/schema.ts
