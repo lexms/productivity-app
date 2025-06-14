@@ -1,30 +1,57 @@
-# New mobile app
+# Productivity Companion
 
-*Automatically synced with your [v0.dev](https://v0.dev) deployments*
+A comprehensive personal productivity and wellness app that helps you optimize your daily routine, track tasks, and maintain work-life balance.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/nicolos-projects-72871e9b/v0-new-mobile-app)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.dev-black?style=for-the-badge)](https://v0.dev/chat/projects/rMlmWhCwgyD)
+## Features
 
-## Overview
+### 🎯 Task Management
+- Organize and track daily tasks
+- Priority-based task organization
+- Timer integration for focused work sessions
+- Progress tracking and completion statistics
 
-This repository will stay in sync with your deployed chats on [v0.dev](https://v0.dev).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.dev](https://v0.dev).
+### 📅 Smart Scheduling
+- Calendar integration with Google Calendar
+- Intelligent schedule optimization
+- Meeting management and analysis
+- Auto-scheduling and deep work time protection
 
-## Deployment
+### 🔍 Daily Check-ins
+- Track mood, energy, and goals
+- Historical data analysis
+- Personalized insights
+- Progress visualization
 
-Your project is live at:
+### ⌚ Wearable Integration
+- Connect with popular devices (Apple Watch, Oura Ring, Fitbit, etc.)
+- Sleep tracking and analysis
+- Recovery monitoring
+- Heart rate and HRV data integration
 
-**[https://vercel.com/nicolos-projects-72871e9b/v0-new-mobile-app](https://vercel.com/nicolos-projects-72871e9b/v0-new-mobile-app)**
+### 📊 Analytics Dashboard
+- Comprehensive productivity insights
+- Performance trends
+- Biometric data correlation
+- Weekly progress tracking
 
-## Build your app
+## Technical Stack
 
-Continue building your app on:
+- Built with Next.js and TypeScript
+- Mobile-first responsive design
+- Real-time data synchronization
+- Secure authentication system
 
-**[https://v0.dev/chat/projects/rMlmWhCwgyD](https://v0.dev/chat/projects/rMlmWhCwgyD)**
+## Getting Started
 
-## How It Works
+1. Clone the repository
+2. Install dependencies: `pnpm install`
+3. Set up environment variables
+4. Run development server: `pnpm run dev`
 
-1. Create and modify your project using [v0.dev](https://v0.dev)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+## Contributing
+
+Contributions are welcome! Please read our contributing guidelines for details on our code of conduct and the process for submitting pull requests.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
