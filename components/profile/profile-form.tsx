@@ -97,9 +97,9 @@ export function ProfileForm({ user, profile }: ProfileFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-2">
+        <div className="flex flex-col gap-2">
           <Label htmlFor="full_name">Full Name</Label>
           <Input
             id="full_name"
@@ -111,7 +111,7 @@ export function ProfileForm({ user, profile }: ProfileFormProps) {
           />
         </div>
 
-        <div className="space-y-2">
+        <div className="flex flex-col gap-2">
           <Label htmlFor="timezone">Timezone</Label>
           <Select
             value={formData.timezone}
@@ -133,7 +133,7 @@ export function ProfileForm({ user, profile }: ProfileFormProps) {
         </div>
       </div>
 
-      <div className="space-y-2">
+      <div className="flex flex-col gap-2">
         <Label htmlFor="bio">Bio</Label>
         <Textarea
           id="bio"
@@ -145,7 +145,7 @@ export function ProfileForm({ user, profile }: ProfileFormProps) {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-2">
+        <div className="flex flex-col gap-2">
           <Label htmlFor="work_hours_start">Work Hours Start</Label>
           <Input
             id="work_hours_start"
@@ -157,7 +157,7 @@ export function ProfileForm({ user, profile }: ProfileFormProps) {
           />
         </div>
 
-        <div className="space-y-2">
+        <div className="flex flex-col gap-2">
           <Label htmlFor="work_hours_end">Work Hours End</Label>
           <Input
             id="work_hours_end"
@@ -171,7 +171,7 @@ export function ProfileForm({ user, profile }: ProfileFormProps) {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-2">
+        <div className="flex flex-col gap-2">
           <Label htmlFor="daily_goal_tasks">Daily Task Goal</Label>
           <Input
             id="daily_goal_tasks"
@@ -188,7 +188,7 @@ export function ProfileForm({ user, profile }: ProfileFormProps) {
           />
         </div>
 
-        <div className="space-y-2">
+        <div className="flex flex-col gap-2">
           <Label htmlFor="daily_goal_points">Daily Points Goal</Label>
           <Input
             id="daily_goal_points"

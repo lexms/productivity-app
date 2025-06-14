@@ -193,7 +193,7 @@ export function WearablesIntegration() {
   };
 
   return (
-    <div className="space-y-6">
+    <div>
       {/* Connected Devices */}
       <Card>
         <CardHeader>

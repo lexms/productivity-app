@@ -31,7 +31,7 @@ export default async function ProfilePage() {
     .single();
 
   return (
-    <div className="max-w-4xl">
+    <div>
       <ProfileHeader user={user} profile={profile} />
 
       <Tabs defaultValue="profile" className="mt-8">
@@ -41,7 +41,7 @@ export default async function ProfilePage() {
           <TabsTrigger value="preferences">Preferences</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="profile" className="space-y-6">
+        <TabsContent value="profile" className="flex flex-col gap-6">
           <Card>
             <CardHeader>
               <CardTitle>Personal Information</CardTitle>
@@ -55,11 +55,11 @@ export default async function ProfilePage() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="account" className="space-y-6">
+        <TabsContent value="account" className="flex flex-col gap-6">
           <AccountSettings user={user} />
         </TabsContent>
 
-        <TabsContent value="preferences" className="space-y-6">
+        <TabsContent value="preferences" className="flex flex-col gap-6">
           <Card>
             <CardHeader>
               <CardTitle>App Preferences</CardTitle>

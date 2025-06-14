@@ -80,7 +80,7 @@ export function TaskList({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       <div className="flex items-center gap-2">
         <Filter className="w-4 h-4 text-slate-500" />
         <Select value={filter} onValueChange={setFilter}>
@@ -96,7 +96,7 @@ export function TaskList({
         </Select>
       </div>
 
-      <div className="space-y-3">
+      <div className="flex flex-col gap-3">
         {filteredTasks.map((task) => (
           <TaskItem
             key={task.id}

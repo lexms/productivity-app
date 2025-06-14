@@ -260,8 +260,8 @@ Alex: Sounds good. Let's also discuss budget constraints...
         </DialogHeader>
 
         {isEditing ? (
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
+          <div className="flex flex-col gap-4 py-4">
+            <div className="flex flex-col gap-2">
               <label htmlFor="title" className="text-sm font-medium">
                 Meeting Title
               </label>
@@ -275,7 +275,7 @@ Alex: Sounds good. Let's also discuss budget constraints...
             </div>
 
             <div className="grid grid-cols-3 gap-4">
-              <div className="space-y-2">
+              <div className="flex flex-col gap-2">
                 <label htmlFor="date" className="text-sm font-medium">
                   Date
                 </label>
@@ -288,7 +288,7 @@ Alex: Sounds good. Let's also discuss budget constraints...
                   }
                 />
               </div>
-              <div className="space-y-2">
+              <div className="flex flex-col gap-2">
                 <label htmlFor="startTime" className="text-sm font-medium">
                   Start Time
                 </label>
@@ -304,7 +304,7 @@ Alex: Sounds good. Let's also discuss budget constraints...
                   }
                 />
               </div>
-              <div className="space-y-2">
+              <div className="flex flex-col gap-2">
                 <label htmlFor="endTime" className="text-sm font-medium">
                   End Time
                 </label>
@@ -322,7 +322,7 @@ Alex: Sounds good. Let's also discuss budget constraints...
               </div>
             </div>
 
-            <div className="space-y-2">
+            <div className="flex flex-col gap-2">
               <label htmlFor="participants" className="text-sm font-medium">
                 Participants (comma separated)
               </label>
@@ -340,7 +340,7 @@ Alex: Sounds good. Let's also discuss budget constraints...
               />
             </div>
 
-            <div className="space-y-2">
+            <div className="flex flex-col gap-2">
               <label htmlFor="summary" className="text-sm font-medium">
                 Meeting Summary
               </label>
@@ -377,7 +377,7 @@ Alex: Sounds good. Let's also discuss budget constraints...
               <TabsTrigger value="export">Export</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="summary" className="space-y-4 py-4">
+            <TabsContent value="summary" className="flex flex-col gap-4 py-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-slate-50 rounded-lg">
                 <div className="flex items-center gap-3">
                   <Calendar className="w-5 h-5 text-slate-600" />
@@ -399,7 +399,7 @@ Alex: Sounds good. Let's also discuss budget constraints...
                 </div>
               </div>
 
-              <div className="space-y-4">
+              <div className="flex flex-col gap-4">
                 <div>
                   <h3 className="text-sm font-semibold mb-2">
                     Meeting Summary
@@ -412,11 +412,13 @@ Alex: Sounds good. Let's also discuss budget constraints...
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <h3 className="text-sm font-semibold mb-2">Key Points</h3>
-                    <ul className="space-y-2">
+                    <ul className="flex flex-col gap-2">
                       {meeting.keyPoints.map((point) => (
                         <li key={point} className="flex items-start gap-2">
                           <div className="mt-1 min-w-[12px]">•</div>
-                          <span className="text-sm text-slate-700">{point}</span>
+                          <span className="text-sm text-slate-700">
+                            {point}
+                          </span>
                         </li>
                       ))}
                     </ul>
@@ -426,11 +428,13 @@ Alex: Sounds good. Let's also discuss budget constraints...
                     <h3 className="text-sm font-semibold mb-2">
                       Decisions Made
                     </h3>
-                    <ul className="space-y-2">
+                    <ul className="flex flex-col gap-2">
                       {meeting.decisions.map((decision) => (
                         <li key={decision} className="flex items-start gap-2">
                           <div className="mt-1 min-w-[12px]">•</div>
-                          <span className="text-sm text-slate-700">{decision}</span>
+                          <span className="text-sm text-slate-700">
+                            {decision}
+                          </span>
                         </li>
                       ))}
                     </ul>
@@ -472,13 +476,16 @@ Alex: Sounds good. Let's also discuss budget constraints...
               </div>
             </TabsContent>
 
-            <TabsContent value="action-items" className="space-y-4 py-4">
-              <div className="space-y-4">
+            <TabsContent
+              value="action-items"
+              className="flex flex-col gap-4 py-4"
+            >
+              <div className="flex flex-col gap-4">
                 <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
                   <h3 className="text-sm font-semibold text-blue-900 mb-3">
                     Add New Action Item
                   </h3>
-                  <div className="space-y-3">
+                  <div className="flex flex-col gap-3">
                     <div>
                       <label
                         htmlFor="action-text"
@@ -551,7 +558,7 @@ Alex: Sounds good. Let's also discuss budget constraints...
                 <h3 className="text-sm font-semibold">
                   Action Items ({meeting.actionItems.length})
                 </h3>
-                <div className="space-y-3">
+                <div className="flex flex-col gap-3">
                   {meeting.actionItems.map((item) => (
                     <div
                       key={item.id}
@@ -632,7 +639,10 @@ Alex: Sounds good. Let's also discuss budget constraints...
               </div>
             </TabsContent>
 
-            <TabsContent value="transcript" className="space-y-4 py-4">
+            <TabsContent
+              value="transcript"
+              className="flex flex-col gap-4 py-4"
+            >
               <div className="flex justify-between items-center">
                 <h3 className="text-sm font-semibold">Meeting Transcript</h3>
                 <div className="flex items-center gap-2">
@@ -662,13 +672,13 @@ Alex: Sounds good. Let's also discuss budget constraints...
               </div>
             </TabsContent>
 
-            <TabsContent value="metrics" className="space-y-4 py-4">
+            <TabsContent value="metrics" className="flex flex-col gap-4 py-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <h3 className="text-sm font-semibold mb-3">
                     Speaking Distribution
                   </h3>
-                  <div className="space-y-3">
+                  <div className="flex flex-col gap-3">
                     {meeting.metrics.speakingDistribution.map((person) => (
                       <div key={person.name}>
                         <div className="flex justify-between text-sm mb-1">
@@ -690,7 +700,7 @@ Alex: Sounds good. Let's also discuss budget constraints...
                   <h3 className="text-sm font-semibold mb-3">
                     Topics Discussed
                   </h3>
-                  <div className="space-y-3">
+                  <div className="flex flex-col gap-3">
                     {meeting.metrics.topicsDiscussed.map((topic) => (
                       <div key={topic.topic}>
                         <div className="flex justify-between text-sm mb-1">
@@ -738,7 +748,7 @@ Alex: Sounds good. Let's also discuss budget constraints...
                 <h3 className="text-sm font-semibold mb-2">
                   Meeting Efficiency Insights
                 </h3>
-                <ul className="space-y-2 text-sm text-slate-700">
+                <ul className="flex flex-col gap-2 text-sm text-slate-700">
                   <li className="flex items-start gap-2">
                     <div className="mt-1 min-w-[12px]">•</div>
                     <span>
@@ -770,7 +780,7 @@ Alex: Sounds good. Let's also discuss budget constraints...
               </div>
             </TabsContent>
 
-            <TabsContent value="export" className="space-y-4 py-4">
+            <TabsContent value="export" className="flex flex-col gap-4 py-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="p-4 bg-white rounded-lg border hover:shadow-md transition-shadow">
                   <div className="flex items-center gap-3 mb-3">

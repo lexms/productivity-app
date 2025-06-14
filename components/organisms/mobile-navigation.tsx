@@ -45,7 +45,7 @@ export function MobileNavigation() {
             </h1>
           </div>
 
-          <ul className="space-y-2">
+          <ul className="flex flex-col gap-2">
             {navigation.map((item) => {
               const isActive = pathname === item.href;
               return (
@@ -92,7 +92,7 @@ export function MobileNavigation() {
                   </Button>
                 </div>
                 <nav className="flex-1 p-4">
-                  <ul className="space-y-2">
+                  <ul className="flex flex-col gap-2">
                     {navigation.map((item) => {
                       const isActive = pathname === item.href;
                       return (

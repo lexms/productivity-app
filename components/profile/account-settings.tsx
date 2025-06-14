@@ -62,7 +62,7 @@ export function AccountSettings({ user }: AccountSettingsProps) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-6">
       {/* Account Information */}
       <Card>
         <CardHeader>
@@ -74,7 +74,7 @@ export function AccountSettings({ user }: AccountSettingsProps) {
             View your account details and authentication information.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="flex flex-col gap-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <Label>Email Address</Label>
@@ -103,7 +103,7 @@ export function AccountSettings({ user }: AccountSettingsProps) {
             Manage your account settings and data.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="flex flex-col gap-4">
           <div className="flex flex-col sm:flex-row gap-4">
             <LogoutButton variant="outline" />
 

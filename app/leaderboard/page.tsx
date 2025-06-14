@@ -3,13 +3,11 @@ import { PageHeader } from "@/components/molecules/page-header";
 
 export default function LeaderboardPage() {
   return (
-    <div>
-      <div className="mb-6">
-        <PageHeader
-          title="Leaderboard"
-          description="See how you rank against other users"
-        />
-      </div>
+    <div className="flex flex-col gap-4">
+      <PageHeader
+        title="Leaderboard"
+        description="See how you rank against other users"
+      />
       <Leaderboard />
     </div>
   );

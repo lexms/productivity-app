@@ -56,7 +56,7 @@ export function Analytics() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div>
       {/* Weekly Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <Card>
@@ -122,14 +122,14 @@ export function Analytics() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
+          <div className="flex flex-col gap-4">
             {dailyStats.map((day, _index) => (
               <div key={day.day} className="flex items-center gap-4">
                 <div className="w-12 text-sm font-medium text-slate-600">
                   {day.day}
                 </div>
                 <div className="flex-1 grid grid-cols-3 gap-4">
-                  <div className="space-y-1">
+                  <div className="flex flex-col gap-1">
                     <div className="flex justify-between text-xs">
                       <span>Tasks</span>
                       <span>{day.tasks}</span>
@@ -141,7 +141,7 @@ export function Analytics() {
                       />
                     </div>
                   </div>
-                  <div className="space-y-1">
+                  <div className="flex flex-col gap-1">
                     <div className="flex justify-between text-xs">
                       <span>Focus</span>
                       <span>{day.focus}h</span>
@@ -153,7 +153,7 @@ export function Analytics() {
                       />
                     </div>
                   </div>
-                  <div className="space-y-1">
+                  <div className="flex flex-col gap-1">
                     <div className="flex justify-between text-xs">
                       <span>Efficiency</span>
                       <span>{day.efficiency}%</span>
@@ -179,7 +179,7 @@ export function Analytics() {
           <CardDescription>Performance breakdown by category</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
+          <div className="flex flex-col gap-4">
             {categories.map((category) => (
               <div
                 key={category.name}
@@ -255,7 +255,7 @@ export function Analytics() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
+          <div className="flex flex-col gap-4">
             <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
               <h4 className="font-semibold text-blue-900 mb-2">
                 🎯 Productivity Peak

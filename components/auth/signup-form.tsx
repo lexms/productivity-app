@@ -201,7 +201,7 @@ export function SignupForm() {
             />
           </div>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center gap-2">
             <Checkbox
               id="terms"
               checked={formData.agreeToTerms}

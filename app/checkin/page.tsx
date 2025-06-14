@@ -4,9 +4,8 @@ import { DailyCheckin } from "@/components/daily-checkin";
 import { DailyCheckinHistory } from "@/components/daily-checkin-history";
 import { PageHeader } from "@/components/molecules/page-header";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar, LineChart, Plus, TrendingUp } from "lucide-react";
+import { Calendar, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { CheckinData } from "@/components/daily-checkin-history";
 
@@ -156,9 +155,9 @@ export default function CheckinPage() {
       : 0;
 
   return (
-    <div>
+    <div className="flex flex-col gap-6">
       {/* Header */}
-      <div className="mb-8">
+      <div>
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <PageHeader
             title="Daily Check-ins"
@@ -195,7 +194,7 @@ export default function CheckinPage() {
         </TabsList>
 
         {/* Today's Check-in */}
-        <TabsContent value="today" className="space-y-6">
+        <TabsContent value="today" className="flex flex-col gap-6">
           <div className="bg-white rounded-lg shadow-sm p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold">Today's Check-in</h2>
@@ -212,7 +211,7 @@ export default function CheckinPage() {
         </TabsContent>
 
         {/* Historical View */}
-        <TabsContent value="history" className="space-y-6">
+        <TabsContent value="history" className="flex flex-col gap-6">
           {isLoading ? (
             <div className="bg-white rounded-lg shadow-sm p-8 text-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-4" />
@@ -228,11 +227,11 @@ export default function CheckinPage() {
       </Tabs>
 
       {/* Footer Info */}
-      <div className="mt-12 p-6 bg-blue-50 rounded-lg border border-blue-200">
+      <div className="p-6 bg-blue-50 rounded-lg border border-blue-200">
         <h3 className="text-lg font-semibold text-blue-900 mb-2">
           💡 Pro Tips
         </h3>
-        <div className="text-sm text-blue-800 space-y-1">
+        <div className="text-sm text-blue-800 flex flex-col gap-1">
           <p>
             • Complete both morning and evening check-ins for the most
             comprehensive insights

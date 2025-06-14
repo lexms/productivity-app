@@ -276,7 +276,7 @@ export function AnalyticsDetail({
               </div>
             </div>
 
-            <TabsContent value="overview" className="space-y-6">
+            <TabsContent value="overview" className="flex flex-col gap-6">
               <div className="bg-slate-50 p-6 rounded-lg border">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                   <div>
@@ -319,13 +319,17 @@ export function AnalyticsDetail({
                   </div>
                 </div>
 
-                <div className="space-y-4">
+                <div className="flex flex-col gap-4">
                   {data.data.map((item) => {
-                    const key = 'day' in item ? item.day : item.week;
-                    const value = 'value' in item ? item.value : `${item.completed}/${item.total}`;
-                    const percentage = 'value' in item 
-                      ? item.value 
-                      : (item.completed / item.total) * 100;
+                    const key = "day" in item ? item.day : item.week;
+                    const value =
+                      "value" in item
+                        ? item.value
+                        : `${item.completed}/${item.total}`;
+                    const percentage =
+                      "value" in item
+                        ? item.value
+                        : (item.completed / item.total) * 100;
 
                     return (
                       <div key={key}>
@@ -354,20 +358,29 @@ export function AnalyticsDetail({
                     <div>
                       <p className="text-2xl font-bold">
                         {metricType === "tasks"
-                          ? `${Math.max(...data.data.map((item) => item.completed))}`
-                          : `${Math.max(...data.data.map((item) => item.value))}${getMetricUnit()}`}
+                          ? `${Math.max(...data.data.map((item) => ("completed" in item ? item.completed : 0)))}`
+                          : `${Math.max(...data.data.map((item) => ("value" in item ? item.value : 0)))}${getMetricUnit()}`}
                       </p>
                       <p className="text-sm text-slate-600">
                         {data.data.reduce((max, item) => {
                           const value =
                             metricType === "tasks"
-                              ? item.completed
-                              : item.value;
-                          return value >
-                            (metricType === "tasks" ? max.completed : max.value)
-                            ? item
-                            : max;
-                        }, data.data[0]).day || "Week 2"}
+                              ? "completed" in item
+                                ? item.completed
+                                : 0
+                              : "value" in item
+                                ? item.value
+                                : 0;
+                          const maxValue =
+                            metricType === "tasks"
+                              ? "completed" in max
+                                ? max.completed
+                                : 0
+                              : "value" in max
+                                ? max.value
+                                : 0;
+                          return value > maxValue ? item : max;
+                        }, data.data[0])?.day || "Week 2"}
                       </p>
                     </div>
                     <div
@@ -400,7 +413,7 @@ export function AnalyticsDetail({
                         ? "Focus Efficiency"
                         : "Task Efficiency"}
                   </h3>
-                  <div className="space-y-2">
+                  <div className="flex flex-col gap-2">
                     <div className="flex justify-between text-sm">
                       <span>Overall Score</span>
                       <span className="font-medium">
@@ -433,7 +446,7 @@ export function AnalyticsDetail({
               </div>
             </TabsContent>
 
-            <TabsContent value="trends" className="space-y-6">
+            <TabsContent value="trends" className="flex flex-col gap-6">
               <div className="bg-white p-6 rounded-lg border">
                 <h3 className="text-sm font-semibold mb-4">
                   {metricType === "productivity"
@@ -443,7 +456,7 @@ export function AnalyticsDetail({
                       : "Task Completion by Category"}
                 </h3>
 
-                <div className="space-y-4">
+                <div className="flex flex-col gap-4">
                   {metricType === "productivity" && (
                     <>
                       <div className="flex justify-between text-sm mb-1">
@@ -533,7 +546,7 @@ export function AnalyticsDetail({
                       : "Task Completion Factors"}
                 </h3>
 
-                <div className="space-y-4">
+                <div className="flex flex-col gap-4">
                   <div className="flex items-start gap-3">
                     <div className="mt-1">
                       <div className="w-3 h-3 rounded-full bg-green-500" />
@@ -625,10 +638,10 @@ export function AnalyticsDetail({
               </div>
             </TabsContent>
 
-            <TabsContent value="insights" className="space-y-6">
+            <TabsContent value="insights" className="flex flex-col gap-6">
               <div className="bg-white p-6 rounded-lg border">
                 <h3 className="text-sm font-semibold mb-4">Key Insights</h3>
-                <div className="space-y-4">
+                <div className="flex flex-col gap-4">
                   {data.insights.map((insight) => (
                     <div key={insight.title} className="flex items-start gap-3">
                       <div className="mt-1">
@@ -649,7 +662,7 @@ export function AnalyticsDetail({
 
               <div className="bg-white p-6 rounded-lg border">
                 <h3 className="text-sm font-semibold mb-4">Recommendations</h3>
-                <div className="space-y-4">
+                <div className="flex flex-col gap-4">
                   {metricType === "productivity" && (
                     <>
                       <div className="flex items-start gap-3">

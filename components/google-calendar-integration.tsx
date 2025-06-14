@@ -78,7 +78,7 @@ export function GoogleCalendarIntegration() {
             )}
           </Button>
         ) : (
-          <div className="space-y-4">
+          <div className="flex flex-col gap-4">
             <div className="p-3 bg-green-50 rounded-lg border border-green-200">
               <p className="text-sm text-green-800">
                 Successfully connected to Google Calendar

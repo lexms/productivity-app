@@ -42,7 +42,7 @@ export function DailyCheckin({ type }: CheckinProps) {
   const isMorning = type === "morning";
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           {isMorning ? (
@@ -93,9 +93,9 @@ export function DailyCheckin({ type }: CheckinProps) {
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-6">
+          <div className="flex flex-col gap-6">
             {/* Energy Level */}
-            <div className="space-y-3">
+            <div className="flex flex-col gap-3">
               <div className="flex items-center gap-2">
                 <Heart className="w-4 h-4 text-red-500" />
                 <Label>Energy Level</Label>
@@ -122,7 +122,7 @@ export function DailyCheckin({ type }: CheckinProps) {
             </div>
 
             {/* Mood */}
-            <div className="space-y-3">
+            <div className="flex flex-col gap-3">
               <div className="flex items-center gap-2">
                 <Brain className="w-4 h-4 text-purple-500" />
                 <Label>Mood</Label>
@@ -151,7 +151,7 @@ export function DailyCheckin({ type }: CheckinProps) {
             {isMorning ? (
               <>
                 {/* Morning Goals */}
-                <div className="space-y-2">
+                <div className="flex flex-col gap-2">
                   <div className="flex items-center gap-2">
                     <Target className="w-4 h-4 text-blue-500" />
                     <Label htmlFor="goals">Today's Goals</Label>
@@ -167,7 +167,7 @@ export function DailyCheckin({ type }: CheckinProps) {
                 </div>
 
                 {/* Priorities */}
-                <div className="space-y-2">
+                <div className="flex flex-col gap-2">
                   <Label htmlFor="priorities">Top 3 Priorities</Label>
                   <Textarea
                     id="priorities"
@@ -185,7 +185,7 @@ export function DailyCheckin({ type }: CheckinProps) {
             ) : (
               <>
                 {/* Evening Achievements */}
-                <div className="space-y-2">
+                <div className="flex flex-col gap-2">
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-green-500" />
                     <Label htmlFor="achievements">Today's Achievements</Label>
@@ -204,7 +204,7 @@ export function DailyCheckin({ type }: CheckinProps) {
                 </div>
 
                 {/* Challenges */}
-                <div className="space-y-2">
+                <div className="flex flex-col gap-2">
                   <Label htmlFor="challenges">Challenges Faced</Label>
                   <Textarea
                     id="challenges"
@@ -220,7 +220,7 @@ export function DailyCheckin({ type }: CheckinProps) {
                 </div>
 
                 {/* Reflections */}
-                <div className="space-y-2">
+                <div className="flex flex-col gap-2">
                   <Label htmlFor="reflections">Reflections</Label>
                   <Textarea
                     id="reflections"

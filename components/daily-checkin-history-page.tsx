@@ -110,7 +110,7 @@ export default function DailyCheckinHistoryPage() {
   };
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="container mx-auto p-6 flex flex-col gap-6">
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
           Daily Check-in History
@@ -126,7 +126,7 @@ export default function DailyCheckinHistoryPage() {
           <TabsTrigger value="history">History & Insights</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="history" className="space-y-6">
+        <TabsContent value="history" className="flex flex-col gap-6">
           <DailyCheckinHistory
             checkins={sampleData}
             onViewDetail={handleViewDetail}
@@ -137,7 +137,7 @@ export default function DailyCheckinHistoryPage() {
       {/* Usage Example */}
       <div className="mt-12 p-6 bg-gray-50 rounded-lg">
         <h3 className="text-lg font-semibold mb-4">Integration Example</h3>
-        <div className="text-sm text-gray-700 space-y-2">
+        <div className="text-sm text-gray-700 flex flex-col gap-2">
           <p>
             <strong>Historical View:</strong> The main component provides
             filtering, search, timeline view, trends analysis, and AI-powered

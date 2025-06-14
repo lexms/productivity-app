@@ -15,34 +15,11 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Brain,
-  Calendar,
-  CheckCircle2,
-  Filter,
-  Heart,
-  LineChart,
-  Moon,
-  Search,
-  Sun,
-  Target,
-  TrendingUp,
-} from "lucide-react";
+import { Calendar, Heart, Moon, Sun, Brain, Target } from "lucide-react";
 import { useState } from "react";
 
-// Import the CheckinData interface from the form component
 export interface CheckinData {
   id?: string;
   energy: number[];
@@ -69,58 +46,21 @@ export function DailyCheckinHistory({
   checkins = [],
   onViewDetail,
 }: DailyCheckinHistoryProps) {
-  const [selectedPeriod, setSelectedPeriod] = useState("30d");
-  const [selectedType, setSelectedType] = useState<
-    "all" | "morning" | "evening"
-  >("all");
-  const [searchQuery, setSearchQuery] = useState("");
   const [selectedCheckin, setSelectedCheckin] = useState<CheckinData | null>(
     null,
   );
 
-  // Filter checkins based on selected filters
-  const filteredCheckins = checkins.filter((checkin) => {
-    const matchesType = selectedType === "all" || checkin.type === selectedType;
-    const matchesSearch =
-      searchQuery === "" ||
-      checkin.goals.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      checkin.achievements.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      checkin.reflections.toLowerCase().includes(searchQuery.toLowerCase());
+  // Filter checkins for last 7 days
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-    // Filter by period
+  const recentCheckins = checkins.filter((checkin) => {
     const checkinDate = new Date(checkin.timestamp);
-    const now = new Date();
-    const daysAgo = Number.parseInt(selectedPeriod.replace("d", ""));
-    const cutoffDate = new Date(now.getTime() - daysAgo * 24 * 60 * 60 * 1000);
-    const matchesPeriod = checkinDate >= cutoffDate;
-
-    return matchesType && matchesSearch && matchesPeriod;
+    return checkinDate >= sevenDaysAgo;
   });
 
-  // Calculate trends and statistics
-  const getAverageMetrics = () => {
-    if (filteredCheckins.length === 0) return { energy: 0, mood: 0, focus: 0 };
-
-    const totals = filteredCheckins.reduce(
-      (acc, checkin) => ({
-        energy: acc.energy + checkin.energy[0],
-        mood: acc.mood + checkin.mood[0],
-        focus: acc.focus + checkin.focus[0],
-      }),
-      { energy: 0, mood: 0, focus: 0 },
-    );
-
-    return {
-      energy: Math.round(totals.energy / filteredCheckins.length),
-      mood: Math.round(totals.mood / filteredCheckins.length),
-      focus: Math.round(totals.focus / filteredCheckins.length),
-    };
-  };
-
-  const averageMetrics = getAverageMetrics();
-
   // Group checkins by date for timeline view
-  const groupedCheckins = filteredCheckins.reduce(
+  const groupedCheckins = recentCheckins.reduce(
     (acc, checkin) => {
       const date = checkin.date || checkin.timestamp.split("T")[0];
       if (!acc[date]) acc[date] = [];
@@ -146,172 +86,69 @@ export function DailyCheckinHistory({
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">Check-in History</h2>
-          <p className="text-gray-600">
-            Review your daily check-ins and track your progress
-          </p>
-        </div>
-
-        {/* Filters */}
-        <div className="flex flex-wrap gap-2">
-          <div className="relative">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            <Input
-              placeholder="Search check-ins..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 w-48"
-            />
-          </div>
-
-          <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
-            <SelectTrigger className="w-32">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="7d">Last 7 days</SelectItem>
-              <SelectItem value="30d">Last 30 days</SelectItem>
-              <SelectItem value="90d">Last 90 days</SelectItem>
-              <SelectItem value="365d">Last year</SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Select
-            value={selectedType}
-            onValueChange={(value: "all" | "morning" | "evening") =>
-              setSelectedType(value)
-            }
-          >
-            <SelectTrigger className="w-32">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All types</SelectItem>
-              <SelectItem value="morning">Morning</SelectItem>
-              <SelectItem value="evening">Evening</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-
-      {/* Statistics Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">Total Check-ins</p>
-                <p className="text-2xl font-bold">{filteredCheckins.length}</p>
-              </div>
-              <Calendar className="w-8 h-8 text-blue-500" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">Avg Energy</p>
-                <p className="text-2xl font-bold">{averageMetrics.energy}/10</p>
-              </div>
-              <Heart className="w-8 h-8 text-red-500" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">Avg Mood</p>
-                <p className="text-2xl font-bold">{averageMetrics.mood}/10</p>
-              </div>
-              <Brain className="w-8 h-8 text-purple-500" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">Avg Focus</p>
-                <p className="text-2xl font-bold">{averageMetrics.focus}/10</p>
-              </div>
-              <Target className="w-8 h-8 text-green-500" />
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Main Content Tabs */}
-      <Tabs defaultValue="timeline" className="w-full">
-        <TabsList className="grid w-full grid-cols-1">
-          <TabsTrigger value="timeline">Timeline</TabsTrigger>
-        </TabsList>
-
-        {/* Timeline View */}
-        <TabsContent value="timeline" className="space-y-4">
-          {Object.entries(groupedCheckins)
-            .sort(([a], [b]) => new Date(b).getTime() - new Date(a).getTime())
-            .map(([date, dayCheckins]) => (
-              <Card key={date}>
-                <CardHeader>
-                  <CardTitle className="text-lg">{formatDate(date)}</CardTitle>
-                  <CardDescription>
-                    {dayCheckins.length} check-in
-                    {dayCheckins.length !== 1 ? "s" : ""}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {dayCheckins
-                      .sort(
-                        (a, b) =>
-                          new Date(a.timestamp).getTime() -
-                          new Date(b.timestamp).getTime(),
-                      )
-                      .map((checkin) => (
-                        <button
-                          key={checkin.id}
-                          type="button"
-                          className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer w-full text-left"
-                          onClick={() => setSelectedCheckin(checkin)}
-                          aria-label={`View ${checkin.type} check-in details`}
-                        >
-                          <div className="flex items-center gap-3">
-                            {checkin.type === "morning" ? (
-                              <Sun className="w-5 h-5 text-yellow-500" />
-                            ) : (
-                              <Moon className="w-5 h-5 text-blue-500" />
-                            )}
-                            <div>
-                              <div className="font-medium capitalize">
-                                {checkin.type} Check-in
-                              </div>
-                              <div className="text-sm text-gray-600">
-                                {formatTime(checkin.timestamp)}
-                              </div>
+    <div className="flex flex-col gap-6">
+      {/* Timeline View */}
+      <div className="flex flex-col gap-4">
+        {Object.entries(groupedCheckins)
+          .sort(([a], [b]) => new Date(b).getTime() - new Date(a).getTime())
+          .map(([date, dayCheckins]) => (
+            <Card key={date}>
+              <CardHeader>
+                <CardTitle className="text-lg">{formatDate(date)}</CardTitle>
+                <CardDescription>
+                  {dayCheckins.length} check-in
+                  {dayCheckins.length !== 1 ? "s" : ""}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-col gap-3">
+                  {dayCheckins
+                    .sort(
+                      (a, b) =>
+                        new Date(a.timestamp).getTime() -
+                        new Date(b.timestamp).getTime(),
+                    )
+                    .map((checkin) => (
+                      <div
+                        key={checkin.id}
+                        className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors w-full"
+                      >
+                        <div className="flex items-center gap-3">
+                          {checkin.type === "morning" ? (
+                            <Sun className="w-5 h-5 text-yellow-500" />
+                          ) : (
+                            <Moon className="w-5 h-5 text-blue-500" />
+                          )}
+                          <div>
+                            <div className="font-medium capitalize">
+                              {checkin.type} Check-in
+                            </div>
+                            <div className="text-sm text-gray-600">
+                              {formatTime(checkin.timestamp)}
                             </div>
                           </div>
+                        </div>
 
-                          <div className="flex items-center gap-4">
-                            <div className="flex gap-2 text-sm">
-                              <Badge variant="outline">
-                                E: {checkin.energy[0]}
-                              </Badge>
-                              <Badge variant="outline">
-                                M: {checkin.mood[0]}
-                              </Badge>
-                              <Badge variant="outline">
-                                F: {checkin.focus[0]}
-                              </Badge>
-                            </div>
+                        <div className="flex items-center gap-4">
+                          <div className="flex gap-2 text-sm">
+                            <Badge variant="outline">
+                              E: {checkin.energy[0]}
+                            </Badge>
+                            <Badge variant="outline">
+                              M: {checkin.mood[0]}
+                            </Badge>
+                            <Badge variant="outline">
+                              F: {checkin.focus[0]}
+                            </Badge>
+                          </div>
+                          <div className="flex gap-2">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setSelectedCheckin(checkin)}
+                            >
+                              View
+                            </Button>
                             <Button
                               variant="ghost"
                               size="sm"
@@ -320,32 +157,31 @@ export function DailyCheckinHistory({
                                 onViewDetail?.(checkin);
                               }}
                             >
-                              View Details
+                              Details
                             </Button>
                           </div>
-                        </button>
-                      ))}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-
-          {filteredCheckins.length === 0 && (
-            <Card>
-              <CardContent className="p-8 text-center">
-                <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  No check-ins found
-                </h3>
-                <p className="text-gray-600">
-                  Try adjusting your filters or complete your first check-in to
-                  see data here.
-                </p>
+                        </div>
+                      </div>
+                    ))}
+                </div>
               </CardContent>
             </Card>
-          )}
-        </TabsContent>
-      </Tabs>
+          ))}
+
+        {recentCheckins.length === 0 && (
+          <Card>
+            <CardContent className="p-8 text-center">
+              <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                No check-ins in the last 7 days
+              </h3>
+              <p className="text-gray-600">
+                Complete a check-in to see it here.
+              </p>
+            </CardContent>
+          </Card>
+        )}
+      </div>
 
       {/* Detail Dialog */}
       <Dialog
@@ -371,7 +207,7 @@ export function DailyCheckinHistory({
                 </DialogDescription>
               </DialogHeader>
 
-              <div className="space-y-4">
+              <div className="flex flex-col gap-4">
                 {/* Metrics */}
                 <div className="grid grid-cols-3 gap-4">
                   <div className="text-center p-3 bg-red-50 rounded-lg">
@@ -398,7 +234,7 @@ export function DailyCheckinHistory({
                 </div>
 
                 {/* Content */}
-                <div className="space-y-4">
+                <div className="flex flex-col gap-4">
                   {selectedCheckin.goals && (
                     <div>
                       <Label className="font-medium">Goals</Label>

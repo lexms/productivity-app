@@ -96,7 +96,7 @@ export function Navigation() {
         </div>
 
         <div className="flex-1 px-2 pb-6 overflow-y-auto">
-          <ul className="space-y-3">
+          <ul className="flex flex-col gap-3">
             {allNavigation.map((item) => {
               const isActive = pathname === item.href;
               return (
@@ -198,7 +198,7 @@ export function Navigation() {
                       <h3 className="text-lg font-medium mb-4 px-2">
                         More Options
                       </h3>
-                      <ul className="space-y-1">
+                      <ul className="flex flex-col gap-1">
                         {secondaryNavigation.map((subItem) => {
                           const isSubActive = pathname === subItem.href;
                           return (

@@ -58,11 +58,11 @@ interface Meeting {
   date: string;
   duration: number;
   participants: string[];
-  status: "analyzed" | "pending" | "in-progress";
   efficiency: number;
   actionItems: ActionItem[];
   summary: string;
   transcript?: string;
+  lastUpdated: Date;
 }
 
 interface ActionItem {
@@ -82,8 +82,8 @@ export function MeetingManagement() {
       date: "2024-01-15",
       duration: 45,
       participants: ["Alex Johnson", "Sarah Chen", "Mike Wilson", "Emma Davis"],
-      status: "analyzed",
       efficiency: 87,
+      lastUpdated: new Date("2024-01-15T15:30:00"),
       actionItems: [
         {
           id: "a1",
@@ -125,8 +125,8 @@ export function MeetingManagement() {
         "Emma Davis",
         "David Lee",
       ],
-      status: "analyzed",
       efficiency: 92,
+      lastUpdated: new Date("2024-01-17T10:15:00"),
       actionItems: [
         {
           id: "a4",
@@ -159,12 +159,17 @@ export function MeetingManagement() {
         "Client: John Smith",
         "Client: Lisa Wong",
       ],
-      status: "pending",
       efficiency: 0,
+      lastUpdated: new Date("2024-01-18T14:00:00"),
       actionItems: [],
       summary: "",
     },
   ]);
+
+  // Sort meetings by lastUpdated
+  const sortedMeetings = [...meetings].sort(
+    (a, b) => b.lastUpdated.getTime() - a.lastUpdated.getTime(),
+  );
 
   const [selectedMeeting, setSelectedMeeting] = useState<Meeting | null>(null);
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
@@ -194,24 +199,24 @@ export function MeetingManagement() {
           if (meeting.id === selectedMeeting.id) {
             return {
               ...meeting,
-              status: "analyzed" as const,
               efficiency: 78,
+              lastUpdated: new Date(),
               actionItems: [
                 ...meeting.actionItems,
                 {
                   id: `a${Date.now()}`,
                   text: "Update client on new feature timeline",
                   assignee: "Alex Johnson",
-                  status: "pending",
-                  priority: "high",
+                  status: "pending" as const,
+                  priority: "high" as const,
                   convertedToTask: false,
                 },
                 {
                   id: `a${Date.now() + 1}`,
                   text: "Revise design based on client feedback",
                   assignee: "Sarah Chen",
-                  status: "pending",
-                  priority: "medium",
+                  status: "pending" as const,
+                  priority: "medium" as const,
                   convertedToTask: false,
                 },
               ],
@@ -235,7 +240,11 @@ export function MeetingManagement() {
           }
           return item;
         });
-        return { ...meeting, actionItems: updatedActionItems };
+        return {
+          ...meeting,
+          actionItems: updatedActionItems,
+          lastUpdated: new Date(), // Update the lastUpdated timestamp
+        };
       }
       return meeting;
     });
@@ -268,16 +277,12 @@ export function MeetingManagement() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="flex items-center gap-2">
           <Badge variant="outline" className="px-2 py-1">
             <FileText className="w-3 h-3 mr-1" />
             {meetings.length} Meetings
-          </Badge>
-          <Badge variant="outline" className="px-2 py-1">
-            <CheckCircle2 className="w-3 h-3 mr-1" />
-            {meetings.filter((m) => m.status === "analyzed").length} Analyzed
           </Badge>
         </div>
         <Dialog>
@@ -294,22 +299,22 @@ export function MeetingManagement() {
                 Create a new meeting record to analyze later
               </DialogDescription>
             </DialogHeader>
-            <div className="space-y-4 py-4">
-              <div className="space-y-2">
+            <div className="flex flex-col gap-4 py-4">
+              <div className="flex flex-col gap-2">
                 <Label htmlFor="title">Meeting Title</Label>
                 <Input id="title" placeholder="Enter meeting title" />
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
+                <div className="flex flex-col gap-2">
                   <Label htmlFor="date">Date</Label>
                   <Input id="date" type="date" />
                 </div>
-                <div className="space-y-2">
+                <div className="flex flex-col gap-2">
                   <Label htmlFor="duration">Duration (min)</Label>
                   <Input id="duration" type="number" placeholder="30" />
                 </div>
               </div>
-              <div className="space-y-2">
+              <div className="flex flex-col gap-2">
                 <Label htmlFor="participants">Participants</Label>
                 <Input
                   id="participants"
@@ -324,71 +329,23 @@ export function MeetingManagement() {
         </Dialog>
       </div>
 
-      <Tabs defaultValue="all" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 mb-4">
-          <TabsTrigger value="all">All Meetings</TabsTrigger>
-          <TabsTrigger value="analyzed">Analyzed</TabsTrigger>
-          <TabsTrigger value="pending">Pending Analysis</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="all" className="space-y-4">
-          {meetings.map((meeting) => (
-            <MeetingCard
-              key={meeting.id}
-              meeting={meeting}
-              onSelect={() => setSelectedMeeting(meeting)}
-              onUpload={() => {
-                setSelectedMeeting(meeting);
-                setUploadDialogOpen(true);
-              }}
-              onConvertToTask={handleConvertToTask}
-              getEfficiencyColor={getEfficiencyColor}
-              getEfficiencyBadge={getEfficiencyBadge}
-              getPriorityColor={getPriorityColor}
-            />
-          ))}
-        </TabsContent>
-
-        <TabsContent value="analyzed" className="space-y-4">
-          {meetings
-            .filter((m) => m.status === "analyzed")
-            .map((meeting) => (
-              <MeetingCard
-                key={meeting.id}
-                meeting={meeting}
-                onSelect={() => setSelectedMeeting(meeting)}
-                onUpload={() => {
-                  setSelectedMeeting(meeting);
-                  setUploadDialogOpen(true);
-                }}
-                onConvertToTask={handleConvertToTask}
-                getEfficiencyColor={getEfficiencyColor}
-                getEfficiencyBadge={getEfficiencyBadge}
-                getPriorityColor={getPriorityColor}
-              />
-            ))}
-        </TabsContent>
-
-        <TabsContent value="pending" className="space-y-4">
-          {meetings
-            .filter((m) => m.status !== "analyzed")
-            .map((meeting) => (
-              <MeetingCard
-                key={meeting.id}
-                meeting={meeting}
-                onSelect={() => setSelectedMeeting(meeting)}
-                onUpload={() => {
-                  setSelectedMeeting(meeting);
-                  setUploadDialogOpen(true);
-                }}
-                onConvertToTask={handleConvertToTask}
-                getEfficiencyColor={getEfficiencyColor}
-                getEfficiencyBadge={getEfficiencyBadge}
-                getPriorityColor={getPriorityColor}
-              />
-            ))}
-        </TabsContent>
-      </Tabs>
+      <div className="flex flex-col gap-4">
+        {sortedMeetings.map((meeting) => (
+          <MeetingCard
+            key={meeting.id}
+            meeting={meeting}
+            onSelect={() => setSelectedMeeting(meeting)}
+            onUpload={() => {
+              setSelectedMeeting(meeting);
+              setUploadDialogOpen(true);
+            }}
+            onConvertToTask={handleConvertToTask}
+            getEfficiencyColor={getEfficiencyColor}
+            getEfficiencyBadge={getEfficiencyBadge}
+            getPriorityColor={getPriorityColor}
+          />
+        ))}
+      </div>
 
       {/* Upload Dialog */}
       <Dialog open={uploadDialogOpen} onOpenChange={setUploadDialogOpen}>
@@ -400,8 +357,8 @@ export function MeetingManagement() {
               items
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="flex space-x-2">
+          <div className="flex flex-col gap-4 py-4">
+            <div className="flex gap-2">
               <Button
                 variant={uploadType === "transcript" ? "default" : "outline"}
                 onClick={() => setUploadType("transcript")}
@@ -422,7 +379,7 @@ export function MeetingManagement() {
 
             <div className="border-2 border-dashed rounded-lg p-6 text-center">
               {uploadFile ? (
-                <div className="space-y-2">
+                <div className="flex flex-col gap-2">
                   <div className="flex items-center justify-center">
                     {uploadType === "transcript" ? (
                       <FileTextIcon className="h-8 w-8 text-blue-500" />
@@ -443,11 +400,11 @@ export function MeetingManagement() {
                   </Button>
                 </div>
               ) : (
-                <div className="space-y-4">
+                <div className="flex flex-col gap-4">
                   <div className="flex items-center justify-center">
                     <Upload className="h-8 w-8 text-slate-400" />
                   </div>
-                  <div className="space-y-2">
+                  <div className="flex flex-col gap-2">
                     <p className="text-sm font-medium">
                       Drag and drop your{" "}
                       {uploadType === "transcript"
@@ -561,7 +518,7 @@ function MeetingCard({
             </CardDescription>
           </div>
           <div className="flex items-center gap-2">
-            {meeting.status === "analyzed" ? (
+            {meeting.efficiency >= 85 ? (
               <Badge className={getEfficiencyBadge(meeting.efficiency)}>
                 <BarChart3 className="w-3 h-3 mr-1" />
                 {meeting.efficiency}% Efficient
@@ -576,7 +533,7 @@ function MeetingCard({
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                {meeting.status !== "analyzed" && (
+                {meeting.efficiency < 85 && (
                   <DropdownMenuItem onClick={onUpload}>
                     <Upload className="w-4 h-4 mr-2" />
                     Upload Transcript
@@ -596,9 +553,9 @@ function MeetingCard({
         </div>
       </CardHeader>
 
-      {meeting.status === "analyzed" && (
+      {meeting.efficiency >= 85 && (
         <CardContent className="pb-3">
-          <div className="space-y-4">
+          <div className="flex flex-col gap-4">
             {/* Summary */}
             <div>
               <h4 className="text-sm font-semibold mb-1 flex items-center">
@@ -613,7 +570,7 @@ function MeetingCard({
                 <CheckSquare className="w-4 h-4 mr-1" /> Action Items (
                 {meeting.actionItems.length})
               </h4>
-              <div className="space-y-2">
+              <div className="flex flex-col gap-2">
                 {expanded
                   ? meeting.actionItems.map((item) => (
                       <div
@@ -767,7 +724,7 @@ function MeetingCard({
       )}
 
       <CardFooter className="pt-0">
-        {meeting.status === "analyzed" ? (
+        {meeting.efficiency >= 85 ? (
           <div className="w-full flex flex-wrap gap-2">
             <Button variant="outline" size="sm" className="flex-1">
               <FileText className="w-4 h-4 mr-1" />

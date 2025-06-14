@@ -181,7 +181,7 @@ export function Leaderboard() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-6">
       {/* Personal Stats */}
       <Card>
         <CardHeader>
@@ -268,7 +268,7 @@ export function Leaderboard() {
               <CardDescription>Compete with your team members</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div className="flex flex-col gap-4">
                 {teamLeaderboard.map((user) => (
                   <div
                     key={user.id}
@@ -330,7 +330,7 @@ export function Leaderboard() {
               <CardDescription>Top performers worldwide</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div className="flex flex-col gap-4">
                 {globalLeaderboard.map((user) => (
                   <div
                     key={user.id}

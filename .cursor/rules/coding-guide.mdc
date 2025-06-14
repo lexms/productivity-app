@@ -4,3 +4,5 @@ globs:
 alwaysApply: true
 ---
 1. When making components always refer to Atomic Components Principle
+2. Use flex and gap to make distance between components instead of space
+3. optimize the based style to mobile friendly style then use md lg breakpoint to adapt on desktop
