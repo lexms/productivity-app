@@ -12,13 +12,20 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
+// Base table configuration with common columns
+const baseTable = {
+  id: uuid("id").primaryKey().defaultRandom(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+} as const;
+
 // Users table
 export const users = pgTable("users", {
-  id: uuid("id").primaryKey().defaultRandom(),
+  ...baseTable,
   email: varchar("email", { length: 255 }).notNull().unique(),
   name: varchar("name", { length: 255 }).notNull(),
   avatar: text("avatar"),
-  timezone: varchar("timezone", { length: 50 }).defaultTo("UTC"),
+  timezone: varchar("timezone", { length: 50 }).default("UTC"),
   preferences: jsonb("preferences")
     .$type<{
       autoScheduling: boolean;
@@ -34,25 +41,21 @@ export const users = pgTable("users", {
       notificationsEnabled: true,
       theme: "system",
     }),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 // Teams table for collaboration
 export const teams = pgTable("teams", {
-  id: uuid("id").primaryKey().defaultRandom(),
+  ...baseTable,
   name: varchar("name", { length: 255 }).notNull(),
   description: text("description"),
   ownerId: uuid("owner_id")
     .references(() => users.id)
     .notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 // Team memberships
 export const teamMembers = pgTable("team_members", {
-  id: uuid("id").primaryKey().defaultRandom(),
+  ...baseTable,
   teamId: uuid("team_id")
     .references(() => teams.id)
     .notNull(),
@@ -65,7 +68,7 @@ export const teamMembers = pgTable("team_members", {
 
 // Tasks table
 export const tasks = pgTable("tasks", {
-  id: uuid("id").primaryKey().defaultRandom(),
+  ...baseTable,
   userId: uuid("user_id")
     .references(() => users.id)
     .notNull(),
@@ -87,25 +90,22 @@ export const tasks = pgTable("tasks", {
     convertedFromMeeting?: boolean;
     meetingId?: string;
   }>(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 // Subtasks
 export const subtasks = pgTable("subtasks", {
-  id: uuid("id").primaryKey().defaultRandom(),
+  ...baseTable,
   taskId: uuid("task_id")
     .references(() => tasks.id)
     .notNull(),
   text: text("text").notNull(),
   completed: boolean("completed").default(false),
   order: integer("order").default(0),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 // Task comments
 export const taskComments = pgTable("task_comments", {
-  id: uuid("id").primaryKey().defaultRandom(),
+  ...baseTable,
   taskId: uuid("task_id")
     .references(() => tasks.id)
     .notNull(),
@@ -113,12 +113,11 @@ export const taskComments = pgTable("task_comments", {
     .references(() => users.id)
     .notNull(),
   text: text("text").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 // Daily check-ins
 export const dailyCheckins = pgTable("daily_checkins", {
-  id: uuid("id").primaryKey().defaultRandom(),
+  ...baseTable,
   userId: uuid("user_id")
     .references(() => users.id)
     .notNull(),
@@ -134,12 +133,11 @@ export const dailyCheckins = pgTable("daily_checkins", {
   reflections: text("reflections"),
   gratitude: text("gratitude"),
   tomorrow: text("tomorrow"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 // Meetings
 export const meetings = pgTable("meetings", {
-  id: uuid("id").primaryKey().defaultRandom(),
+  ...baseTable,
   userId: uuid("user_id")
     .references(() => users.id)
     .notNull(),
@@ -160,13 +158,11 @@ export const meetings = pgTable("meetings", {
     topicsDiscussed: Array<{ topic: string; duration: number }>;
     sentimentScore: number;
   }>(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 // Meeting action items
 export const meetingActionItems = pgTable("meeting_action_items", {
-  id: uuid("id").primaryKey().defaultRandom(),
+  ...baseTable,
   meetingId: uuid("meeting_id")
     .references(() => meetings.id)
     .notNull(),
@@ -176,12 +172,11 @@ export const meetingActionItems = pgTable("meeting_action_items", {
   priority: varchar("priority", { length: 10 }).default("medium"), // 'low', 'medium', 'high'
   convertedToTask: boolean("converted_to_task").default(false),
   taskId: uuid("task_id").references(() => tasks.id),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 // Wearable devices
 export const wearableDevices = pgTable("wearable_devices", {
-  id: uuid("id").primaryKey().defaultRandom(),
+  ...baseTable,
   userId: uuid("user_id")
     .references(() => users.id)
     .notNull(),
@@ -195,13 +190,11 @@ export const wearableDevices = pgTable("wearable_devices", {
     syncFrequency: number; // in minutes
     dataTypes: string[];
   }>(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 // Wearable data
 export const wearableData = pgTable("wearable_data", {
-  id: uuid("id").primaryKey().defaultRandom(),
+  ...baseTable,
   userId: uuid("user_id")
     .references(() => users.id)
     .notNull(),
@@ -234,7 +227,7 @@ export const wearableData = pgTable("wearable_data", {
 
 // Schedule optimization
 export const scheduleOptimizations = pgTable("schedule_optimizations", {
-  id: uuid("id").primaryKey().defaultRandom(),
+  ...baseTable,
   userId: uuid("user_id")
     .references(() => users.id)
     .notNull(),
@@ -268,12 +261,11 @@ export const scheduleOptimizations = pgTable("schedule_optimizations", {
   optimizationScore: integer("optimization_score"), // 0-100
   adherenceScore: integer("adherence_score"), // 0-100, how well user followed the schedule
   feedback: text("feedback"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 // Habit patterns (derived data)
 export const habitPatterns = pgTable("habit_patterns", {
-  id: uuid("id").primaryKey().defaultRandom(),
+  ...baseTable,
   userId: uuid("user_id")
     .references(() => users.id)
     .notNull(),
@@ -305,12 +297,11 @@ export const habitPatterns = pgTable("habit_patterns", {
     .notNull(),
   confidence: integer("confidence"), // 0-100, how confident we are in this pattern
   lastCalculated: timestamp("last_calculated").defaultNow().notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 // Analytics data
 export const analyticsData = pgTable("analytics_data", {
-  id: uuid("id").primaryKey().defaultRandom(),
+  ...baseTable,
   userId: uuid("user_id")
     .references(() => users.id)
     .notNull(),
@@ -322,12 +313,11 @@ export const analyticsData = pgTable("analytics_data", {
     trends?: Array<{ period: string; value: number }>;
     insights?: string[];
   }>(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 // Achievements and gamification
 export const achievements = pgTable("achievements", {
-  id: uuid("id").primaryKey().defaultRandom(),
+  ...baseTable,
   name: varchar("name", { length: 255 }).notNull(),
   description: text("description").notNull(),
   icon: varchar("icon", { length: 10 }).notNull(), // emoji
@@ -341,12 +331,11 @@ export const achievements = pgTable("achievements", {
     .notNull(),
   points: integer("points").default(0),
   rarity: varchar("rarity", { length: 20 }).default("common"), // 'common', 'rare', 'epic', 'legendary'
-  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 // User achievements
 export const userAchievements = pgTable("user_achievements", {
-  id: uuid("id").primaryKey().defaultRandom(),
+  ...baseTable,
   userId: uuid("user_id")
     .references(() => users.id)
     .notNull(),
@@ -359,7 +348,7 @@ export const userAchievements = pgTable("user_achievements", {
 
 // Leaderboard entries
 export const leaderboardEntries = pgTable("leaderboard_entries", {
-  id: uuid("id").primaryKey().defaultRandom(),
+  ...baseTable,
   userId: uuid("user_id")
     .references(() => users.id)
     .notNull(),
@@ -369,12 +358,11 @@ export const leaderboardEntries = pgTable("leaderboard_entries", {
   value: integer("value").notNull(),
   rank: integer("rank"),
   date: date("date").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 // Notifications
 export const notifications = pgTable("notifications", {
-  id: uuid("id").primaryKey().defaultRandom(),
+  ...baseTable,
   userId: uuid("user_id")
     .references(() => users.id)
     .notNull(),
@@ -390,12 +378,11 @@ export const notifications = pgTable("notifications", {
   read: boolean("read").default(false),
   scheduledFor: timestamp("scheduled_for"),
   sentAt: timestamp("sent_at"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 // AI insights and recommendations
 export const aiInsights = pgTable("ai_insights", {
-  id: uuid("id").primaryKey().defaultRandom(),
+  ...baseTable,
   userId: uuid("user_id")
     .references(() => users.id)
     .notNull(),
@@ -408,7 +395,6 @@ export const aiInsights = pgTable("ai_insights", {
   implemented: boolean("implemented").default(false),
   feedback: varchar("feedback", { length: 20 }), // 'helpful', 'not_helpful', 'irrelevant'
   expiresAt: timestamp("expires_at"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 // Relations
